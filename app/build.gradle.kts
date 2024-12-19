@@ -69,11 +69,20 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ui.viewbinding)
     implementation(libs.androidx.fragment.ktx)
+    implementation (libs.picasso)
+
 
     //Navigation
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.fragment)
+
+    // Retrofit
+    implementation (libs.retrofit)
+
+// Gson конвертер для работы с JSON (опционально, если используете)
+    implementation (libs.converter.gson)
+
 
     // Testing
     testImplementation(libs.junit)

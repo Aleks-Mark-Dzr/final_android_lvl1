@@ -1,26 +1,16 @@
 package com.example.skillcinema.network
 
-import android.graphics.Movie
-import androidx.contentpager.content.Query
-//import retrofit2.Retrofit
-//import retrofit2.converter.moshi.MoshiConverterFactory
-//import retrofit2.http.GET
-//import retrofit2.http.Query
+import com.example.skillcinema.data.TopMoviesResponse
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.Query
 
 interface MovieApiService {
-
-//    @GET("/api/v2.2/films/top")
-//    suspend fun getTopMovies(@Query("page") page: Int): List<Movie>
+    @Headers("X-API-KEY: $API_KEY")
+    @GET("/api/v2.2/films/top?type=TOP_250_BEST_FILMS")
+    suspend fun getTopMovies(@Query("page") page: Int): TopMoviesResponse
 
     companion object {
-        private const val BASE_URL = "https://kinopoiskapiunofficial.tech"
-
-//        fun create(): MovieApiService {
-//            return Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(MoshiConverterFactory.create())
-//                .build()
-//                .create(MovieApiService::class.java)
-//        }
+        private const val API_KEY = "f08ba7c2-5719-4c08-9888-764c3e4954f5"
     }
 }
