@@ -8,53 +8,52 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/onboarding_text"
+        android:id="@+id/onboarding3_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="26dp"
         android:text="@string/skillcinema"
         android:textColor="@color/black"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/onboarding_view"
+        app:layout_constraintBottom_toTopOf="@id/onboarding3_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints,RtlSymmetry" />
 
     <Button
-        android:id="@+id/onboardingSkipButton"
+        android:id="@+id/onboardingSkipButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/skip"
         android:textColor="@android:color/darker_gray"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@id/onboarding_view"
+        app:layout_constraintBottom_toTopOf="@id/onboarding3_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/onboarding_text"
+        app:layout_constraintStart_toEndOf="@id/onboarding3_text"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints,SmallSp" />
 
     <ImageView
-        android:id="@+id/onboarding_view"
+        android:id="@+id/onboarding3_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/onboarding"
-        app:layout_constraintBottom_toTopOf="@id/onboarding_bottom_text"
+        android:src="@drawable/onboarding3"
+        app:layout_constraintBottom_toTopOf="@id/onboarding3_bottom_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/onboarding_text" />
+        app:layout_constraintTop_toBottomOf="@id/onboarding3_text" />
 
     <TextView
-        android:id="@+id/onboarding_bottom_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/onboarding3_bottom_text"
+        android:layout_width="226dp"
+        android:layout_height="109dp"
         android:paddingStart="26dp"
-        android:text="@string/find_out_about_premieres"
+        android:text="@string/share_with_friendsions"
         android:textColor="@color/black"
         android:textSize="42sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/onboarding_view"
+        app:layout_constraintTop_toBottomOf="@id/onboarding3_view"
         tools:ignore="MissingConstraints,RtlSymmetry" />
 
 

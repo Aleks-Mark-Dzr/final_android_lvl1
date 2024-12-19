@@ -1,5 +1,6 @@
 package com.example.skillcinema
 
+import OnboardingPagerAdapter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.skillcinema.databinding.ActivityMainBinding
@@ -16,11 +17,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Отображаем OnboardingFragment
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, OnboardingActivityFragment())
-                .commit()
-        }
+        // Настройка ViewPager2
+        val onboardingAdapter = OnboardingPagerAdapter(this)
+        binding.viewPager.adapter = onboardingAdapter
     }
 }
