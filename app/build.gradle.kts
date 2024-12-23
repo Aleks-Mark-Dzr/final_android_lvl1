@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
-    id("org.jetbrains.compose") version "1.6.0"
+//    id("org.jetbrains.compose") version "1.6.0"
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
