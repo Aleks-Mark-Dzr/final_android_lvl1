@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.databinding.FragmentHomepageBinding
@@ -46,10 +49,17 @@ class HomepageFragment : Fragment() {
         }
     }
 
+    @OptIn(UnstableApi::class)
     private suspend fun fetchMovies(): List<Movie> {
         return withContext(Dispatchers.IO) {
-            val response = movieApiService.getTopMovies(page = 1)
-            response.films
+            try {
+                val response = movieApiService.getTopMovies(page = 1)
+                response.films
+            } catch (e: Exception) {
+                // Логирование ошибки и возврат пустого списка
+                Log.e("HomepageFragment", "Error fetching movies: ${e.message}")
+                emptyList()
+            }
         }
     }
 

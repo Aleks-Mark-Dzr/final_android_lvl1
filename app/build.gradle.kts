@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("org.jetbrains.compose") version "1.6.0"
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -30,10 +33,7 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -41,9 +41,7 @@ android {
         compose = true
         viewBinding = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
+
 //    packaging {
 //        resources {
 //            excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -82,6 +80,12 @@ dependencies {
 
 // Gson конвертер для работы с JSON (опционально, если используете)
     implementation (libs.converter.gson)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.espresso.core)
+
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
 
 
     // Testing
