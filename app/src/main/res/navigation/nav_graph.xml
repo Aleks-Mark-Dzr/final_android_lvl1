@@ -4,9 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/onboardingFragment">
 
+    <!-- Onboarding Fragment -->
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="com.example.skillcinema.ui.onboarding.OnboardingActivityFragment"
+        android:name="com.example.skillcinema.ui.onboarding.OnboardingFragment"
         android:label="Onboarding"
-        tools:layout="@layout/fragment_onboarding" />
+        tools:layout="@layout/fragment_onboarding">
+
+        <!-- Action to Homepage -->
+        <action
+            android:id="@+id/action_onboardingFragment_to_homepageFragment"
+            app:destination="@id/homepageFragment" />
+    </fragment>
+
+    <!-- Homepage Fragment -->
+    <fragment
+        android:id="@+id/homepageFragment"
+        android:name="com.example.skillcinema.ui.homepage.HomepageFragment"
+        android:label="Homepage"
+        tools:layout="@layout/fragment_homepage" />
 </navigation>

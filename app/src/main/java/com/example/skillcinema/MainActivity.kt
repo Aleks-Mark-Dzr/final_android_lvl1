@@ -1,10 +1,10 @@
 package com.example.skillcinema
 
-import OnboardingPagerAdapter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.skillcinema.databinding.ActivityMainBinding
-import com.example.skillcinema.ui.onboarding.OnboardingActivityFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,8 +17,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Настройка ViewPager2
-        val onboardingAdapter = OnboardingPagerAdapter(this)
-        binding.viewPager.adapter = onboardingAdapter
+        // Настройка навигации
+        val navController = findNavController(R.id.nav_host_fragment)
+        setupActionBarWithNavController(navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

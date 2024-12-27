@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.skillcinema.R
 import com.example.skillcinema.databinding.FragmentOnboardingBinding
 
-class OnboardingActivityFragment : Fragment() {
+class OnboardingFragment : Fragment() {
 
     private var _binding: FragmentOnboardingBinding? = null
     private val binding get() = _binding!!
@@ -23,17 +25,13 @@ class OnboardingActivityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Обработка кнопки Skip
         binding.skipButton.setOnClickListener {
-            // Здесь вы можете заменить текущий фрагмент или закрыть приложение
-            requireActivity().supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, AnotherFragment()) // Замените AnotherFragment на нужный
-                .commit()
+            findNavController().navigate(R.id.action_onboardingFragment_to_homepageFragment)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Очищаем binding для предотвращения утечек памяти
+        _binding = null
     }
 }
