@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Настройка навигации
-        val navController = findNavController(R.id.nav_host_fragment)
-        setupActionBarWithNavController(navController)
+//        val navController = findNavController(R.id.nav_host_fragment)
+//        setupActionBarWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
