@@ -1,5 +1,6 @@
 package com.example.skillcinema.ui.homepage.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.data.Movie
@@ -14,7 +15,12 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
 
     fun fetchMovies(page: Int = 1) {
         viewModelScope.launch {
-            _movies.value = repository.getTopMovies(page)
+            try {
+                val fetchedMovies = repository.getTopMovies(page)
+                _movies.value = fetchedMovies
+            } catch (e: Exception) {
+                Log.e("HomepageViewModel", "Error fetching movies: ${e.message}", e)
+            }
         }
     }
 }
