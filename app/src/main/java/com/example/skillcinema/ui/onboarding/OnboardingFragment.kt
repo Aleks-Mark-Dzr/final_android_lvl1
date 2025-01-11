@@ -1,5 +1,6 @@
 package com.example.skillcinema.ui.onboarding
 
+import OnboardingPagerAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.skillcinema.R
 import com.example.skillcinema.databinding.FragmentOnboardingBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class OnboardingFragment : Fragment() {
 
@@ -24,6 +26,14 @@ class OnboardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Устанавливаем адаптер для ViewPager2
+        binding.viewPager.adapter = OnboardingPagerAdapter(requireActivity())
+
+        // Подключаем TabLayoutMediator для синхронизации с ViewPager2
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            // Можно настроить вкладки, если требуется
+        }.attach()
 
         binding.skipButton.setOnClickListener {
             findNavController().navigate(R.id.action_onboardingFragment_to_homepageFragment)
