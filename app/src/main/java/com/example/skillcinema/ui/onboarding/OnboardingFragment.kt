@@ -30,6 +30,7 @@ class OnboardingFragment : Fragment() {
         // Устанавливаем адаптер для ViewPager2
         binding.viewPager.adapter = OnboardingPagerAdapter(requireActivity())
 
+        
         // Подключаем TabLayoutMediator для синхронизации с ViewPager2
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             // Можно настроить вкладки, если требуется
