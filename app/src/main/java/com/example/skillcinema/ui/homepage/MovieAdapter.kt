@@ -36,11 +36,9 @@ class MovieAdapter : ListAdapter<Movie, MovieAdapter.MovieViewHolder>(MovieDiffC
 }
 
 class MovieDiffCallback : DiffUtil.ItemCallback<Movie>() {
-    override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem.filmId == newItem.filmId
-    }
+    override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+        oldItem.filmId == newItem.filmId
 
-    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem == newItem
-    }
+    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+        oldItem == newItem
 }

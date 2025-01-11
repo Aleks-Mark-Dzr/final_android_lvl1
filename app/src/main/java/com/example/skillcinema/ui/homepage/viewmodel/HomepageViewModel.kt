@@ -9,13 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
-    private val _movies = MutableStateFlow<List<Movie>>(emptyList()) // Инициализация с пустым списком
+    private val _movies = MutableStateFlow<List<Movie>>(emptyList())
     val movies: StateFlow<List<Movie>> get() = _movies
 
-    fun fetchMovies() {
+    fun fetchMovies(page: Int = 1) {
         viewModelScope.launch {
-            val fetchedMovies = repository.getTopMovies(page = 1)
-            _movies.value = fetchedMovies
+            _movies.value = repository.getTopMovies(page)
         }
     }
 }

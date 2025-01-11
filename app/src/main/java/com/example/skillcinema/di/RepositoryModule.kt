@@ -9,13 +9,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module // Добавляем эту аннотацию
+@Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService: MovieApiService): MovieRepository {
-        return MovieRepositoryImpl(apiService)
-    }
+    fun provideMovieRepository(apiService: MovieApiService): MovieRepository =
+        MovieRepositoryImpl(apiService)
 }

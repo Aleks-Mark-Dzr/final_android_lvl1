@@ -30,13 +30,6 @@ class HomepageFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = movieAdapter
         }
-
-        // Загрузите данные (пример)
-        val sampleMovies = listOf(
-            Movie(1, "Movie 1", "2024", "https://example.com/image1.jpg"),
-            Movie(2, "Movie 2", "2023", "https://example.com/image2.jpg")
-        )
-        movieAdapter.submitList(sampleMovies)
     }
 
     override fun onDestroyView() {
