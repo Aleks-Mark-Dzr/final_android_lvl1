@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.data.repository.MovieRepositoryImpl
 import com.example.skillcinema.databinding.FragmentHomepageBinding
 import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModel
-import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModelFactory
 import com.example.skillcinema.utils.NetworkUtils
 import kotlinx.coroutines.flow.collect
 
