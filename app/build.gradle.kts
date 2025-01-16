@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
+    id("org.jetbrains.kotlin.kapt")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
@@ -67,6 +68,10 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    // Hilt
+    implementation(libs.dagger.hilt.android.vversion)
+    kapt(libs.hilt.android.compiler.vversion)
 
     // Testing
     testImplementation(libs.junit)
