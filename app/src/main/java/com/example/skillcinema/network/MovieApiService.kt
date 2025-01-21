@@ -16,15 +16,3 @@ interface MovieApiService {
         private const val API_KEY = "f08ba7c2-5719-4c08-9888-764c3e4954f5"
     }
 }
-
-//object RetrofitInstance {
-//    private const val BASE_URL = "https://kinopoiskapiunofficial.tech"
-//
-//    val movieApiService: MovieApiService by lazy {
-//        Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//            .create(MovieApiService::class.java)
-//    }
-//}
