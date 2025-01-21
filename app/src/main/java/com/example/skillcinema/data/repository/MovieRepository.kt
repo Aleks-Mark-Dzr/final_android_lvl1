@@ -16,7 +16,7 @@ class MovieRepositoryImpl @Inject constructor(
 ) : MovieRepository {
     override suspend fun getTopMovies(page: Int): List<Movie> {
         return runCatching {
-            apiService.getTopMovies(page).films
+            apiService.getCollections(page).films
         }.getOrElse {
             Log.e("MovieRepositoryImpl", "Error fetching movies: ${it.message}", it)
             emptyList()

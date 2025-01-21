@@ -10,5 +10,5 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface MovieApiService {
 //    @Headers("X-API-KEY: $API_KEY")
     @GET("/api/v2.2/films/top?type=TOP_250_BEST_FILMS")
-    suspend fun getTopMovies(@Query("page") page: Int): TopMoviesResponse
+    suspend fun getCollections(@Query("page") page: Int): TopMoviesResponse
 }
