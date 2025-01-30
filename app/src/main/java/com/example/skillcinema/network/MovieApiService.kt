@@ -8,7 +8,26 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 interface MovieApiService {
-//    @Headers("X-API-KEY: $API_KEY")
-    @GET("/api/v2.2/films/top?type=TOP_250_BEST_FILMS")
-    suspend fun getCollections(@Query("page") page: Int): TopMoviesResponse
+    @GET("/api/v2.2/films/top")
+    suspend fun getTopMovies(
+        @Query("type") type: String,
+        @Query("page") page: Int
+    ): TopMoviesResponse
+
+    @GET("/api/v2.2/films/premieres")
+    suspend fun getPremieres(
+        @Query("year") year: Int,
+        @Query("month") month: String
+    ): TopMoviesResponse
+
+    @GET("/api/v2.2/films")
+    suspend fun getMoviesByGenreAndCountry(
+        @Query("countries") countryId: Int,
+        @Query("genres") genreId: Int,
+        @Query("ratingFrom") ratingFrom: Int = 8,
+        @Query("page") page: Int = 1
+    ): TopMoviesResponse
+
+    @GET("/api/v2.2/films/filters")
+    suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
 }

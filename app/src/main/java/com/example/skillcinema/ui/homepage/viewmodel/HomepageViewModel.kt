@@ -11,28 +11,30 @@ import kotlinx.coroutines.launch
 
 class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    private val _movies = MutableStateFlow<List<Movie>>(emptyList())
-    val movies: StateFlow<List<Movie>> get() = _movies
+    private val _premieres = MutableStateFlow<List<Movie>>(emptyList())
+    val premieres: StateFlow<List<Movie>> get() = _premieres
 
-    fun fetchMovies(page: Int = 1) {
+    private val _popularMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val popularMovies: StateFlow<List<Movie>> get() = _popularMovies
+
+    private val _dynamicCategory = MutableStateFlow<List<Movie>>(emptyList())
+    val dynamicCategory: StateFlow<List<Movie>> get() = _dynamicCategory
+
+    fun fetchPremieres(year: Int, month: String) {
         viewModelScope.launch {
-            _movies.value = try {
-                repository.getTopMovies(page)
-            } catch (e: Exception) {
-                emptyList()
-            }
+            _premieres.value = repository.getPremieres(year, month) ?: emptyList()
         }
     }
-}
 
-class HomepageViewModelFactory(
-    private val repository: MovieRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomepageViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return HomepageViewModel(repository) as T
+    fun fetchPopularMovies(page: Int = 1) {
+        viewModelScope.launch {
+            _popularMovies.value = repository.getTopMovies(page) ?: emptyList()
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+
+    fun fetchDynamicCategory(countryId: Int, genreId: Int) {
+        viewModelScope.launch {
+            _dynamicCategory.value = repository.getMoviesByGenreAndCountry(countryId, genreId) ?: emptyList()
+        }
     }
 }
