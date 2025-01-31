@@ -49,7 +49,7 @@ class HomepageFragment : Fragment() {
         binding.rvPopular.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvDynamicCategory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        // Подписка на StateFlow для каждой категории
+        // Подписка на StateFlow для премьер
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.premieres.collect { moviesList ->
@@ -62,6 +62,7 @@ class HomepageFragment : Fragment() {
             }
         }
 
+        // Подписка на StateFlow для популярных фильмов
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.popularMovies.collect { moviesList ->
@@ -74,6 +75,7 @@ class HomepageFragment : Fragment() {
             }
         }
 
+        // Подписка на StateFlow для динамической подборки
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.dynamicCategory.collect { moviesList ->
@@ -85,7 +87,6 @@ class HomepageFragment : Fragment() {
                 }
             }
         }
-
 
         // Загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
