@@ -88,7 +88,7 @@ class HomepageFragment : Fragment() {
             }
         }
 
-        // Загрузка данных
+        // Загрузка данных (после настройки подписок)
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
             viewModel.fetchPremieres(2025, "January")
             viewModel.fetchPopularMovies()

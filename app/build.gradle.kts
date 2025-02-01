@@ -73,6 +73,10 @@ dependencies {
     implementation(libs.dagger.hilt.android.vversion)
     kapt(libs.hilt.android.compiler.vversion)
 
+    // Interceptor
+    implementation (libs.okhttp3.okhttp)
+    implementation (libs.logging.interceptor)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
