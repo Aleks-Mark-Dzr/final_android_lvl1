@@ -19,15 +19,6 @@ class MovieRepositoryImpl @Inject constructor(
     private val apiService: MovieApiService
 ) : MovieRepository {
 
-    override suspend fun getTopMovies(page: Int): List<Movie> {
-        return runCatching {
-            apiService.getTopMovies(type = "TOP_250_BEST_FILMS", page).films
-        }.getOrElse {
-            Log.e("MovieRepositoryImpl", "Error fetching top movies: ${it.message}", it)
-            emptyList()
-        }
-    }
-
     override suspend fun getPremieres(year: Int, month: String): List<Movie> {
         return runCatching {
             val response = apiService.getPremieres(year, month)
@@ -39,11 +30,24 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTopMovies(page: Int): List<Movie> {
+        return runCatching {
+            val response = apiService.getTopMovies(type = "TOP_250_BEST_FILMS", page)
+            Log.d("MovieRepositoryImpl", "Top movies response: ${response.films}")
+            response.films
+        }.getOrElse {
+            Log.e("MovieRepositoryImpl", "Error fetching top movies: ${it.message}", it)
+            emptyList()
+        }
+    }
+
     override suspend fun getMoviesByGenreAndCountry(countryId: Int, genreId: Int): List<Movie> {
         return runCatching {
-            apiService.getMoviesByGenreAndCountry(countryId, genreId).films
+            val response = apiService.getMoviesByGenreAndCountry(countryId, genreId)
+            Log.d("MovieRepositoryImpl", "Dynamic category response: ${response.films}")
+            response.films
         }.getOrElse {
-            Log.e("MovieRepositoryImpl", "Error fetching movies by genre and country: ${it.message}", it)
+            Log.e("MovieRepositoryImpl", "Error fetching dynamic category: ${it.message}", it)
             emptyList()
         }
     }
