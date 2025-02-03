@@ -22,8 +22,8 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getPremieres(year: Int, month: String): List<Movie> {
         return runCatching {
             val response = apiService.getPremieres(year, month)
-            Log.d("MovieRepositoryImpl", "Premieres response: ${response.films}")
-            response.films
+            Log.d("MovieRepositoryImpl", "Premieres response: ${response.items}")
+            response.items
         }.getOrElse {
             Log.e("MovieRepositoryImpl", "Error fetching premieres: ${it.message}", it)
             emptyList()
