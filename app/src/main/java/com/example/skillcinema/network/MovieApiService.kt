@@ -1,5 +1,7 @@
 package com.example.skillcinema.network
 
+import com.example.skillcinema.data.MoviesByGenreAndCountryResponse
+import com.example.skillcinema.data.PremieresResponse
 import com.example.skillcinema.data.TopMoviesResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -18,7 +20,7 @@ interface MovieApiService {
     suspend fun getPremieres(
         @Query("year") year: Int,
         @Query("month") month: String
-    ): TopMoviesResponse
+    ): PremieresResponse
 
     @GET("/api/v2.2/films")
     suspend fun getMoviesByGenreAndCountry(
@@ -26,7 +28,8 @@ interface MovieApiService {
         @Query("genres") genreId: Int,
         @Query("ratingFrom") ratingFrom: Int = 8,
         @Query("page") page: Int = 1
-    ): TopMoviesResponse
+    ): MoviesByGenreAndCountryResponse
+
 
     @GET("/api/v2.2/films/filters")
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse

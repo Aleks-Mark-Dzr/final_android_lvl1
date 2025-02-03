@@ -24,9 +24,11 @@ class HomepageFragment : Fragment() {
 
     private var _binding: FragmentHomepageBinding? = null
     private val binding get() = _binding!!
-    private val movieAdapter = MovieAdapter()
 
     private lateinit var viewModel: HomepageViewModel
+    private lateinit var premieresAdapter: CategoryMoviesAdapter
+    private lateinit var popularAdapter: CategoryMoviesAdapter
+    private lateinit var dynamicCategoryAdapter: CategoryMoviesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,55 +46,58 @@ class HomepageFragment : Fragment() {
         val factory = HomepageViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
+        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie ->
+            // Обработчик клика
+        }
+
+        popularAdapter = CategoryMoviesAdapter("Популярное") { movie ->
+            // Обработчик клика
+        }
+
+        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie ->
+            // Обработчик клика
+        }
+
         // Настройка RecyclerView
         binding.rvPremieres.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvPopular.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvDynamicCategory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPremieres.adapter = premieresAdapter
 
-        // Подписка на StateFlow для премьер
+        binding.rvPopular.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPopular.adapter = popularAdapter
+
+        binding.rvDynamicCategory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvDynamicCategory.adapter = dynamicCategoryAdapter
+
+        // Подписка на StateFlow
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.premieres.collect { moviesList ->
-                    moviesList?.let {
-                        binding.rvPremieres.adapter = CategoryMoviesAdapter("Премьеры", it) { movie ->
-                            // Обработчик клика по фильму
-                        }
-                    }
+                    moviesList?.let { premieresAdapter.setData(it) }
                 }
             }
         }
 
-        // Подписка на StateFlow для популярных фильмов
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.popularMovies.collect { moviesList ->
-                    moviesList?.let {
-                        binding.rvPopular.adapter = CategoryMoviesAdapter("Популярное", it) { movie ->
-                            // Обработчик клика по фильму
-                        }
-                    }
+                    moviesList?.let { popularAdapter.setData(it) }
                 }
             }
         }
 
-        // Подписка на StateFlow для динамической подборки
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.dynamicCategory.collect { moviesList ->
-                    moviesList?.let {
-                        binding.rvDynamicCategory.adapter = CategoryMoviesAdapter("Динамическая подборка", it) { movie ->
-                            // Обработчик клика по фильму
-                        }
-                    }
+                    moviesList?.let { dynamicCategoryAdapter.setData(it) }
                 }
             }
         }
 
-        // Загрузка данных (после настройки подписок)
+        // Загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
             viewModel.fetchPremieres(2025, "January")
             viewModel.fetchPopularMovies()
-            viewModel.fetchDynamicCategory(countryId = 1, genreId = 2) // Замените на реальные ID
+            viewModel.fetchDynamicCategory(countryId = 1, genreId = 2) // Пример
         } else {
             Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
         }
