@@ -1,5 +1,5 @@
 package com.example.skillcinema.data
 
 data class MoviesByGenreAndCountryResponse(
-    val films: List<Movie>
+    val items: List<Movie>
 )

@@ -44,8 +44,8 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMoviesByGenreAndCountry(countryId: Int, genreId: Int): List<Movie> {
         return runCatching {
             val response = apiService.getMoviesByGenreAndCountry(countryId, genreId)
-            Log.d("MovieRepositoryImpl", "Dynamic category response: ${response.films}")
-            response.films
+            Log.d("MovieRepositoryImpl", "Dynamic category response: ${response.items}")
+            response.items
         }.getOrElse {
             Log.e("MovieRepositoryImpl", "Error fetching dynamic category: ${it.message}", it)
             emptyList()
