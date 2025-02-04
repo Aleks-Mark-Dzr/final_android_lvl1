@@ -30,6 +30,7 @@ class HomepageFragment : Fragment() {
     private lateinit var popularAdapter: CategoryMoviesAdapter
     private lateinit var dynamicCategoryAdapter: CategoryMoviesAdapter
     private lateinit var top250MoviesAdapter: CategoryMoviesAdapter
+    private lateinit var seriesAdapter: CategoryMoviesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,20 +64,32 @@ class HomepageFragment : Fragment() {
             // Обработчик клика
         }
 
+        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie ->
+            // Обработчик клика
+        }
+
         // Настройка RecyclerView
-        binding.rvPremieres.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPremieres.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvPremieres.adapter = premieresAdapter
 
-        binding.rvPopular.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPopular.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvPopular.adapter = popularAdapter
 
-        binding.rvDynamicCategory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvDynamicCategory.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvDynamicCategory.adapter = dynamicCategoryAdapter
 
-        binding.rvTop250Category.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTop250Category.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvTop250Category.adapter = top250MoviesAdapter
 
-        // Подписка на StateFlow
+        binding.rvSeriesCategory.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvSeriesCategory.adapter = seriesAdapter
+
+            // Подписка на StateFlow
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.premieres.collect { moviesList ->
@@ -111,6 +124,16 @@ class HomepageFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tvSeries.collect { moviesList ->
+                    moviesList?.let {
+                        seriesAdapter.setData(it)
+                    }
+                }
+            }
+        }
+
 
         // Загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
@@ -118,6 +141,7 @@ class HomepageFragment : Fragment() {
             viewModel.fetchPopularMovies()
             viewModel.fetchDynamicCategory(countryId = 1, genreId = 2) // Пример
             viewModel.fetchTop250Movies(1)
+            viewModel.fetchTvSeries(1)
         } else {
             Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
         }

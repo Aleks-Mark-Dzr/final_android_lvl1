@@ -5,5 +5,10 @@
     <string name="find_out_about_premieres">Узнавай о премьерах</string>
     <string name="create_collections">Создавай коллекции</string>
     <string name="share_with_friends">Делись с друзьями</string>
+    <string name="Series">Сериалы</string>
+    <string name="TOP_250">Топ-250</string>
+    <string name="dynamic">Динамические подборки</string>
+    <string name="Popular">Популярное</string>
+    <string name="Premieres">Премьеры</string>
 
 </resources>

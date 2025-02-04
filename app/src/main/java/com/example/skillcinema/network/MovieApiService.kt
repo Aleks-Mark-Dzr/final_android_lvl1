@@ -4,6 +4,7 @@ import com.example.skillcinema.data.MoviesByGenreAndCountryResponse
 import com.example.skillcinema.data.PremieresResponse
 import com.example.skillcinema.data.MovieCollectionResponse
 import com.example.skillcinema.data.TopMoviesResponse
+import com.example.skillcinema.data.TvSeriesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -33,6 +34,17 @@ interface MovieApiService {
         @Query("type") type: String = "TOP_250_MOVIES",
         @Query("page") page: Int = 1
     ): MovieCollectionResponse
+
+    @GET("/api/v2.2/films")
+    suspend fun getTV_SERIES(
+//        @Query("order") order: String ="RATING",
+        @Query("type") type: String = "TV_SERIES",
+//        @Query("ratingFrom") ratingFrom: Number = 0,
+//        @Query("ratingTo") ratingTo: Number =10,
+//        @Query("yearFrom") yearFrom: Int = 1000,
+//        @Query("yearTo") yearTo: Int = 3000,
+        @Query("page") page: Int = 1
+    ): TvSeriesResponse
 
 
     @GET("/api/v2.2/films/filters")

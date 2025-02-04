@@ -12,6 +12,9 @@ interface MovieRepository {
     suspend fun getPremieres(year: Int, month: String): List<Movie>
     suspend fun getMoviesByGenreAndCountry(countryId: Int, genreId: Int): List<Movie>
     suspend fun getTop250Movies(page: Int): List<Movie>
+    suspend fun getTvSeries(
+        page: Int
+    ): List<Movie>
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
 }
 
@@ -65,7 +68,20 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getTop250Movies(page: Int): List<Movie> {
         return runCatching {
             val response = apiService.getTop250Movies(type = "TOP_250_MOVIES", page)
-            Log.d("MovieRepositoryImpl", "Top movies response: ${response.items}")
+            Log.d("MovieRepositoryImpl", "Top-250 movies response: ${response.items}")
+            response.items
+        }.getOrElse {
+            Log.e("MovieRepositoryImpl", "Error fetching top movies: ${it.message}", it)
+            emptyList()
+        }
+    }
+
+    override suspend fun getTvSeries(
+        page: Int
+    ): List<Movie> {
+        return runCatching {
+            val response = apiService.getTV_SERIES(type = "TV_SERIES", page)
+            Log.d("MovieRepositoryImpl", "Top TV_SERIES response: ${response.items}")
             response.items
         }.getOrElse {
             Log.e("MovieRepositoryImpl", "Error fetching top movies: ${it.message}", it)

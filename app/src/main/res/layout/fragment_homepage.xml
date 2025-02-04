@@ -14,7 +14,7 @@
             android:id="@+id/tvPremieresTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Премьеры"
+            android:text="@string/Premieres"
             android:textSize="20sp"
             android:padding="8dp"
             android:textStyle="bold" />
@@ -30,7 +30,7 @@
             android:id="@+id/tvPopularTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Популярное"
+            android:text="@string/Popular"
             android:textSize="20sp"
             android:padding="8dp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
             android:id="@+id/tvDynamicCategoryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Динамические подборки"
+            android:text="@string/dynamic"
             android:textSize="20sp"
             android:padding="8dp"
             android:textStyle="bold" />
@@ -62,13 +62,29 @@
             android:id="@+id/tvTop250CategoryTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Топ-250"
+            android:text="@string/TOP_250"
             android:textSize="20sp"
             android:padding="8dp"
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTop250Category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Секция для сериалов -->
+        <TextView
+            android:id="@+id/tvSeriesCategoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Series"
+            android:textSize="20sp"
+            android:padding="8dp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSeriesCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />

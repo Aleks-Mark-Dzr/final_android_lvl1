@@ -1,7 +1,6 @@
 package com.example.skillcinema.ui.homepage.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.data.repository.MovieRepository
@@ -20,8 +19,11 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _dynamicCategory = MutableStateFlow<List<Movie>>(emptyList())
     val dynamicCategory: StateFlow<List<Movie>> get() = _dynamicCategory
 
-    private val _top250Movies = MutableStateFlow<List<Movie>?>(null)
-    val top250Movies: StateFlow<List<Movie>?> = _top250Movies
+    private val _top250Movies = MutableStateFlow<List<Movie>>(emptyList())
+    val top250Movies: StateFlow<List<Movie>> get() = _top250Movies
+
+    private val _tvSeries = MutableStateFlow<List<Movie>>(emptyList())
+    val tvSeries: StateFlow<List<Movie>> get() = _tvSeries
 
     fun fetchPremieres(year: Int, month: String) {
         viewModelScope.launch {
@@ -37,13 +39,20 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
 
     fun fetchDynamicCategory(countryId: Int, genreId: Int) {
         viewModelScope.launch {
-            _dynamicCategory.value = repository.getMoviesByGenreAndCountry(countryId, genreId) ?: emptyList()
+            _dynamicCategory.value =
+                repository.getMoviesByGenreAndCountry(countryId, genreId) ?: emptyList()
         }
     }
 
-    fun fetchTop250Movies(page: Int) {
+    fun fetchTop250Movies(page: Int = 1) {
         viewModelScope.launch {
-            _top250Movies.value = repository.getTop250Movies(page)
+            _top250Movies.value = repository.getTop250Movies(page) ?: emptyList()
+        }
+    }
+
+    fun fetchTvSeries(page: Int =1) {
+        viewModelScope.launch {
+            _tvSeries.value = repository.getTvSeries(page = 1) ?: emptyList()
         }
     }
 }
