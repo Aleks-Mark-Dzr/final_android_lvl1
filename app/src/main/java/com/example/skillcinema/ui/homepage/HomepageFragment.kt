@@ -29,6 +29,7 @@ class HomepageFragment : Fragment() {
     private lateinit var premieresAdapter: CategoryMoviesAdapter
     private lateinit var popularAdapter: CategoryMoviesAdapter
     private lateinit var dynamicCategoryAdapter: CategoryMoviesAdapter
+    private lateinit var top250MoviesAdapter: CategoryMoviesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +59,10 @@ class HomepageFragment : Fragment() {
             // Обработчик клика
         }
 
+        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie ->
+            // Обработчик клика
+        }
+
         // Настройка RecyclerView
         binding.rvPremieres.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvPremieres.adapter = premieresAdapter
@@ -67,6 +72,9 @@ class HomepageFragment : Fragment() {
 
         binding.rvDynamicCategory.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvDynamicCategory.adapter = dynamicCategoryAdapter
+
+        binding.rvTop250Category.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTop250Category.adapter = top250MoviesAdapter
 
         // Подписка на StateFlow
         lifecycleScope.launch {
@@ -93,11 +101,23 @@ class HomepageFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.top250Movies.collect { moviesList ->
+                    moviesList?.let {
+                        top250MoviesAdapter.setData(it)
+                    }
+                }
+            }
+        }
+
+
         // Загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
             viewModel.fetchPremieres(2025, "January")
             viewModel.fetchPopularMovies()
             viewModel.fetchDynamicCategory(countryId = 1, genreId = 2) // Пример
+            viewModel.fetchTop250Movies(1)
         } else {
             Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
         }

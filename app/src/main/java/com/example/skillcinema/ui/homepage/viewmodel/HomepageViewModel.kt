@@ -20,6 +20,9 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _dynamicCategory = MutableStateFlow<List<Movie>>(emptyList())
     val dynamicCategory: StateFlow<List<Movie>> get() = _dynamicCategory
 
+    private val _top250Movies = MutableStateFlow<List<Movie>?>(null)
+    val top250Movies: StateFlow<List<Movie>?> = _top250Movies
+
     fun fetchPremieres(year: Int, month: String) {
         viewModelScope.launch {
             _premieres.value = repository.getPremieres(year, month) ?: emptyList()
@@ -35,6 +38,12 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
     fun fetchDynamicCategory(countryId: Int, genreId: Int) {
         viewModelScope.launch {
             _dynamicCategory.value = repository.getMoviesByGenreAndCountry(countryId, genreId) ?: emptyList()
+        }
+    }
+
+    fun fetchTop250Movies(page: Int) {
+        viewModelScope.launch {
+            _top250Movies.value = repository.getTop250Movies(page)
         }
     }
 }

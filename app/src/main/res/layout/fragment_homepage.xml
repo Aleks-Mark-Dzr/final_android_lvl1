@@ -57,5 +57,21 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
 
+        <!-- Секция для Топ-250 -->
+        <TextView
+            android:id="@+id/tvTop250CategoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Топ-250"
+            android:textSize="20sp"
+            android:padding="8dp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTop250Category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
     </LinearLayout>
 </ScrollView>

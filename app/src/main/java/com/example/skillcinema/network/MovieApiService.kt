@@ -2,12 +2,10 @@ package com.example.skillcinema.network
 
 import com.example.skillcinema.data.MoviesByGenreAndCountryResponse
 import com.example.skillcinema.data.PremieresResponse
+import com.example.skillcinema.data.MovieCollectionResponse
 import com.example.skillcinema.data.TopMoviesResponse
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.Query
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 interface MovieApiService {
     @GET("/api/v2.2/films/top")
@@ -29,6 +27,12 @@ interface MovieApiService {
         @Query("ratingFrom") ratingFrom: Int = 8,
         @Query("page") page: Int = 1
     ): MoviesByGenreAndCountryResponse
+
+    @GET("/api/v2.2/films/collections")
+    suspend fun getTop250Movies(
+        @Query("type") type: String = "TOP_250_MOVIES",
+        @Query("page") page: Int = 1
+    ): MovieCollectionResponse
 
 
     @GET("/api/v2.2/films/filters")
