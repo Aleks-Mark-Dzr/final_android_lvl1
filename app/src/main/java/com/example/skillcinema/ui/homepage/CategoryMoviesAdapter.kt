@@ -29,12 +29,6 @@ class CategoryMoviesAdapter(
         fun bind(movie: Movie) {
             binding.movieTitle.text = movie.nameRu
             binding.movieYear.text = movie.year
-            binding.movieRating.text = "⭐ ${movie.ratingKinopoisk ?: "N/A"}"
-            binding.movieGenres.text = if (movie.genres.isNotEmpty()) {
-                movie.genres.joinToString(", ") { it.genre }
-            } else {
-                "Жанр неизвестен"
-            }
             Picasso.get().load(movie.posterUrlPreview).into(binding.moviePoster)
             binding.root.setOnClickListener { onMovieClick(movie) }
         }
