@@ -7,10 +7,10 @@
 
     <ImageView
         android:id="@+id/moviePoster"
-        android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+        android:layout_height="180dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -18,40 +18,40 @@
         android:id="@+id/movieTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:padding="8dp"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/moviePoster"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/moviePoster" />
 
     <TextView
         android:id="@+id/movieYear"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/movieRating"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/moviePoster"
+        android:padding="8dp"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movieTitle" />
 
     <TextView
         android:id="@+id/movieRating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toTopOf="@id/movieYear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/moviePoster"
+        android:padding="8dp"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movieYear" />
 
     <TextView
         android:id="@+id/movieGenres"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:padding="8dp"
+        app:layout_constraintWidth_percent="0.35"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/moviePoster"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/movieRating" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
