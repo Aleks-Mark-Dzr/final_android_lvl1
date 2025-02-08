@@ -27,32 +27,32 @@ class HomepageViewModel(private val repository: MovieRepository) : ViewModel() {
 
     fun fetchPremieres(year: Int, month: String) {
         viewModelScope.launch {
-            _premieres.value = repository.getPremieres(year, month) ?: emptyList()
+            _premieres.value = repository.getPremieres(year, month)?.take(20) ?: emptyList()
         }
     }
 
     fun fetchPopularMovies(page: Int = 1) {
         viewModelScope.launch {
-            _popularMovies.value = repository.getTopMovies(page) ?: emptyList()
+            _popularMovies.value = repository.getTopMovies(page)?.take(20) ?: emptyList()
         }
     }
 
     fun fetchDynamicCategory(countryId: Int, genreId: Int) {
         viewModelScope.launch {
             _dynamicCategory.value =
-                repository.getMoviesByGenreAndCountry(countryId, genreId) ?: emptyList()
+                repository.getMoviesByGenreAndCountry(countryId, genreId)?.take(20) ?: emptyList()
         }
     }
 
     fun fetchTop250Movies(page: Int = 1) {
         viewModelScope.launch {
-            _top250Movies.value = repository.getTop250Movies(page) ?: emptyList()
+            _top250Movies.value = repository.getTop250Movies(page)?.take(20) ?: emptyList()
         }
     }
 
-    fun fetchTvSeries(page: Int =1) {
+    fun fetchTvSeries(page: Int = 1) {
         viewModelScope.launch {
-            _tvSeries.value = repository.getTvSeries(page = 1) ?: emptyList()
+            _tvSeries.value = repository.getTvSeries(page)?.take(20) ?: emptyList()
         }
     }
 }
