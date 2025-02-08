@@ -48,25 +48,25 @@ class HomepageFragment : Fragment() {
         val factory = HomepageViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
-        premieresAdapter = CategoryMoviesAdapter("Премьеры", { movie ->
+        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie ->
             // Обработчик клика
-        }, {})
+        }
 
-        popularAdapter = CategoryMoviesAdapter("Популярное", { movie ->
+        popularAdapter = CategoryMoviesAdapter("Популярное") { movie ->
             // Обработчик клика
-        }, {})
+        }
 
-        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка", { movie ->
+        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie ->
             // Обработчик клика
-        }, {})
+        }
 
-        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250", { movie ->
+        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie ->
             // Обработчик клика
-        }, {})
+        }
 
-        seriesAdapter = CategoryMoviesAdapter("Сериалы", { movie ->
+        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie ->
             // Обработчик клика
-        }, {})
+        }
 
         // Настройка RecyclerView
         binding.rvPremieres.layoutManager =

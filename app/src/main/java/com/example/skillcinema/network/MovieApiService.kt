@@ -24,7 +24,7 @@ interface MovieApiService {
     @GET("/api/v2.2/films")
     suspend fun getMoviesByGenreAndCountry(
         @Query("countries") countryId: Int,
-        @Query("genres") genreId: Int,
+//        @Query("genres") genreId: Int,
         @Query("ratingFrom") ratingFrom: Int = 8,
         @Query("page") page: Int = 1
     ): MoviesByGenreAndCountryResponse
