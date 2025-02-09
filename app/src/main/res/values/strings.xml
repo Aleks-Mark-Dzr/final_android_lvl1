@@ -10,5 +10,6 @@
     <string name="dynamic">Динамические подборки</string>
     <string name="Popular">Популярное</string>
     <string name="Premieres">Премьеры</string>
+    <string name="all">Все</string>
 
 </resources>
