@@ -14,10 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.databinding.FragmentHomepageBinding
+import com.example.skillcinema.domain.usecase.*
 import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModel
 import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModelFactory
 import com.example.skillcinema.utils.NetworkUtils
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class HomepageFragment : Fragment() {
@@ -44,98 +44,82 @@ class HomepageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Получаем репозиторий из приложения
         val repository = (requireActivity().application as SkillCinemaApp).movieRepository
-        val factory = HomepageViewModelFactory(repository)
+
+        // Создаем UseCase-классы
+        val factory = HomepageViewModelFactory(
+            GetPremieresUseCase(repository),
+            GetPopularMoviesUseCase(repository),
+            GetMoviesByGenreAndCountryUseCase(repository),
+            GetTop250MoviesUseCase(repository),
+            GetTvSeriesUseCase(repository)
+        )
+
+        // Инициализация ViewModel
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
-        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie ->
-            // Обработчик клика
-        }
-
-        popularAdapter = CategoryMoviesAdapter("Популярное") { movie ->
-            // Обработчик клика
-        }
-
-        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie ->
-            // Обработчик клика
-        }
-
-        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie ->
-            // Обработчик клика
-        }
-
-        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie ->
-            // Обработчик клика
-        }
+        // Настройка адаптеров
+        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie -> /* Обработчик клика */ }
+        popularAdapter = CategoryMoviesAdapter("Популярное") { movie -> /* Обработчик клика */ }
+        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie -> /* Обработчик клика */ }
+        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie -> /* Обработчик клика */ }
+        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie -> /* Обработчик клика */ }
 
         // Настройка RecyclerView
-        binding.rvPremieres.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvPremieres.adapter = premieresAdapter
-
-        binding.rvPopular.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvPopular.adapter = popularAdapter
-
-        binding.rvDynamicCategory.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvDynamicCategory.adapter = dynamicCategoryAdapter
-
-        binding.rvTop250Category.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvTop250Category.adapter = top250MoviesAdapter
-
-        binding.rvSeriesCategory.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSeriesCategory.adapter = seriesAdapter
+        binding.rvPremieres.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = premieresAdapter
+        }
+        binding.rvPopular.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = popularAdapter
+        }
+        binding.rvDynamicCategory.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = dynamicCategoryAdapter
+        }
+        binding.rvTop250Category.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = top250MoviesAdapter
+        }
+        binding.rvSeriesCategory.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = seriesAdapter
+        }
 
         // Подписка на StateFlow
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.premieres.collect { moviesList ->
-                    moviesList?.let { premieresAdapter.setData(it) }
-                }
+                viewModel.premieres.collect { moviesList -> premieresAdapter.setData(moviesList) }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.popularMovies.collect { moviesList ->
-                    moviesList?.let { popularAdapter.setData(it) }
-                }
+                viewModel.popularMovies.collect { moviesList -> popularAdapter.setData(moviesList) }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dynamicCategory.collect { moviesList ->
-                    moviesList?.let { dynamicCategoryAdapter.setData(it) }
-                }
+                viewModel.dynamicCategory.collect { moviesList -> dynamicCategoryAdapter.setData(moviesList) }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.top250Movies.collect { moviesList ->
-                    moviesList?.let {
-                        top250MoviesAdapter.setData(it)
-                    }
-                }
+                viewModel.top250Movies.collect { moviesList -> top250MoviesAdapter.setData(moviesList) }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tvSeries.collect { moviesList ->
-                    moviesList?.let {
-                        seriesAdapter.setData(it)
-                    }
-                }
+                viewModel.tvSeries.collect { moviesList -> seriesAdapter.setData(moviesList) }
             }
         }
 
-
-        // Загрузка данных
+        // Проверка интернета и загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
             viewModel.fetchPremieres(2025, "January")
             viewModel.fetchPopularMovies()
