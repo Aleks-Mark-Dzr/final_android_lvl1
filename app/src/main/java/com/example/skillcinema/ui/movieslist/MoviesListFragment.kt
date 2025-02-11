@@ -46,6 +46,9 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Устанавливаем заголовок категории
+        binding.tvCategoryTitle.text = category ?: "Фильмы"
+
         // Получаем репозиторий из приложения
         val repository = (requireActivity().application as SkillCinemaApp).movieRepository
 
