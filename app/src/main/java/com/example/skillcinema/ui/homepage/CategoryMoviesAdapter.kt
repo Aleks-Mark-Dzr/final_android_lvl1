@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.skillcinema.data.Movie
-//import com.example.skillcinema.databinding.ItemCategoryBinding
 import com.example.skillcinema.databinding.ItemMovieBinding
+//import com.example.skillcinema.databinding.ItemMovieGridBinding
 import com.squareup.picasso.Picasso
 
 class CategoryMoviesAdapter(
     private val categoryTitle: String,
+    private val isGrid: Boolean = false, // Флаг для отображения в сетке
     private val onMovieClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<CategoryMoviesAdapter.MovieViewHolder>() {
 
@@ -22,11 +23,6 @@ class CategoryMoviesAdapter(
             binding.movieTitle.text = movie.nameRu
             binding.movieYear.text = movie.year
             binding.movieRating.text = "⭐ ${movie.ratingKinopoisk ?: "N/A"}"
-            binding.movieGenres.text = if (movie.genres.isNotEmpty()) {
-                movie.genres.joinToString(", ") { it.genre }
-            } else {
-                "Жанр неизвестен"
-            }
             Picasso.get().load(movie.posterUrlPreview).into(binding.moviePoster)
             binding.root.setOnClickListener { onMovieClick(movie) }
         }

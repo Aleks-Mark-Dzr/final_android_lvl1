@@ -11,7 +11,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.databinding.FragmentHomepageBinding
 import com.example.skillcinema.domain.usecase.*
@@ -44,10 +46,8 @@ class HomepageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Получаем репозиторий из приложения
         val repository = (requireActivity().application as SkillCinemaApp).movieRepository
 
-        // Создаем UseCase-классы
         val factory = HomepageViewModelFactory(
             GetPremieresUseCase(repository),
             GetPopularMoviesUseCase(repository),
@@ -56,17 +56,15 @@ class HomepageFragment : Fragment() {
             GetTvSeriesUseCase(repository)
         )
 
-        // Инициализация ViewModel
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
-        // Настройка адаптеров
-        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie -> /* Обработчик клика */ }
-        popularAdapter = CategoryMoviesAdapter("Популярное") { movie -> /* Обработчик клика */ }
-        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie -> /* Обработчик клика */ }
-        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie -> /* Обработчик клика */ }
-        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie -> /* Обработчик клика */ }
+        // Исправлено: передаем categoryTitle в адаптер
+        premieresAdapter = CategoryMoviesAdapter(categoryTitle = "Премьеры") { movie -> }
+        popularAdapter = CategoryMoviesAdapter(categoryTitle = "Популярное") { movie -> }
+        dynamicCategoryAdapter = CategoryMoviesAdapter(categoryTitle = "Динамическая подборка") { movie -> }
+        top250MoviesAdapter = CategoryMoviesAdapter(categoryTitle = "Топ-250") { movie -> }
+        seriesAdapter = CategoryMoviesAdapter(categoryTitle = "Сериалы") { movie -> }
 
-        // Настройка RecyclerView
         binding.rvPremieres.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = premieresAdapter
@@ -88,47 +86,54 @@ class HomepageFragment : Fragment() {
             adapter = seriesAdapter
         }
 
-        // Подписка на StateFlow
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.premieres.collect { moviesList -> premieresAdapter.setData(moviesList) }
             }
         }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.popularMovies.collect { moviesList -> popularAdapter.setData(moviesList) }
             }
         }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.dynamicCategory.collect { moviesList -> dynamicCategoryAdapter.setData(moviesList) }
             }
         }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.top250Movies.collect { moviesList -> top250MoviesAdapter.setData(moviesList) }
             }
         }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tvSeries.collect { moviesList -> seriesAdapter.setData(moviesList) }
             }
         }
 
-        // Проверка интернета и загрузка данных
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
             viewModel.fetchPremieres(2025, "January")
             viewModel.fetchPopularMovies()
-            viewModel.fetchDynamicCategory(countryId = 1, genreId = 2) // Пример
+            viewModel.fetchDynamicCategory(countryId = 1, genreId = 2)
             viewModel.fetchTop250Movies(1)
             viewModel.fetchTvSeries(1)
         } else {
             Toast.makeText(requireContext(), "No Internet Connection", Toast.LENGTH_SHORT).show()
         }
+
+        binding.tvAllPremieres.setOnClickListener { navigateToCategoryScreen("Премьеры") }
+        binding.tvAllPopular.setOnClickListener { navigateToCategoryScreen("Популярное") }
+        binding.tvAllDynamicCategory.setOnClickListener { navigateToCategoryScreen("Динамическая подборка") }
+        binding.tvAllTop250Category.setOnClickListener { navigateToCategoryScreen("Топ-250") }
+        binding.tvAllSeriesCategory.setOnClickListener { navigateToCategoryScreen("Сериалы") }
+    }
+
+    private fun navigateToCategoryScreen(category: String) {
+        val bundle = Bundle().apply {
+            putString("category", category)
+        }
+        findNavController().navigate(R.id.action_homepageFragment_to_moviesListFragment, bundle)
     }
 
     override fun onDestroyView() {

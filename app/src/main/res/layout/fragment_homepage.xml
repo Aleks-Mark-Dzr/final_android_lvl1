@@ -68,7 +68,7 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
-                android:id="@+id/tvAllPopulat"
+                android:id="@+id/tvAllPopular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/all"
