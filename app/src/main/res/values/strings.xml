@@ -12,5 +12,15 @@
     <string name="Premieres">Премьеры</string>
     <string name="all">Все</string>
     <string name="category_movies">Категория</string>
+    <string name="movie_poster">Постер фильма</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="watch_later">Хочу посмотреть</string>
+    <string name="already_watched">Уже просмотрено</string>
+    <string name="share">Поделиться</string>
+    <string name="show_more">Показать больше</string>
+    <string name="seasons">Сезоны</string>
+    <string name="actors">Актеры</string>
+    <string name="gallery">Галерея</string>
+    <string name="similar_movies">Похожие фильмы</string>
 
 </resources>

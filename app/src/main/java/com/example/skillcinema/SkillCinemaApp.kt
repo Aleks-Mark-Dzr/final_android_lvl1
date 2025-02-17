@@ -1,9 +1,13 @@
 package com.example.skillcinema
 
 import android.app.Application
+import com.example.skillcinema.data.database.MovieDatabase
+import com.example.skillcinema.data.database.MovieDao
+import com.example.skillcinema.data.repository.MovieDetailRepository
+import com.example.skillcinema.data.repository.MovieDetailRepositoryImpl
 import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.data.repository.MovieRepositoryImpl
-import com.example.skillcinema.network.CustomHttpLoggingInterceptor // Импорт кастомного Interceptor
+import com.example.skillcinema.network.CustomHttpLoggingInterceptor
 import com.example.skillcinema.network.MovieApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -12,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SkillCinemaApp : Application() {
 
     lateinit var movieRepository: MovieRepository
+    lateinit var movieDetailRepository: MovieDetailRepository
 
     override fun onCreate() {
         super.onCreate()
@@ -40,7 +45,13 @@ class SkillCinemaApp : Application() {
         // 4. Создаем сервис для работы с API
         val movieApiService = retrofit.create(MovieApiService::class.java)
 
-        // 5. Инициализация репозитория
+        // 5. Инициализируем локальную базу данных Room
+        val database = MovieDatabase.getDatabase(this)
+        val movieDao = database.movieDao()
+
+        // 6. Инициализация репозиториев
+//        movieRepository = MovieRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
         movieRepository = MovieRepositoryImpl(movieApiService)
+        movieDetailRepository = MovieDetailRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
     }
 }

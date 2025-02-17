@@ -1,11 +1,17 @@
 package com.example.skillcinema.network
 
+import com.example.skillcinema.data.ActorResponse
+import com.example.skillcinema.data.GalleryResponse
 import com.example.skillcinema.data.MoviesByGenreAndCountryResponse
 import com.example.skillcinema.data.PremieresResponse
 import com.example.skillcinema.data.MovieCollectionResponse
+import com.example.skillcinema.data.MovieDetailResponse
+import com.example.skillcinema.data.SeasonsResponse
+import com.example.skillcinema.data.SimilarMoviesResponse
 import com.example.skillcinema.data.TopMoviesResponse
 import com.example.skillcinema.data.TvSeriesResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApiService {
@@ -49,4 +55,20 @@ interface MovieApiService {
 
     @GET("/api/v2.2/films/filters")
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
+
+    @GET("/api/v2.2/films/{filmId}")
+    suspend fun getMovieDetails(@Path("filmId") filmId: Int): MovieDetailResponse
+
+    @GET("/api/v2.2/films/{filmId}/seasons")
+    suspend fun getSeasons(@Path("filmId") filmId: Int): SeasonsResponse
+
+    @GET("/api/v2.2/films/{filmId}/frames")
+    suspend fun getMovieGallery(@Path("filmId") filmId: Int): GalleryResponse
+
+    @GET("/api/v2.2/films/{filmId}/similars")
+    suspend fun getSimilarMovies(@Path("filmId") filmId: Int): SimilarMoviesResponse
+
+    @GET("/api/v2.2/films/{filmId}/staff")
+    suspend fun getMovieCast(@Path("filmId") filmId: Int): List<ActorResponse>
+
 }

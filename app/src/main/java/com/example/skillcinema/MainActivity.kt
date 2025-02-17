@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.skillcinema.databinding.ActivityMainBinding
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,6 +13,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ✅ Инициализируем Mobile Ads перед использованием
+        MobileAds.initialize(this) {}
 
         // Инициализация ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)

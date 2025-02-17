@@ -3,8 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     id("org.jetbrains.kotlin.kapt")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id("dagger.hilt.android.plugin") // ✅ Убрали `kotlin-kapt`
 }
 
 android {
@@ -57,25 +56,28 @@ dependencies {
     // Networking
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.okhttp3.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Image loading
     implementation(libs.picasso)
 
-    // Dependency injection
+    // Dependency Injection (Hilt)
     implementation(libs.hilt.android)
+    implementation(libs.mediation.test.suite)
     kapt(libs.hilt.android.compiler)
+
+    // Room (Database)
+    implementation(libs.androidx.room.runtime) // ✅ Добавлено
+    kapt("androidx.room:room-compiler:2.6.1") // ✅ Добавлено
+    implementation(libs.androidx.room.ktx)
+
+    // Google Mobile Ads SDK
+    implementation(libs.play.services.ads) // ✅ Убедитесь, что версия 22.5.0
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
-    // Hilt
-    implementation(libs.dagger.hilt.android.vversion)
-    kapt(libs.hilt.android.compiler.vversion)
-
-    // Interceptor
-    implementation (libs.okhttp3.okhttp)
-    implementation (libs.logging.interceptor)
 
     // Testing
     testImplementation(libs.junit)

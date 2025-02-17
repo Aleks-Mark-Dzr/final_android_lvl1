@@ -40,4 +40,17 @@
             app:argType="string" />
     </fragment>
 
+    <!-- MovieDetailFragment -->
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.skillcinema.ui.moviedetail.MovieDetailFragment"
+        android:label="Movie Detail"
+        tools:layout="@layout/fragment_movie_detail">
+        <argument
+            android:name="movieId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
+
 </navigation>
