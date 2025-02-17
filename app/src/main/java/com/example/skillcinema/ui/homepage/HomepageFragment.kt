@@ -58,12 +58,22 @@ class HomepageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
-        // Исправлено: передаем categoryTitle в адаптер
-        premieresAdapter = CategoryMoviesAdapter(categoryTitle = "Премьеры") { movie -> }
-        popularAdapter = CategoryMoviesAdapter(categoryTitle = "Популярное") { movie -> }
-        dynamicCategoryAdapter = CategoryMoviesAdapter(categoryTitle = "Динамическая подборка") { movie -> }
-        top250MoviesAdapter = CategoryMoviesAdapter(categoryTitle = "Топ-250") { movie -> }
-        seriesAdapter = CategoryMoviesAdapter(categoryTitle = "Сериалы") { movie -> }
+        // ✅ Добавляем переход на `MovieDetailFragment` при клике
+        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie ->
+            navigateToMovieDetail(movie.filmId)
+        }
+        popularAdapter = CategoryMoviesAdapter("Популярное") { movie ->
+            navigateToMovieDetail(movie.filmId)
+        }
+        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie ->
+            navigateToMovieDetail(movie.filmId)
+        }
+        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie ->
+            navigateToMovieDetail(movie.filmId)
+        }
+        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie ->
+            navigateToMovieDetail(movie.filmId)
+        }
 
         binding.rvPremieres.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -127,6 +137,14 @@ class HomepageFragment : Fragment() {
         binding.tvAllDynamicCategory.setOnClickListener { navigateToCategoryScreen("Динамическая подборка") }
         binding.tvAllTop250Category.setOnClickListener { navigateToCategoryScreen("Топ-250") }
         binding.tvAllSeriesCategory.setOnClickListener { navigateToCategoryScreen("Сериалы") }
+    }
+
+    // ✅ Переход на `MovieDetailFragment`
+    private fun navigateToMovieDetail(movieId: Int) {
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+        findNavController().navigate(R.id.action_homepageFragment_to_movieDetailFragment, bundle)
     }
 
     private fun navigateToCategoryScreen(category: String) {

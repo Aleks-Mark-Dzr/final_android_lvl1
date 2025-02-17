@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
@@ -24,6 +26,11 @@ class MovieDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieId = arguments?.getInt("movieId") ?: 0
+
+        if (movieId == 0) {
+            Toast.makeText(requireContext(), "Ошибка: ID фильма не найден!", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressed() // Закрываем экран, если ID некорректный
+        }
     }
 
     override fun onCreateView(
@@ -43,25 +50,33 @@ class MovieDetailFragment : Fragment() {
 
         viewModel.fetchMovieDetails(movieId)
 
-        lifecycleScope.launch {
-            viewModel.movieDetail.collect { movie ->
-                movie?.let {
-                    binding.tvMovieTitle.text = it.nameRu
-                    binding.tvMovieOriginalTitle.text = it.nameOriginal ?: ""
-                    binding.tvMovieYearGenres.text = it.year
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                viewModel.movieDetail.collect { movie ->
+                    if (movie != null) {
+                        binding.tvMovieTitle.text = movie.nameRu
+                        binding.tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
+                        binding.tvMovieYearGenres.text = "${movie.year} | ${movie.genres.joinToString { it.genre }}"
+                    } else {
+                        Toast.makeText(requireContext(), "Ошибка загрузки фильма", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.isFavorite.collect { isFavorite ->
-                binding.btnFavorite.text = if (isFavorite) "Удалить из любимых" else "Добавить в любимые"
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                viewModel.isFavorite.collect { isFavorite ->
+                    binding.btnFavorite.text = if (isFavorite) "Удалить из любимых" else "Добавить в любимые"
+                }
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.isWatched.collect { isWatched ->
-                binding.btnWatched.text = if (isWatched) "Уже просмотрено" else "Добавить в просмотренные"
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                viewModel.isWatched.collect { isWatched ->
+                    binding.btnWatched.text = if (isWatched) "Уже просмотрено" else "Добавить в просмотренные"
+                }
             }
         }
 
