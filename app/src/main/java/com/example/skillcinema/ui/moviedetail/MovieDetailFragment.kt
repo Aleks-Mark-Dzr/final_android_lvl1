@@ -120,6 +120,7 @@ class MovieDetailFragment : Fragment() {
         binding.apply {
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
+            tvMovieRating.text = movie.ratingKinopoisk.toString()
             tvMovieYearGenres.text = "${movie.year} | ${movie.genres.joinToString { it.genre }}"
 
             // 🔹 Проверяем URL постера и логируем
