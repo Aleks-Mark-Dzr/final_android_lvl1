@@ -79,10 +79,14 @@ class MovieDetailFragment : Fragment() {
                     if (movie != null) {
                         Log.d("MovieDetailFragment", "✅ Фильм загружен: ${movie.nameRu}")
                         updateUI(movie)
+
+                        // ✅ Скрываем ProgressBar и показываем контент
                         binding.progressBar.visibility = View.GONE
                         binding.contentContainer.visibility = View.VISIBLE
                     } else {
                         Log.w("MovieDetailFragment", "⏳ Данные фильма пока не загружены...")
+
+                        // ⏳ Показываем ProgressBar, скрываем контент
                         binding.progressBar.visibility = View.VISIBLE
                         binding.contentContainer.visibility = View.GONE
                     }
