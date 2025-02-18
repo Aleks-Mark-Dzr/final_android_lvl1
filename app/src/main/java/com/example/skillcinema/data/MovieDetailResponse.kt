@@ -4,7 +4,7 @@ import com.example.skillcinema.network.Country
 
 data class MovieDetailResponse(
     val kinopoiskId: Int,
-    val nameRu: String?,
+    val nameRu: String? = null,
     val nameOriginal: String?,
     val year: String?,
     val posterUrl: String?,

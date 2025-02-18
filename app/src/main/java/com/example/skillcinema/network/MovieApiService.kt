@@ -1,20 +1,12 @@
 package com.example.skillcinema.network
 
-import com.example.skillcinema.data.ActorResponse
-import com.example.skillcinema.data.GalleryResponse
-import com.example.skillcinema.data.MoviesByGenreAndCountryResponse
-import com.example.skillcinema.data.PremieresResponse
-import com.example.skillcinema.data.MovieCollectionResponse
-import com.example.skillcinema.data.MovieDetailResponse
-import com.example.skillcinema.data.SeasonsResponse
-import com.example.skillcinema.data.SimilarMoviesResponse
-import com.example.skillcinema.data.TopMoviesResponse
-import com.example.skillcinema.data.TvSeriesResponse
+import com.example.skillcinema.data.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApiService {
+
     @GET("/api/v2.2/films/top")
     suspend fun getTopMovies(
         @Query("type") type: String,
@@ -30,7 +22,7 @@ interface MovieApiService {
     @GET("/api/v2.2/films")
     suspend fun getMoviesByGenreAndCountry(
         @Query("countries") countryId: Int,
-//        @Query("genres") genreId: Int,
+        @Query("genres") genreId: Int,
         @Query("ratingFrom") ratingFrom: Int = 8,
         @Query("page") page: Int = 1
     ): MoviesByGenreAndCountryResponse
@@ -42,16 +34,10 @@ interface MovieApiService {
     ): MovieCollectionResponse
 
     @GET("/api/v2.2/films")
-    suspend fun getTV_SERIES(
-//        @Query("order") order: String ="RATING",
+    suspend fun getTvSeries(
         @Query("type") type: String = "TV_SERIES",
-//        @Query("ratingFrom") ratingFrom: Number = 0,
-//        @Query("ratingTo") ratingTo: Number =10,
-//        @Query("yearFrom") yearFrom: Int = 1000,
-//        @Query("yearTo") yearTo: Int = 3000,
         @Query("page") page: Int = 1
     ): TvSeriesResponse
-
 
     @GET("/api/v2.2/films/filters")
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
@@ -70,5 +56,4 @@ interface MovieApiService {
 
     @GET("/api/v2.2/films/{filmId}/staff")
     suspend fun getMovieCast(@Path("filmId") filmId: Int): List<ActorResponse>
-
 }

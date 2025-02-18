@@ -2,6 +2,7 @@ package com.example.skillcinema.ui.homepage
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,12 @@ class HomepageFragment : Fragment() {
     private lateinit var top250MoviesAdapter: CategoryMoviesAdapter
     private lateinit var seriesAdapter: CategoryMoviesAdapter
 
+    // ✅ Обработчик клика на фильм теперь объявлен заранее
+    private val onMovieClick: (Int) -> Unit = { movieId ->
+        Log.d("HomepageFragment", "Клик по фильму с ID: $movieId")
+        navigateToMovieDetail(movieId)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,23 +65,14 @@ class HomepageFragment : Fragment() {
 
         viewModel = ViewModelProvider(this, factory)[HomepageViewModel::class.java]
 
-        // ✅ Добавляем переход на `MovieDetailFragment` при клике
-        premieresAdapter = CategoryMoviesAdapter("Премьеры") { movie ->
-            navigateToMovieDetail(movie.filmId)
-        }
-        popularAdapter = CategoryMoviesAdapter("Популярное") { movie ->
-            navigateToMovieDetail(movie.filmId)
-        }
-        dynamicCategoryAdapter = CategoryMoviesAdapter("Динамическая подборка") { movie ->
-            navigateToMovieDetail(movie.filmId)
-        }
-        top250MoviesAdapter = CategoryMoviesAdapter("Топ-250") { movie ->
-            navigateToMovieDetail(movie.filmId)
-        }
-        seriesAdapter = CategoryMoviesAdapter("Сериалы") { movie ->
-            navigateToMovieDetail(movie.filmId)
-        }
+        // ✅ Передача `onMovieClick` в адаптер
+        premieresAdapter = CategoryMoviesAdapter(onMovieClick)
+        popularAdapter = CategoryMoviesAdapter(onMovieClick)
+        dynamicCategoryAdapter = CategoryMoviesAdapter(onMovieClick)
+        top250MoviesAdapter = CategoryMoviesAdapter(onMovieClick)
+        seriesAdapter = CategoryMoviesAdapter(onMovieClick)
 
+        // ✅ Настройка `RecyclerView`
         binding.rvPremieres.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = premieresAdapter
@@ -96,29 +94,30 @@ class HomepageFragment : Fragment() {
             adapter = seriesAdapter
         }
 
+        // ✅ Подписка на обновление данных с использованием `submitList()`
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.premieres.collect { moviesList -> premieresAdapter.setData(moviesList) }
+                viewModel.premieres.collect { moviesList -> premieresAdapter.submitList(moviesList) }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.popularMovies.collect { moviesList -> popularAdapter.setData(moviesList) }
+                viewModel.popularMovies.collect { moviesList -> popularAdapter.submitList(moviesList) }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.dynamicCategory.collect { moviesList -> dynamicCategoryAdapter.setData(moviesList) }
+                viewModel.dynamicCategory.collect { moviesList -> dynamicCategoryAdapter.submitList(moviesList) }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.top250Movies.collect { moviesList -> top250MoviesAdapter.setData(moviesList) }
+                viewModel.top250Movies.collect { moviesList -> top250MoviesAdapter.submitList(moviesList) }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tvSeries.collect { moviesList -> seriesAdapter.setData(moviesList) }
+                viewModel.tvSeries.collect { moviesList -> seriesAdapter.submitList(moviesList) }
             }
         }
 
@@ -139,11 +138,16 @@ class HomepageFragment : Fragment() {
         binding.tvAllSeriesCategory.setOnClickListener { navigateToCategoryScreen("Сериалы") }
     }
 
-    // ✅ Переход на `MovieDetailFragment`
+    // ✅ Исправленный переход на `MovieDetailFragment`
     private fun navigateToMovieDetail(movieId: Int) {
+        if (!isAdded) return // Проверяем, что фрагмент еще добавлен в NavController
+
+        Log.d("HomepageFragment", "Навигация в MovieDetailFragment с movieId = $movieId")
+
         val bundle = Bundle().apply {
             putInt("movieId", movieId)
         }
+
         findNavController().navigate(R.id.action_homepageFragment_to_movieDetailFragment, bundle)
     }
 

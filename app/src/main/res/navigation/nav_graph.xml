@@ -35,7 +35,9 @@
             android:id="@+id/action_homepageFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <!-- Movies List Fragment -->
@@ -47,16 +49,12 @@
 
         <argument
             android:name="category"
-            app:argType="string"
-            android:defaultValue="Фильмы" />
+            android:defaultValue="Фильмы"
+            app:argType="string" />
 
         <action
-            android:id="@+id/action_homepageFragment_to_movieDetailFragment"
-            app:destination="@id/movieDetailFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            android:id="@+id/action_moviesListFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
 
     </fragment>
 
@@ -69,8 +67,8 @@
 
         <argument
             android:name="movieId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

@@ -9,14 +9,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.databinding.FragmentMoviesListBinding
-import com.example.skillcinema.domain.usecase.GetMoviesByGenreAndCountryUseCase
-import com.example.skillcinema.domain.usecase.GetPopularMoviesUseCase
-import com.example.skillcinema.domain.usecase.GetPremieresUseCase
-import com.example.skillcinema.domain.usecase.GetTop250MoviesUseCase
-import com.example.skillcinema.domain.usecase.GetTvSeriesUseCase
+import com.example.skillcinema.domain.usecase.*
 import com.example.skillcinema.ui.homepage.CategoryMoviesAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,13 +44,13 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Устанавливаем заголовок категории
+        // ✅ Проверяем, существует ли category, если нет — используем дефолтное значение
         binding.tvCategoryTitle.text = category ?: "Фильмы"
 
-        // Получаем репозиторий из приложения
+        // ✅ Получаем репозиторий из Application
         val repository = (requireActivity().application as SkillCinemaApp).movieRepository
 
-        // Создаем UseCase-классы
+        // ✅ Создаем ViewModel через Factory
         val factory = MoviesListViewModelFactory(
             GetPremieresUseCase(repository),
             GetPopularMoviesUseCase(repository),
@@ -61,12 +59,11 @@ class MoviesListFragment : Fragment() {
             GetTvSeriesUseCase(repository)
         )
 
-        // Создаем ViewModel через Factory
         viewModel = ViewModelProvider(this, factory)[MoviesListViewModel::class.java]
 
-        // Исправлено: передаем правильный параметр в адаптер
-        adapter = CategoryMoviesAdapter(categoryTitle = category ?: "", isGrid = true) { movie ->
-            // Обработчик клика по фильму
+        // ✅ Исправлено: `onMovieClick` теперь объявлен в `MoviesListFragment`, а не внутри `onViewCreated`
+        adapter = CategoryMoviesAdapter { movieId ->
+            navigateToMovieDetail(movieId)
         }
 
         binding.recyclerView.apply {
@@ -74,16 +71,28 @@ class MoviesListFragment : Fragment() {
             adapter = this@MoviesListFragment.adapter
         }
 
-        // Загружаем фильмы
+        // ✅ Загружаем фильмы
         viewModel.loadMoviesForCategory(category ?: "")
 
-        // Подписка на StateFlow
+        // ✅ Подписка на `StateFlow` (заменен `setData` на `submitList`)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.movies.collectLatest { movies ->
-                    adapter.setData(movies)
+                    adapter.submitList(movies)
                 }
             }
+        }
+    }
+
+    // ✅ Исправленный метод перехода в `MovieDetailFragment`
+    private fun navigateToMovieDetail(movieId: Int) {
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        // ✅ Проверяем, что `NavController` доступен, прежде чем вызывать навигацию
+        if (findNavController().currentDestination?.id == R.id.moviesListFragment) {
+            findNavController().navigate(R.id.action_moviesListFragment_to_movieDetailFragment, bundle)
         }
     }
 
