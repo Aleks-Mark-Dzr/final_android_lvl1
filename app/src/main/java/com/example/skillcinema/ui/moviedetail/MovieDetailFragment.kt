@@ -13,6 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.skillcinema.GlideApp
+import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
@@ -87,7 +91,6 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-
     private fun observeFavoriteState() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -114,6 +117,22 @@ class MovieDetailFragment : Fragment() {
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
             tvMovieYearGenres.text = "${movie.year} | ${movie.genres.joinToString { it.genre }}"
+
+            // 🔹 Проверяем URL постера и логируем
+            if (movie.posterUrl.isNullOrEmpty()) {
+                Log.e("MovieDetailFragment", "❌ Ошибка: URL постера пустой или null!")
+                Toast.makeText(requireContext(), "Ошибка загрузки постера", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.d("MovieDetailFragment", "🔹 Загружаем постер: ${movie.posterUrl}")
+
+                // ✅ Загружаем постер с помощью GlideApp
+                GlideApp.with(this@MovieDetailFragment)
+                    .load(movie.posterUrl)
+                    .placeholder(R.drawable.placeholder)  // Заглушка во время загрузки
+                    .error(R.drawable.error_image)       // Картинка при ошибке загрузки
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivMoviePoster)
+            }
         }
     }
 

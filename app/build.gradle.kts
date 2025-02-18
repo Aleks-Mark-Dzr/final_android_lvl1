@@ -61,6 +61,9 @@ dependencies {
 
     // Image loading
     implementation(libs.picasso)
+    implementation (libs.github.glide)
+    annotationProcessor (libs.compiler)
+    kapt (libs.compiler)
 
     // Dependency Injection (Hilt)
     implementation(libs.hilt.android)
@@ -69,7 +72,7 @@ dependencies {
 
     // Room (Database)
     implementation(libs.androidx.room.runtime) // ✅ Добавлено
-    kapt("androidx.room:room-compiler:2.6.1") // ✅ Добавлено
+    kapt(libs.androidx.room.compiler) // ✅ Добавлено
     implementation(libs.androidx.room.ktx)
 
     // Google Mobile Ads SDK

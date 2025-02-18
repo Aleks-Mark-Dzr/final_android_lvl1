@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Фон -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#BDBDBD"/> <!-- Серый цвет фона -->
+            <corners android:radius="8dp"/> <!-- Скругленные углы -->
+        </shape>
+    </item>
+
+    <!-- Иконка ошибки (перекрещенный круг) -->
+    <item>
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="48dp"
+            android:height="48dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24"
+            android:tint="#FF0000"> <!-- Красный цвет ошибки -->
+            <path
+                android:fillColor="@android:color/white"
+                android:pathData="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2ZM16.59,15.41L12,10.83L7.41,15.41L6,14L10.59,9.41L6,4.83L7.41,3.42L12,8.01L16.59,3.42L18,4.83L13.41,9.41L18,14L16.59,15.41Z"/>
+        </vector>
+    </item>
+
+</layer-list>

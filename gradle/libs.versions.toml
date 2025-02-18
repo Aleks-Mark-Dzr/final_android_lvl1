@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.1"
 converterGson = "2.11.0"
+glideVersion = "4.16.0"
 googleHiltAndroid = "<version>"
 hiltAndroid = "2.54"
 hiltAndroidCompiler = "2.54"
@@ -32,11 +33,14 @@ roomKtx = "2.6.1"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version = "2.8.7" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version = "2.8.7" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCommon" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCommon" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glideVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 #noinspection SimilarGradleDependency
 dagger-hilt-android-vversion = { module = "com.google.dagger:hilt-android", version = "2.55" }
 #noinspection SimilarGradleDependency
+github-glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 hilt-android = { module = "com.google.dagger:hilt-android", version = "2.55" }
 #noinspection SimilarGradleDependency
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version = "2.55" }
