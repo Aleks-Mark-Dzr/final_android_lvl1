@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,115 +25,117 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Постер фильма -->
-            <ImageView
-                android:id="@+id/ivMoviePoster"
+            <!-- Контейнер для постера с текстом -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:scaleType="centerCrop"
-                android:contentDescription="@string/movie_poster"/>
+                android:layout_height="400dp">
 
-            <!-- Название фильма -->
-            <TextView
-                android:id="@+id/tvMovieTitle"
-                android:layout_width="match_parent"
+                <!-- Постер фильма -->
+                <ImageView
+                    android:id="@+id/ivMoviePoster"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/movie_poster"
+                    android:scaleType="centerCrop" />
+
+                <!-- Текст поверх постера -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:background="@android:color/transparent">
+
+                    <TextView
+                        android:id="@+id/tvMovieTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:shadowColor="@android:color/black"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="4" />
+
+                    <TextView
+                        android:id="@+id/tvMovieOriginalTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="italic"
+                        android:shadowColor="@android:color/black"
+                        android:shadowDx="2"
+                        android:shadowDy="2"
+                        android:shadowRadius="4" />
+
+                    <TextView
+                        android:id="@+id/tvMovieRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/holo_orange_light"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvMovieYearGenres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                    <!-- Панель действий (кнопки на постере) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp">
+
+                        <Button
+                            android:id="@+id/btnFavorite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_favorite" />
+
+                        <Button
+                            android:id="@+id/btnWatchLater"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/watch_later" />
+
+                        <Button
+                            android:id="@+id/btnWatched"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/already_watched" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Кнопка "Показать больше" -->
+            <Button
+                android:id="@+id/btnExpandDescription"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:gravity="center"
-                android:paddingTop="8dp"/>
-
-            <!-- Название на оригинальном языке -->
-            <TextView
-                android:id="@+id/tvMovieOriginalTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="italic"
-                android:gravity="center"
-                android:textColor="@android:color/darker_gray"
-                android:paddingBottom="8dp"/>
-
-            <!-- Рейтинг и год выпуска -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tvMovieRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/holo_orange_light"
-                    android:paddingEnd="16dp"/>
-
-                <TextView
-                    android:id="@+id/tvMovieYearGenres"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray"/>
-            </LinearLayout>
-
-            <!-- Панель действий -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:paddingVertical="8dp">
-
-                <Button
-                    android:id="@+id/btnFavorite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_to_favorites"/>
-
-                <Button
-                    android:id="@+id/btnWatchLater"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/watch_later"
-                    android:layout_marginStart="8dp"/>
-
-                <Button
-                    android:id="@+id/btnWatched"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/already_watched"
-                    android:layout_marginStart="8dp"/>
-
-                <Button
-                    android:id="@+id/btnShare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/share"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="4dp"
+                android:text="@string/show_more" />
 
             <!-- Описание фильма -->
             <TextView
                 android:id="@+id/tvMovieDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="5"
                 android:ellipsize="end"
-                android:textSize="16sp"
+                android:maxLines="5"
+                android:paddingTop="8dp"
                 android:textColor="@android:color/black"
-                android:paddingTop="8dp"/>
-
-            <Button
-                android:id="@+id/btnExpandDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/show_more"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="4dp"/>
-
+                android:textSize="16sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>
