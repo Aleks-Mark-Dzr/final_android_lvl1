@@ -41,50 +41,95 @@
                 <!-- Текст поверх постера -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
-                    android:padding="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="@android:color/transparent"
                     android:orientation="vertical"
-                    android:background="@android:color/transparent">
+                    android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/tvMovieTitle"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:shadowColor="@android:color/black"
-                        android:shadowDx="2"
-                        android:shadowDy="2"
-                        android:shadowRadius="4" />
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/tvMovieRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/holo_orange_light"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvMovieTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="8dp"
+                            android:shadowColor="@android:color/black"
+                            android:shadowDx="2"
+                            android:shadowDy="2"
+                            android:shadowRadius="4"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvMovieOriginalTitle"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="italic"
+                        android:gravity="center_horizontal"
                         android:shadowColor="@android:color/black"
                         android:shadowDx="2"
                         android:shadowDy="2"
-                        android:shadowRadius="4" />
-
-                    <TextView
-                        android:id="@+id/tvMovieRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/holo_orange_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:shadowRadius="4"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/tvMovieYearGenres"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/tvCountry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tvDuration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tvAgeRestrictions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
                     <!-- Панель действий (кликабельные изображения) -->
                     <LinearLayout
@@ -98,41 +143,46 @@
                             android:id="@+id/ivFavorite"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:src="@drawable/ic_favorite"
-                            android:contentDescription="@string/add_to_favorites"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:contentDescription="@string/add_to_favorites"
+                            android:focusable="true"
+                            android:src="@drawable/ic_no_favorite" />
 
                         <ImageView
                             android:id="@+id/ivWatchLater"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginStart="8dp"
-                            android:src="@drawable/ic_bookmark"
-                            android:contentDescription="@string/watch_later"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:contentDescription="@string/watch_later"
+                            android:focusable="true"
+                            android:src="@drawable/ic_bookmark" />
 
                         <ImageView
                             android:id="@+id/ivWatched"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:src="@drawable/ic_eye_closed"
-                            android:contentDescription="@string/already_watched"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:contentDescription="@string/already_watched"
+                            android:focusable="true"
+                            android:src="@drawable/ic_eye_closed" />
+
+                        <ImageView
+                            android:id="@+id/ivShared"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:src="@drawable/ic_share" />
+
+                        <ImageView
+                            android:id="@+id/otherMenu"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_other" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
-
-            <!-- Кнопка "Показать больше" -->
-            <Button
-                android:id="@+id/btnExpandDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="4dp"
-                android:text="@string/show_more" />
 
             <!-- Описание фильма -->
             <TextView

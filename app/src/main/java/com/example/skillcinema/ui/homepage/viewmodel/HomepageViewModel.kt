@@ -34,31 +34,31 @@ class HomepageViewModel(
 
     fun fetchPremieres(year: Int, month: String) {
         viewModelScope.launch {
-            _premieres.value = getPremieresUseCase.execute(year, month)
+            _premieres.value = getPremieresUseCase.execute(year, month).shuffled()
         }
     }
 
     fun fetchPopularMovies(page: Int = 1) {
         viewModelScope.launch {
-            _popularMovies.value = getPopularMoviesUseCase.execute(page)
+            _popularMovies.value = getPopularMoviesUseCase.execute(page).shuffled()
         }
     }
 
     fun fetchDynamicCategory(countryId: Int, genreId: Int) {
         viewModelScope.launch {
-            _dynamicCategory.value = getMoviesByGenreAndCountryUseCase.execute(countryId, genreId)
+            _dynamicCategory.value = getMoviesByGenreAndCountryUseCase.execute(countryId, genreId).shuffled()
         }
     }
 
     fun fetchTop250Movies(page: Int = 1) {
         viewModelScope.launch {
-            _top250Movies.value = getTop250MoviesUseCase.execute(page)
+            _top250Movies.value = getTop250MoviesUseCase.execute(page).shuffled()
         }
     }
 
     fun fetchTvSeries(page: Int = 1) {
         viewModelScope.launch {
-            _tvSeries.value = getTvSeriesUseCase.execute(page)
+            _tvSeries.value = getTvSeriesUseCase.execute(page).shuffled()
         }
     }
 }
