@@ -86,7 +86,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
-                    <!-- Панель действий (кнопки на постере) -->
+                    <!-- Панель действий (кликабельные изображения) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -94,25 +94,33 @@
                         android:orientation="horizontal"
                         android:paddingTop="8dp">
 
-                        <Button
-                            android:id="@+id/btnFavorite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_favorite" />
+                        <ImageView
+                            android:id="@+id/ivFavorite"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_favorite"
+                            android:contentDescription="@string/add_to_favorites"
+                            android:clickable="true"
+                            android:focusable="true" />
 
-                        <Button
-                            android:id="@+id/btnWatchLater"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ImageView
+                            android:id="@+id/ivWatchLater"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_marginStart="8dp"
-                            android:text="@string/watch_later" />
+                            android:src="@drawable/ic_bookmark"
+                            android:contentDescription="@string/watch_later"
+                            android:clickable="true"
+                            android:focusable="true" />
 
-                        <Button
-                            android:id="@+id/btnWatched"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/already_watched" />
-
+                        <ImageView
+                            android:id="@+id/ivWatched"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_eye_closed"
+                            android:contentDescription="@string/already_watched"
+                            android:clickable="true"
+                            android:focusable="true" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>

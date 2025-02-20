@@ -68,8 +68,8 @@ class MovieDetailFragment : Fragment() {
         observeFavoriteState()
         observeWatchedState()
 
-        binding.btnFavorite.setOnClickListener { viewModel.toggleFavorite(movieId) }
-        binding.btnWatched.setOnClickListener { viewModel.toggleWatched(movieId) }
+        binding.ivFavorite.setOnClickListener { viewModel.toggleFavorite(movieId) }
+        binding.ivWatched.setOnClickListener { viewModel.toggleWatched(movieId) }
     }
 
     private fun observeMovieDetails() {
@@ -99,7 +99,7 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isFavorite.collectLatest { isFavorite ->
-                    binding.btnFavorite.text = if (isFavorite) "Удалить из любимых" else "Добавить в любимые"
+//                    binding.btnFavorite.text = if (isFavorite) "Удалить из любимых" else "Добавить в любимые"
                 }
             }
         }
@@ -109,7 +109,7 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isWatched.collectLatest { isWatched ->
-                    binding.btnWatched.text = if (isWatched) "Уже просмотрено" else "Добавить в просмотренные"
+//                    binding.btnWatched.text = if (isWatched) "Уже просмотрено" else "Добавить в просмотренные"
                 }
             }
         }
