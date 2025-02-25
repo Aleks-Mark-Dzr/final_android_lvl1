@@ -147,7 +147,7 @@
                             android:clickable="true"
                             android:contentDescription="@string/add_to_favorites"
                             android:focusable="true"
-                            android:src="@drawable/ic_no_favorite" />
+                            android:src="@drawable/ic_no_favorite_2" />
 
                         <ImageView
                             android:id="@+id/ivWatchLater"
@@ -157,7 +157,7 @@
                             android:clickable="true"
                             android:contentDescription="@string/watch_later"
                             android:focusable="true"
-                            android:src="@drawable/ic_bookmark" />
+                            android:src="@drawable/ic_no_bookmark" />
 
                         <ImageView
                             android:id="@+id/ivWatched"
@@ -166,7 +166,7 @@
                             android:clickable="true"
                             android:contentDescription="@string/already_watched"
                             android:focusable="true"
-                            android:src="@drawable/ic_eye_closed" />
+                            android:src="@drawable/ic_not_viewed_2" />
 
                         <ImageView
                             android:id="@+id/ivShared"
@@ -174,13 +174,13 @@
                             android:layout_height="48dp"
                             android:clickable="true"
                             android:focusable="true"
-                            android:src="@drawable/ic_share" />
+                            android:src="@drawable/ic_share_2" />
 
                         <ImageView
                             android:id="@+id/otherMenu"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:src="@drawable/ic_other" />
+                            android:src="@drawable/ic_more" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
