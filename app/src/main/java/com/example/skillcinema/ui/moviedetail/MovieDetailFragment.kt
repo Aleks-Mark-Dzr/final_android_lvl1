@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.skillcinema.GlideApp
 import com.example.skillcinema.R
@@ -38,16 +37,14 @@ class MovieDetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
         movieId = arguments?.getInt("movieId") ?: 0
 
-        Log.d("MovieDetailFragment", "🎬 Получен movieId: $movieId")
-
         if (movieId == 0) {
-            Toast.makeText(requireContext(), "❌ Ошибка: ID фильма не найден!", Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack()
+            showErrorAndExit("❌ Ошибка: ID фильма не найден!")
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
@@ -56,40 +53,45 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewModel()
+        setupClickListeners()
+        fetchMovieDetailsWithRetry()
+        observeStates()
+    }
 
+    private fun setupViewModel() {
         val repository = (requireActivity().application as SkillCinemaApp).movieDetailRepository
         val factory = MovieDetailViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
+    }
 
-        Log.d("MovieDetailFragment", "📤 Запрашиваем детали фильма с ID: $movieId")
+    private fun setupClickListeners() {
+        binding.ivFavorite.setOnClickListener {
+            viewModel.toggleFavorite(movieId)
+        }
+        binding.ivWatchLater.setOnClickListener {
+            viewModel.toggleWatchLater(movieId)
+        }
+        binding.ivWatched.setOnClickListener {
+            viewModel.toggleWatched(movieId)
+        }
+    }
 
-        fetchMovieDetailsWithRetry()
+    private fun observeStates() {
         observeMovieDetails()
         observeFavoriteState()
+        observeWatchLaterState()
         observeWatchedState()
-
-        binding.ivFavorite.setOnClickListener { viewModel.toggleFavorite(movieId) }
-        binding.ivWatched.setOnClickListener { viewModel.toggleWatched(movieId) }
     }
 
     private fun observeMovieDetails() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.movieDetail.collectLatest { movie ->
-                    if (movie != null) {
-                        Log.d("MovieDetailFragment", "✅ Фильм загружен: ${movie.nameRu}")
-                        updateUI(movie)
-
-                        // ✅ Скрываем ProgressBar и показываем контент
-                        binding.progressBar.visibility = View.GONE
-                        binding.contentContainer.visibility = View.VISIBLE
-                    } else {
-                        Log.w("MovieDetailFragment", "⏳ Данные фильма пока не загружены...")
-
-                        // ⏳ Показываем ProgressBar, скрываем контент
-                        binding.progressBar.visibility = View.VISIBLE
-                        binding.contentContainer.visibility = View.GONE
-                    }
+                    movie?.let {
+                        updateUI(it)
+                        showContent()
+                    } ?: showLoading()
                 }
             }
         }
@@ -99,7 +101,21 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isFavorite.collectLatest { isFavorite ->
-//                    binding.btnFavorite.text = if (isFavorite) "Удалить из любимых" else "Добавить в любимые"
+                    val icon = if (isFavorite) R.drawable.ic_favorite_2
+                    else R.drawable.ic_no_favorite_2
+                    binding.ivFavorite.setImageResource(icon)
+                }
+            }
+        }
+    }
+
+    private fun observeWatchLaterState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isWatchLater.collectLatest { isWatchLater ->
+                    val icon = if (isWatchLater) R.drawable.ic_bookmark_2
+                    else R.drawable.ic_no_bookmark
+                    binding.ivWatchLater.setImageResource(icon)
                 }
             }
         }
@@ -109,7 +125,9 @@ class MovieDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isWatched.collectLatest { isWatched ->
-//                    binding.btnWatched.text = if (isWatched) "Уже просмотрено" else "Добавить в просмотренные"
+                    val icon = if (isWatched) R.drawable.ic_viewed
+                    else R.drawable.ic_not_viewed_2
+                    binding.ivWatched.setImageResource(icon)
                 }
             }
         }
@@ -117,53 +135,69 @@ class MovieDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI(movie: MovieDetailResponse) {
-        binding.apply {
+        with(binding) {
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
-            tvMovieRating.text = movie.ratingKinopoisk.toString()
-            tvMovieYearGenres.text = "${movie.year} | ${movie.genres.joinToString { it.genre }}"
-
-            // 🔹 Проверяем URL постера и логируем
-            if (movie.posterUrl.isNullOrEmpty()) {
-                Log.e("MovieDetailFragment", "❌ Ошибка: URL постера пустой или null!")
-                Toast.makeText(requireContext(), "Ошибка загрузки постера", Toast.LENGTH_SHORT).show()
-            } else {
-                Log.d("MovieDetailFragment", "🔹 Загружаем постер: ${movie.posterUrl}")
-
-                // ✅ Загружаем постер с помощью GlideApp
-                GlideApp.with(this@MovieDetailFragment)
-                    .load(movie.posterUrl)
-                    .placeholder(R.drawable.placeholder)  // Заглушка во время загрузки
-                    .error(R.drawable.error_image)       // Картинка при ошибке загрузки
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(ivMoviePoster)
-            }
+            tvMovieRating.text = movie.ratingKinopoisk?.toString() ?: "N/A"
+            tvMovieYearGenres.text = formatYearAndGenres(movie)
+            loadPoster(movie.posterUrl)
         }
+    }
+
+    private fun formatYearAndGenres(movie: MovieDetailResponse): String {
+        return listOfNotNull(
+            movie.year?.toString(),
+            movie.genres?.joinToString { it.genre }
+        ).joinToString(" | ")
+    }
+
+    private fun loadPoster(posterUrl: String?) {
+        if (posterUrl.isNullOrEmpty()) {
+            showPosterError()
+            return
+        }
+
+        GlideApp.with(this)
+            .load(posterUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.error_image)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(binding.ivMoviePoster)
     }
 
     private fun fetchMovieDetailsWithRetry(retryCount: Int = 3) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeat(retryCount) { attempt ->
-                Log.d("MovieDetailFragment", "📤 Попытка загрузки фильма (попытка ${attempt + 1})")
-
                 try {
                     viewModel.fetchMovieDetails(movieId)
                     delay(1000)
-
-                    if (viewModel.movieDetail.value != null) {
-                        Log.d("MovieDetailFragment", "✅ Фильм загружен с попытки ${attempt + 1}")
-                        return@launch
-                    }
+                    if (viewModel.movieDetail.value != null) return@launch
                 } catch (e: Exception) {
-                    Log.e("MovieDetailFragment", "❌ Ошибка загрузки фильма: ${e.message}", e)
+                    Log.e("MovieDetailFragment", "Attempt ${attempt + 1} failed: ${e.message}")
                 }
             }
-
-            // Если фильм так и не загрузился, закрываем экран
-            Log.e("MovieDetailFragment", "❌ Фильм не удалось загрузить после $retryCount попыток")
-            Toast.makeText(requireContext(), "Ошибка загрузки фильма", Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack()
+            showErrorAndExit("❌ Ошибка загрузки фильма")
         }
+    }
+
+    private fun showContent() {
+        binding.progressBar.visibility = View.GONE
+        binding.contentContainer.visibility = View.VISIBLE
+    }
+
+    private fun showLoading() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.contentContainer.visibility = View.GONE
+    }
+
+    private fun showPosterError() {
+        Log.e("MovieDetailFragment", "Poster URL is invalid")
+        binding.ivMoviePoster.setImageResource(R.drawable.error_image)
+    }
+
+    private fun showErrorAndExit(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        findNavController().popBackStack()
     }
 
     override fun onDestroyView() {

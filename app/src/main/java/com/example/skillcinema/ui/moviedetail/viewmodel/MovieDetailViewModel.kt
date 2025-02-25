@@ -17,6 +17,9 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> get() = _isFavorite.asStateFlow()
 
+    private val _isWatchLater = MutableStateFlow(false)
+    val isWatchLater: StateFlow<Boolean> get() = _isWatchLater.asStateFlow()
+
     private val _isWatched = MutableStateFlow(false)
     val isWatched: StateFlow<Boolean> get() = _isWatched.asStateFlow()
 
@@ -30,6 +33,12 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     fun toggleFavorite(movieId: Int) {
         viewModelScope.launch {
             _isFavorite.value = !_isFavorite.value
+        }
+    }
+
+    fun toggleWatchLater(movieId: Int) {
+        viewModelScope.launch {
+            _isWatchLater.value = !_isWatchLater.value
         }
     }
 
