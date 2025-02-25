@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -142,8 +143,9 @@
 
                         <ImageView
                             android:id="@+id/ivFavorite"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
                             android:contentDescription="@string/add_to_favorites"
                             android:focusable="true"
@@ -151,9 +153,9 @@
 
                         <ImageView
                             android:id="@+id/ivWatchLater"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:layout_marginStart="8dp"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
                             android:contentDescription="@string/watch_later"
                             android:focusable="true"
@@ -161,26 +163,32 @@
 
                         <ImageView
                             android:id="@+id/ivWatched"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
                             android:contentDescription="@string/already_watched"
                             android:focusable="true"
-                            android:src="@drawable/ic_not_viewed_2" />
+                            android:src="@drawable/ic_not_viewed_2"
+                            tools:ignore="RtlSymmetry" />
 
                         <ImageView
                             android:id="@+id/ivShared"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
-                            android:src="@drawable/ic_share_2" />
+                            android:src="@drawable/ic_share_2"
+                            tools:ignore="RtlSymmetry" />
 
                         <ImageView
                             android:id="@+id/otherMenu"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_more" />
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_more"
+                            tools:ignore="RtlSymmetry" />
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
