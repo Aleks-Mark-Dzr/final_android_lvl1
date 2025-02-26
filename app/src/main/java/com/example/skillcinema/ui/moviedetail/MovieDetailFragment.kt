@@ -143,6 +143,25 @@ class MovieDetailFragment : Fragment() {
             tvCountry.text = movie.countries.joinToString(", ") { it.country }
             tvDuration.text = movie.filmLength?.let { "$it мин." } ?: "Неизвестно"
             tvAgeRestrictions.text = movie.ratingAgeLimits?.let { "$it+" } ?: "Не указано"
+
+            // Обрезка описания до 250 символов
+            val fullDescription = movie.description?.takeIf { it.isNotBlank() } ?: "Описание не доступно"
+            val shortDescription = if (fullDescription.length > 250) {
+                fullDescription.substring(0, 250) + "..."
+            } else {
+                fullDescription
+            }
+
+            tvMovieDescription.text = shortDescription
+            tvMovieDescription.visibility = View.VISIBLE // Убедимся, что элемент не скрыт
+
+            // Добавление обработчика нажатий для разворачивания текста
+            var isExpanded = false
+            tvMovieDescription.setOnClickListener {
+                isExpanded = !isExpanded
+                tvMovieDescription.text = if (isExpanded) fullDescription else shortDescription
+                tvMovieDescription.maxLines = if (isExpanded) Int.MAX_VALUE else 5
+            }
             loadPoster(movie.posterUrl)
         }
     }
