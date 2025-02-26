@@ -14,7 +14,8 @@ data class MovieDetailResponse(
     val countries: List<Country>,
     val filmLength: Int?,
     val serial: Boolean,
-    val seasonsCount: Int?
+    val seasonsCount: Int?,
+    val ratingAgeLimits: String?
 )
 
 data class ActorResponse(

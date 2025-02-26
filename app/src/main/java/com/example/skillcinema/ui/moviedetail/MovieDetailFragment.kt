@@ -140,6 +140,9 @@ class MovieDetailFragment : Fragment() {
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
             tvMovieRating.text = movie.ratingKinopoisk?.toString() ?: "N/A"
             tvMovieYearGenres.text = formatYearAndGenres(movie)
+            tvCountry.text = movie.countries.joinToString(", ") { it.country }
+            tvDuration.text = movie.filmLength?.let { "$it мин." } ?: "Неизвестно"
+            tvAgeRestrictions.text = movie.ratingAgeLimits?.let { "$it+" } ?: "Не указано"
             loadPoster(movie.posterUrl)
         }
     }

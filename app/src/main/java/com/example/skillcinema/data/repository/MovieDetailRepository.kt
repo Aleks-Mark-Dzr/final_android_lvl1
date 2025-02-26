@@ -144,7 +144,8 @@ private fun MovieEntity.toMovieDetailResponse(): MovieDetailResponse {
         countries = emptyList(),
         filmLength = null,
         serial = false,
-        seasonsCount = null
+        seasonsCount = null,
+        ratingAgeLimits = null
     )
 }
 
