@@ -18,15 +18,6 @@ data class MovieDetailResponse(
     val ratingAgeLimits: String?
 )
 
-data class ActorResponse(
-    val staffId: Int,
-    val nameRu: String?,
-    val nameEn: String?,
-    val posterUrl: String?,
-    val professionKey: String,
-    val description: String?
-)
-
 data class GalleryResponse(
     val total: Int,
     val items: List<GalleryItem>

@@ -13,8 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.skillcinema.GlideApp
+//import com.example.skillcinema.GlideApp
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.MovieDetailResponse
@@ -179,7 +181,7 @@ class MovieDetailFragment : Fragment() {
             return
         }
 
-        GlideApp.with(this)
+        Glide.with(this)
             .load(posterUrl)
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.error_image)
@@ -221,6 +223,35 @@ class MovieDetailFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         findNavController().popBackStack()
     }
+
+//    private fun setupActorsSection() {
+//        binding.actorsRecyclerView.apply {
+//            layoutManager = GridLayoutManager(
+//                requireContext(),
+//                5,  // 5 columns
+//                GridLayoutManager.HORIZONTAL,
+//                false
+//            )
+//            adapter = actorsAdapter
+//            addItemDecoration(SpacingItemDecoration(16))
+//        }
+//
+//        binding.actorsHeader.setOnClickListener {
+//            if (totalActors > MAX_VISIBLE_ACTORS) {
+//                navigateToFullCast()
+//            }
+//        }
+//    }
+//
+//    private fun updateActorsUI(actors: List<Actor>) {
+//        val visibleActors = actors.take(MAX_VISIBLE_ACTORS)
+//        actorsAdapter.submitList(visibleActors)
+//
+//        binding.actorsCount.text = when {
+//            actors.size > MAX_VISIBLE_ACTORS -> "+${actors.size}"
+//            else -> actors.size.toString()
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

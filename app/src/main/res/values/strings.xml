@@ -22,5 +22,7 @@
     <string name="actors">Актеры</string>
     <string name="gallery">Галерея</string>
     <string name="similar_movies">Похожие фильмы</string>
+    <string name="top_films">ТОП фильмов</string>
+    <string name="full_filmography">Фильмография</string>
 
 </resources>

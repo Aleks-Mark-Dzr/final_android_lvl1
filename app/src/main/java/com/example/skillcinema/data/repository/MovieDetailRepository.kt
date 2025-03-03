@@ -16,6 +16,7 @@ interface MovieDetailRepository {
     suspend fun getMovieGallery(movieId: Int): GalleryResponse
     suspend fun getSeasons(movieId: Int): SeasonsResponse
     suspend fun getSimilarMovies(movieId: Int): SimilarMoviesResponse
+    suspend fun getMovieActors(movieId: Int): List<Actor>
 }
 
 class MovieDetailRepositoryImpl @Inject constructor(
@@ -128,6 +129,20 @@ class MovieDetailRepositoryImpl @Inject constructor(
                 SimilarMoviesResponse(emptyList())
             }
         }
+
+    override suspend fun getMovieActors(movieId: Int): List<Actor> {
+        return apiService.getMovieActors(movieId)
+            .filter { it.professionKey == "ACTOR" }
+            .map { response ->
+                Actor(
+                    id = response.staffId,
+                    name = response.nameRu ?: response.nameEn ?: "Unknown",
+                    role = response.description ?: "Role not specified",
+                    photoUrl = response.posterUrl,
+                    profession = response.professionKey
+                )
+            }
+    }
 }
 
 // ✅ Конвертация `MovieEntity` → `MovieDetailResponse`

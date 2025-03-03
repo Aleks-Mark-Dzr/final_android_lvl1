@@ -56,4 +56,14 @@ interface MovieApiService {
 
     @GET("/api/v2.2/films/{filmId}/staff")
     suspend fun getMovieCast(@Path("filmId") filmId: Int): List<ActorResponse>
+
+    @GET("/api/v1/staff")
+    suspend fun getMovieActors(
+        @Query("filmId") movieId: Int
+    ): List<ActorResponse>
+
+    @GET("/api/v1/staff/{personId}")
+    suspend fun getActorDetails(
+        @Path("personId") actorId: Int
+    ): ActorDetailsResponse
 }
