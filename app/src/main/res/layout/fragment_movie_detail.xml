@@ -217,6 +217,14 @@
                 android:textSize="16sp"
                 android:clickable="true"
                 android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tvActors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Актеры не найдены"
+                android:textSize="16sp"
+                android:visibility="gone"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

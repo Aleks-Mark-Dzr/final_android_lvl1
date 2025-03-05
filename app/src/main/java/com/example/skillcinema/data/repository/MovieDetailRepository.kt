@@ -85,16 +85,19 @@ class MovieDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMovieCast(movieId: Int): List<ActorResponse> =
-        withContext(Dispatchers.IO) {
+    override suspend fun getMovieCast(movieId: Int): List<ActorResponse> {
+        return withContext(Dispatchers.IO) {
             try {
-                Log.d("MovieDetailRepository", "🎭 Запрос актеров для фильма ID: $movieId")
-                apiService.getMovieCast(movieId)
+                Log.d("MovieDetailRepository", "Запрос к API: /api/v1/staff?filmId=$movieId")
+                val response = apiService.getMovieCast(movieId)
+                Log.d("MovieDetailRepository", "Ответ API: ${response.size} актеров")
+                response
             } catch (e: Exception) {
-                Log.e("MovieDetailRepository", "❌ Ошибка загрузки актеров: ${e.message}")
+                Log.e("MovieDetailRepository", "Ошибка загрузки актеров: ${e.message}")
                 emptyList()
             }
         }
+    }
 
     override suspend fun getMovieGallery(movieId: Int): GalleryResponse =
         withContext(Dispatchers.IO) {

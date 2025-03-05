@@ -54,6 +54,6 @@ interface MovieApiService {
     @GET("/api/v2.2/films/{filmId}/similars")
     suspend fun getSimilarMovies(@Path("filmId") filmId: Int): SimilarMoviesResponse
 
-    @GET("/api/v2.2/films/{filmId}/staff")
-    suspend fun getMovieCast(@Path("filmId") filmId: Int): List<ActorResponse>
+    @GET("/api/v1/staff")
+    suspend fun getMovieCast(@Query("filmId") filmId: Int): List<ActorResponse>
 }

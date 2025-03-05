@@ -1,18 +1,24 @@
 package com.example.skillcinema.ui.moviedetail.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.data.MovieDetailResponse
+import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 
 class MovieDetailViewModel(private val repository: MovieDetailRepository) : ViewModel() {
 
     private val _movieDetail = MutableStateFlow<MovieDetailResponse?>(null)
     val movieDetail: StateFlow<MovieDetailResponse?> get() = _movieDetail.asStateFlow()
+
+    private val _actorsList = MutableStateFlow<List<ActorResponse>>(emptyList())
+    val actorsList: StateFlow<List<ActorResponse>> get() = _actorsList.asStateFlow()
 
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> get() = _isFavorite.asStateFlow()
@@ -25,10 +31,26 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
 
     fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
-            val movie = repository.getMovieDetails(movieId)
-            _movieDetail.value = movie
+            Log.d("MovieDetailViewModel", "Запрос деталей фильма для ID: $movieId")
+
+            val movieDeferred = async {
+                Log.d("MovieDetailViewModel", "Отправляем запрос в API: /api/v2.2/films/$movieId")
+                repository.getMovieDetails(movieId)
+            }
+
+            val actorsDeferred = async {
+                Log.d("MovieDetailViewModel", "Отправляем запрос в API: /api/v1/staff?filmId=$movieId")
+                repository.getMovieCast(movieId)
+            }
+
+            _movieDetail.value = movieDeferred.await()
+            _actorsList.value = actorsDeferred.await()
+
+            Log.d("MovieDetailViewModel", "Фильм загружен: ${_movieDetail.value}")
+            Log.d("MovieDetailViewModel", "Актеры загружены: ${_actorsList.value?.size} актеров")
         }
     }
+
 
     fun toggleFavorite(movieId: Int) {
         viewModelScope.launch {

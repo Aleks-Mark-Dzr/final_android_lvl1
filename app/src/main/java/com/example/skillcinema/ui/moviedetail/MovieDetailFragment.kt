@@ -18,6 +18,7 @@ import com.example.skillcinema.GlideApp
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.MovieDetailResponse
+import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModelFactory
@@ -79,6 +80,7 @@ class MovieDetailFragment : Fragment() {
 
     private fun observeStates() {
         observeMovieDetails()
+        observeActorsList()
         observeFavoriteState()
         observeWatchLaterState()
         observeWatchedState()
@@ -133,9 +135,37 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun observeActorsList() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actorsList.collectLatest { actors ->
+                    updateActorsUI(actors)
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
+    private fun updateActorsUI(actors: List<ActorResponse>) {
+        binding.tvActors.apply {
+            text = if (actors.isNotEmpty()) {
+                actors.joinToString(", ") { it.nameRu ?: "Неизвестный актер" }
+            } else {
+                "Актеры не найдены"
+            }
+            visibility = View.VISIBLE
+        }
+    }
+
     private fun updateUI(movie: MovieDetailResponse) {
         with(binding) {
+            GlideApp.with(this@MovieDetailFragment)
+                .load(movie.posterUrl)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(ivMoviePoster)
+
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
             tvMovieRating.text = movie.ratingKinopoisk?.toString() ?: "N/A"
@@ -143,26 +173,7 @@ class MovieDetailFragment : Fragment() {
             tvCountry.text = movie.countries.joinToString(", ") { it.country }
             tvDuration.text = movie.filmLength?.let { "$it мин." } ?: "Неизвестно"
             tvAgeRestrictions.text = movie.ratingAgeLimits?.let { "$it+" } ?: "Не указано"
-
-            // Обрезка описания до 250 символов
-            val fullDescription = movie.description?.takeIf { it.isNotBlank() } ?: "Описание не доступно"
-            val shortDescription = if (fullDescription.length > 250) {
-                fullDescription.substring(0, 250) + "..."
-            } else {
-                fullDescription
-            }
-
-            tvMovieDescription.text = shortDescription
-            tvMovieDescription.visibility = View.VISIBLE // Убедимся, что элемент не скрыт
-
-            // Добавление обработчика нажатий для разворачивания текста
-            var isExpanded = false
-            tvMovieDescription.setOnClickListener {
-                isExpanded = !isExpanded
-                tvMovieDescription.text = if (isExpanded) fullDescription else shortDescription
-                tvMovieDescription.maxLines = if (isExpanded) Int.MAX_VALUE else 5
-            }
-            loadPoster(movie.posterUrl)
+            tvMovieDescription.text = movie.description ?: "Описание не доступно"
         }
     }
 
@@ -173,33 +184,9 @@ class MovieDetailFragment : Fragment() {
         ).joinToString(" | ")
     }
 
-    private fun loadPoster(posterUrl: String?) {
-        if (posterUrl.isNullOrEmpty()) {
-            showPosterError()
-            return
-        }
-
-        GlideApp.with(this)
-            .load(posterUrl)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.error_image)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(binding.ivMoviePoster)
-    }
-
-    private fun fetchMovieDetailsWithRetry(retryCount: Int = 3) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeat(retryCount) { attempt ->
-                try {
-                    viewModel.fetchMovieDetails(movieId)
-                    delay(1000)
-                    if (viewModel.movieDetail.value != null) return@launch
-                } catch (e: Exception) {
-                    Log.e("MovieDetailFragment", "Attempt ${attempt + 1} failed: ${e.message}")
-                }
-            }
-            showErrorAndExit("❌ Ошибка загрузки фильма")
-        }
+    private fun showErrorAndExit(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        findNavController().popBackStack()
     }
 
     private fun showContent() {
@@ -212,14 +199,20 @@ class MovieDetailFragment : Fragment() {
         binding.contentContainer.visibility = View.GONE
     }
 
-    private fun showPosterError() {
-        Log.e("MovieDetailFragment", "Poster URL is invalid")
-        binding.ivMoviePoster.setImageResource(R.drawable.error_image)
-    }
-
-    private fun showErrorAndExit(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-        findNavController().popBackStack()
+    private fun fetchMovieDetailsWithRetry(retryCount: Int = 3) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            Log.d("MovieDetailFragment", "Начинаем загрузку данных для фильма ID: $movieId")
+            repeat(retryCount) { attempt ->
+                try {
+                    viewModel.fetchMovieDetails(movieId)
+                    delay(1000)
+                    if (viewModel.movieDetail.value != null) return@launch
+                } catch (e: Exception) {
+                    Log.e("MovieDetailFragment", "Attempt ${attempt + 1} failed: ${e.message}")
+                }
+            }
+            showErrorAndExit("❌ Ошибка загрузки фильма")
+        }
     }
 
     override fun onDestroyView() {
