@@ -71,4 +71,36 @@
             app:argType="integer" />
     </fragment>
 
+    <fragment
+        android:id="@+id/filmographyListFragment"
+        android:name="com.example.skillcinema.ui.actordetail.filmography.FilmographyListFragment"
+        tools:layout="@layout/fragment_filmography_list">
+
+        <argument
+            android:name="actorId"
+            app:argType="integer"/>
+
+        <argument
+            android:name="profession"
+            app:argType="com.example.skillcinema.domain.models.Profession"/>
+
+        <argument
+            android:name="count"
+            app:argType="integer"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/actorDetailFragment"
+        android:name="com.example.skillcinema.ui.actordetail.ActorDetailFragment"
+        android:label="Actor Detail">
+
+        <argument
+            android:name="actorId"
+            app:argType="integer"/>
+
+        <action
+            android:id="@+id/action_actorDetailFragment_to_filmographyFragment"
+            app:destination="@id/filmographyFragment"/>
+    </fragment>
+
 </navigation>
