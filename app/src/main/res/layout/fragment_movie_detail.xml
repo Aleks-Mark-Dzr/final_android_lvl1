@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Прогресс-бар для загрузки -->
     <ProgressBar
@@ -218,13 +219,15 @@
                 android:clickable="true"
                 android:focusable="true" />
 
-            <TextView
-                android:id="@+id/tvActors"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvActors"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Актеры не найдены"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="4"
+                tools:listitem="@layout/item_actor" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

@@ -13,13 +13,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.skillcinema.GlideApp
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
+import com.example.skillcinema.data.Actor
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
+import com.example.skillcinema.ui.adapters.ActorsAdapter
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModelFactory
 import kotlinx.coroutines.delay
@@ -33,6 +37,10 @@ class MovieDetailFragment : Fragment() {
 
     private lateinit var viewModel: MovieDetailViewModel
     private var movieId: Int = 0
+
+    private val actorsAdapter = ActorsAdapter { actorId ->
+        // Обработка клика по актеру
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +64,7 @@ class MovieDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViewModel()
         setupClickListeners()
+        setupActorsRecyclerView()
         fetchMovieDetailsWithRetry()
         observeStates()
     }
@@ -76,6 +85,12 @@ class MovieDetailFragment : Fragment() {
         binding.ivWatched.setOnClickListener {
             viewModel.toggleWatched(movieId)
         }
+    }
+
+    private fun setupActorsRecyclerView() {
+        val layoutManager = GridLayoutManager(requireContext(), 4, RecyclerView.HORIZONTAL, false)
+        binding.rvActors.layoutManager = layoutManager
+        binding.rvActors.adapter = actorsAdapter
     }
 
     private fun observeStates() {
@@ -147,14 +162,17 @@ class MovieDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateActorsUI(actors: List<ActorResponse>) {
-        binding.tvActors.apply {
-            text = if (actors.isNotEmpty()) {
-                actors.joinToString(", ") { it.nameRu ?: "Неизвестный актер" }
-            } else {
-                "Актеры не найдены"
-            }
-            visibility = View.VISIBLE
+        val actorList = actors.map { actor ->
+            Actor(
+                id = actor.staffId,
+                name = actor.nameRu ?: "Неизвестный актер",
+                role = actor.description ?: "Роль не указана",
+                photoUrl = actor.posterUrl,
+                profession = actor.professionKey
+            )
         }
+        actorsAdapter.submitList(actorList)
+        binding.rvActors.visibility = View.VISIBLE
     }
 
     private fun updateUI(movie: MovieDetailResponse) {

@@ -1,11 +1,15 @@
 package com.example.skillcinema.ui.moviedetail.viewmodel
 
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.repository.MovieDetailRepository
+import com.example.skillcinema.ui.adapters.ActorsAdapter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,5 +72,9 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
         viewModelScope.launch {
             _isWatched.value = !_isWatched.value
         }
+    }
+
+    private val actorsAdapter = ActorsAdapter { actorId ->
+        // Обработка клика по актеру
     }
 }
