@@ -162,7 +162,11 @@ class MovieDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateActorsUI(actors: List<ActorResponse>) {
-        val actorList = actors.map { actor ->
+        // Общее количество актёров
+        val totalActors = actors.size
+
+        // Отображаем только 20 первых актёров, если их больше
+        val actorList = actors.take(20).map { actor ->
             Actor(
                 id = actor.staffId,
                 name = actor.nameRu ?: "Неизвестный актер",
@@ -171,8 +175,17 @@ class MovieDetailFragment : Fragment() {
                 profession = actor.professionKey
             )
         }
+
+        // Обновляем адаптер
         actorsAdapter.submitList(actorList)
         binding.rvActors.visibility = View.VISIBLE
+
+        // Добавляем информацию о количестве актёров
+        binding.tvActorsCount.text = if (totalActors > 20) {
+            "$totalActors >"
+        } else {
+            ""
+        }
     }
 
     private fun updateUI(movie: MovieDetailResponse) {

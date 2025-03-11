@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <!-- Прогресс-бар для загрузки -->
     <ProgressBar
@@ -44,9 +44,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="clip_horizontal"
                     android:layout_gravity="bottom"
                     android:background="@android:color/transparent"
+                    android:gravity="clip_horizontal"
                     android:orientation="vertical"
                     android:padding="16dp">
 
@@ -210,24 +210,54 @@
                 android:id="@+id/tvMovieDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:clickable="true"
                 android:ellipsize="end"
+                android:focusable="true"
                 android:maxLines="5"
                 android:padding="16dp"
-                android:background="@android:color/white"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:clickable="true"
-                android:focusable="true" />
+                android:textSize="16sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvActors"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="4"
-                tools:listitem="@layout/item_actor" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/sectionFilmStarred"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filmStarred"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/tvActorsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/purple_500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvActors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sectionFilmStarred"
+                    app:spanCount="4"
+                    tools:ignore="MissingConstraints"
+                    tools:listitem="@layout/item_actor" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

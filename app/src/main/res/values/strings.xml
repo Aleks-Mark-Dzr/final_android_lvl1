@@ -24,5 +24,6 @@
     <string name="similar_movies">Похожие фильмы</string>
     <string name="top_films">ТОП фильмов</string>
     <string name="full_filmography">Фильмография</string>
+    <string name="filmStarred">В фильме снимались</string>
 
 </resources>
