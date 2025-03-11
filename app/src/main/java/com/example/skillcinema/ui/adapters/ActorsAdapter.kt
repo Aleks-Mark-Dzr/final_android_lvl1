@@ -33,7 +33,7 @@ class ActorsAdapter(
                     .load(actor.photoUrl)
                     .placeholder(R.drawable.ic_person_placeholder)
                     .error(R.drawable.ic_person_placeholder)
-                    .circleCrop()
+//                    .circleCrop()
                     .into(actorPhoto)
 
                 actorName.text = actor.name
