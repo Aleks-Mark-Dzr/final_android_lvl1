@@ -22,8 +22,10 @@ import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.Actor
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.data.ActorResponse
+import com.example.skillcinema.data.CrewMember
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
 import com.example.skillcinema.ui.adapters.ActorsAdapter
+import com.example.skillcinema.ui.adapters.CrewAdapter
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModelFactory
 import kotlinx.coroutines.delay
@@ -41,6 +43,11 @@ class MovieDetailFragment : Fragment() {
     private val actorsAdapter = ActorsAdapter { actorId ->
         // Обработка клика по актеру
     }
+
+    private val crewAdapter = CrewAdapter { crewId ->
+        // Обработка клика по персоналу
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +72,7 @@ class MovieDetailFragment : Fragment() {
         setupViewModel()
         setupClickListeners()
         setupActorsRecyclerView()
+        setupCrewRecyclerView()
         fetchMovieDetailsWithRetry()
         observeStates()
     }
@@ -93,9 +101,16 @@ class MovieDetailFragment : Fragment() {
         binding.rvActors.adapter = actorsAdapter
     }
 
+    private fun setupCrewRecyclerView(){
+        val layoutManager = GridLayoutManager(requireContext(),2,RecyclerView.HORIZONTAL,false)
+        binding.rvStaff.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.HORIZONTAL, false)
+        binding.rvStaff.adapter = crewAdapter
+    }
+
     private fun observeStates() {
         observeMovieDetails()
         observeActorsList()
+        observeCrewList()
         observeFavoriteState()
         observeWatchLaterState()
         observeWatchedState()
@@ -160,6 +175,16 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun observeCrewList() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.crewList.collectLatest { staff ->
+                    updateCrewUI(staff)
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun updateActorsUI(actors: List<ActorResponse>) {
         // Общее количество актёров
@@ -187,6 +212,24 @@ class MovieDetailFragment : Fragment() {
             ""
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateCrewUI(staff: List<ActorResponse>) = with(binding) {
+        val crew = staff.map { person ->
+            CrewMember(
+                id = person.staffId,
+                name = person.nameRu ?: "Неизвестный участник",
+                role = person.profession ?: "",      // должность (режиссер, продюсер и т.п.)
+                photoUrl = person.posterUrl
+            )
+        }
+        val totalCrew = crew.size
+        // Если участников больше определенного порога (например, 6), показываем их количество
+        tvStaffCount.text = if (totalCrew > 6) "Всего участников: $totalCrew" else ""
+        crewAdapter.submitList( if (totalCrew > 6) crew.take(6) else crew )
+        rvStaff.visibility = View.VISIBLE
+    }
+
 
     private fun updateUI(movie: MovieDetailResponse) {
         with(binding) {

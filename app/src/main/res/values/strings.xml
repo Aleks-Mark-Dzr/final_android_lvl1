@@ -25,5 +25,6 @@
     <string name="top_films">ТОП фильмов</string>
     <string name="full_filmography">Фильмография</string>
     <string name="filmStarred">В фильме снимались</string>
+    <string name="filmWasWorked">Над фильмом работали</string>
 
 </resources>

@@ -24,6 +24,9 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _actorsList = MutableStateFlow<List<ActorResponse>>(emptyList())
     val actorsList: StateFlow<List<ActorResponse>> get() = _actorsList.asStateFlow()
 
+    private val _crewList = MutableStateFlow<List<ActorResponse>>(emptyList())
+    val crewList: StateFlow<List<ActorResponse>> get() = _crewList.asStateFlow()
+
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> get() = _isFavorite.asStateFlow()
 
@@ -48,7 +51,11 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
             }
 
             _movieDetail.value = movieDeferred.await()
-            _actorsList.value = actorsDeferred.await()
+//            _actorsList.value = actorsDeferred.await()
+            // Разделяем на актёров и съемочную группу по профессии
+            _actorsList.value = actorsDeferred.await().filter { it.professionKey == "ACTOR" }
+            _crewList.value   = actorsDeferred.await().filter { it.professionKey != "ACTOR" }
+
 
             Log.d("MovieDetailViewModel", "Фильм загружен: ${_movieDetail.value}")
             Log.d("MovieDetailViewModel", "Актеры загружены: ${_actorsList.value?.size} актеров")
