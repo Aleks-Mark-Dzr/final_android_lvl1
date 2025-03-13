@@ -292,7 +292,7 @@
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sectionFilmWasWorked"
+                    app:layout_constraintTop_toBottomOf="@+id/sectionStaff"
                     app:spanCount="2"
                     tools:ignore="MissingConstraints"
                     tools:listitem="@layout/item_actor" />
