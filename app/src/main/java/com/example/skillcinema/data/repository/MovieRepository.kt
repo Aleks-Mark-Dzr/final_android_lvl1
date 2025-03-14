@@ -37,7 +37,7 @@ class MovieRepositoryImpl @Inject constructor(
         safeApiCall { apiService.getPremieres(year, month).items } ?: emptyList()
 
     override suspend fun getTopMovies(page: Int): List<Movie> =
-        safeApiCall { apiService.getTopMovies(type = "TOP_250_BEST_FILMS", page).films } ?: emptyList()
+        safeApiCall { apiService.getTopMovies(type = "TOP_POPULAR_ALL", page).items } ?: emptyList()
 
     override suspend fun getMoviesByGenreAndCountry(countryId: Int, genreId: Int): List<Movie> =
         safeApiCall { apiService.getMoviesByGenreAndCountry(countryId, genreId).items } ?: emptyList()

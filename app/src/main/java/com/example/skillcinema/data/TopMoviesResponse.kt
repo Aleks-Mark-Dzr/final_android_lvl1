@@ -1,6 +1,6 @@
 package com.example.skillcinema.data
 
 data class TopMoviesResponse(
-    val films: List<Movie>
+    val items: List<Movie>
 )
 
