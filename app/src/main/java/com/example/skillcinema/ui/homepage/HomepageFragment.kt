@@ -22,6 +22,8 @@ import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModel
 import com.example.skillcinema.ui.homepage.viewmodel.HomepageViewModelFactory
 import com.example.skillcinema.utils.NetworkUtils
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Locale
 
 class HomepageFragment : Fragment() {
 
@@ -121,8 +123,14 @@ class HomepageFragment : Fragment() {
             }
         }
 
+        val calendar: Calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: String =
+            calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
+
+
         if (NetworkUtils.isNetworkAvailable(requireContext())) {
-            viewModel.fetchPremieres(2025, "January")
+            viewModel.fetchPremieres(currentYear, currentMonth)
             viewModel.fetchPopularMovies()
             viewModel.fetchDynamicCategory(countryId = 1, genreId = 2)
             viewModel.fetchTop250Movies(1)
