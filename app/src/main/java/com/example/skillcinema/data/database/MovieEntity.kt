@@ -12,5 +12,6 @@ data class MovieEntity(
     val posterUrl: String?,
     val rating: Double?,
     val isWatched: Boolean = false,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val isWatchLater: Boolean = false
 )

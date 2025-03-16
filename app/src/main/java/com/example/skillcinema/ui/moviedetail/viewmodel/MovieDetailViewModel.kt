@@ -59,25 +59,40 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
 
             Log.d("MovieDetailViewModel", "Фильм загружен: ${_movieDetail.value}")
             Log.d("MovieDetailViewModel", "Актеры загружены: ${_actorsList.value?.size} актеров")
+
+            val movie = repository.getMovieDetails(movieId)
+            val cachedMovie = repository.getMovieById(movieId)
+            cachedMovie?.let {
+                _isFavorite.value = it.isFavorite
+                _isWatchLater.value = it.isWatchLater
+                _isWatched.value = it.isWatched
+            }
+            _movieDetail.value = movie
         }
     }
 
 
     fun toggleFavorite(movieId: Int) {
         viewModelScope.launch {
-            _isFavorite.value = !_isFavorite.value
+            val currentStatus = !_isFavorite.value
+            _isFavorite.value = currentStatus
+            repository.updateFavoriteStatus(movieId, currentStatus)
         }
     }
 
     fun toggleWatchLater(movieId: Int) {
         viewModelScope.launch {
-            _isWatchLater.value = !_isWatchLater.value
+            val currentStatus = !_isWatchLater.value
+            _isWatchLater.value = currentStatus
+            repository.updateWatchLaterStatus(movieId, currentStatus)
         }
     }
 
     fun toggleWatched(movieId: Int) {
         viewModelScope.launch {
-            _isWatched.value = !_isWatched.value
+            val currentStatus = !_isWatched.value
+            _isWatched.value = currentStatus
+            repository.updateWatchedStatus(movieId, currentStatus)
         }
     }
 

@@ -17,4 +17,7 @@ interface MovieDao {
 
     @Query("UPDATE movies SET isWatched = :watched WHERE movieId = :movieId")
     suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
+
+    @Query("UPDATE movies SET isWatchLater = :watchLater WHERE movieId = :movieId")
+    suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
 }

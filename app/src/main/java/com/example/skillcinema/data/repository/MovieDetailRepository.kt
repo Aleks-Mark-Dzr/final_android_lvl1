@@ -16,6 +16,10 @@ interface MovieDetailRepository {
     suspend fun getMovieGallery(movieId: Int): GalleryResponse
     suspend fun getSeasons(movieId: Int): SeasonsResponse
     suspend fun getSimilarMovies(movieId: Int): SimilarMoviesResponse
+    suspend fun updateFavoriteStatus(movieId: Int, favorite: Boolean)
+    suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
+    suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
+    suspend fun getMovieById(movieId: Int): MovieEntity?
 }
 
 class MovieDetailRepositoryImpl @Inject constructor(
@@ -131,6 +135,22 @@ class MovieDetailRepositoryImpl @Inject constructor(
                 SimilarMoviesResponse(emptyList())
             }
         }
+
+    override suspend fun updateFavoriteStatus(movieId: Int, favorite: Boolean) {
+        movieDao.updateFavoriteStatus(movieId, favorite)
+    }
+
+    override suspend fun updateWatchedStatus(movieId: Int, watched: Boolean) {
+        movieDao.updateWatchedStatus(movieId, watched)
+    }
+
+    override suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean) {
+        movieDao.updateWatchLaterStatus(movieId, watchLater)
+    }
+
+    override suspend fun getMovieById(movieId: Int): MovieEntity? {
+        return movieDao.getMovieById(movieId)
+    }
 }
 
 // ✅ Конвертация `MovieEntity` → `MovieDetailResponse`

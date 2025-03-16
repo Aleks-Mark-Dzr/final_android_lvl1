@@ -108,6 +108,22 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun observeStates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isFavorite.collectLatest { isFavorite ->
+                    val icon = if (isFavorite) R.drawable.ic_favorite_2 else R.drawable.ic_no_favorite_2
+                    binding.ivFavorite.setImageResource(icon)
+                }
+                viewModel.isWatchLater.collectLatest { isWatchLater ->
+                    val icon = if (isWatchLater) R.drawable.ic_bookmark_2 else R.drawable.ic_no_bookmark
+                    binding.ivWatchLater.setImageResource(icon)
+                }
+                viewModel.isWatched.collectLatest { isWatched ->
+                    val icon = if (isWatched) R.drawable.ic_viewed else R.drawable.ic_not_viewed_2
+                    binding.ivWatched.setImageResource(icon)
+                }
+            }
+        }
         observeMovieDetails()
         observeActorsList()
         observeCrewList()
