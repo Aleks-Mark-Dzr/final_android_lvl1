@@ -41,6 +41,7 @@ class HomepageFragment : Fragment() {
     private val onMovieClick: (Int) -> Unit = { movieId ->
         Log.d("HomepageFragment", "Клик по фильму с ID: $movieId")
         navigateToMovieDetail(movieId)
+//        throw Exception("My first test Exception")
     }
 
     override fun onCreateView(

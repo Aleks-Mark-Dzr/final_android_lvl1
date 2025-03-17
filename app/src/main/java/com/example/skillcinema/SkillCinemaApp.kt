@@ -9,6 +9,7 @@ import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.data.repository.MovieRepositoryImpl
 import com.example.skillcinema.network.CustomHttpLoggingInterceptor
 import com.example.skillcinema.network.MovieApiService
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -53,5 +54,8 @@ class SkillCinemaApp : Application() {
 //        movieRepository = MovieRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
         movieRepository = MovieRepositoryImpl(movieApiService)
         movieDetailRepository = MovieDetailRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
+
+        // 7. Инициализация Crashlytics в коде
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
     }
 }

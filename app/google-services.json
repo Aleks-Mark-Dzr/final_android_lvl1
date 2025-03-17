@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1071807477832",
+    "project_id": "mykinopoisk-a8d9c",
+    "storage_bucket": "mykinopoisk-a8d9c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071807477832:android:bbc91d4ead76f639bc407d",
+        "android_client_info": {
+          "package_name": "com.example.skillcinema"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz2HIyfeXwLXJLEDtMiptA13y3b61urkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

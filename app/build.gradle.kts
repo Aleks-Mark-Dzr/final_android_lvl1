@@ -3,7 +3,11 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     id("org.jetbrains.kotlin.kapt")
-    id("dagger.hilt.android.plugin") // ✅ Убрали `kotlin-kapt`
+    id("dagger.hilt.android.plugin")
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
+    // Add the Crashlytics Gradle plugin
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -62,6 +66,7 @@ dependencies {
     // Image loading
     implementation(libs.picasso)
     implementation (libs.github.glide)
+    implementation(libs.firebase.crashlytics.ktx)
     annotationProcessor (libs.compiler)
     kapt (libs.compiler)
 
@@ -71,12 +76,17 @@ dependencies {
     kapt(libs.hilt.android.compiler)
 
     // Room (Database)
-    implementation(libs.androidx.room.runtime) // ✅ Добавлено
-    kapt(libs.androidx.room.compiler) // ✅ Добавлено
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     // Google Mobile Ads SDK
-    implementation(libs.play.services.ads) // ✅ Убедитесь, что версия 22.5.0
+    implementation(libs.play.services.ads)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+
 
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
