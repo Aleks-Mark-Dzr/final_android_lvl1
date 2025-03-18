@@ -1,6 +1,7 @@
 package com.example.skillcinema.ui.onboarding
 
 import OnboardingPagerAdapter
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -61,8 +62,14 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun navigateToHomepage() {
+        // Сохраняем в SharedPreferences, что онбординг был показан
+        val sharedPref = requireActivity().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("is_first_launch", false).apply()
+
+        // Навигация на главный экран
         findNavController().navigate(R.id.action_onboardingFragment_to_homepageFragment)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
