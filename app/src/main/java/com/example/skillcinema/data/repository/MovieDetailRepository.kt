@@ -161,14 +161,14 @@ private fun MovieEntity.toMovieDetailResponse(): MovieDetailResponse {
         nameOriginal = this.nameOriginal,
         year = this.year,
         posterUrl = this.posterUrl,
-        description = null,
+        description = this.description,
         ratingKinopoisk = this.rating,
         genres = emptyList(),
         countries = emptyList(),
         filmLength = null,
         serial = false,
         seasonsCount = null,
-        ratingAgeLimits = null
+        ratingAgeLimits = null,
     )
 }
 
@@ -182,6 +182,7 @@ private fun MovieDetailResponse.toMovieEntity(): MovieEntity {
         posterUrl = this.posterUrl ?: "",
         rating = this.ratingKinopoisk ?: 0.0,
         isWatched = false,
-        isFavorite = false
+        isFavorite = false,
+        description = this.description
     )
 }
