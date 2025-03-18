@@ -26,5 +26,8 @@
     <string name="full_filmography">Фильмография</string>
     <string name="filmStarred">В фильме снимались</string>
     <string name="filmWasWorked">Над фильмом работали</string>
+    <string name="home_page_icon">Домашняя страница</string>
+    <string name="search">Поиск</string>
+    <string name="user">Пользователь</string>
 
 </resources>
