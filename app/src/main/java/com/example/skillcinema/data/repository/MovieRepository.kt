@@ -14,6 +14,7 @@ interface MovieRepository {
     suspend fun getTop250Movies(page: Int): List<Movie>
     suspend fun getTvSeries(page: Int): List<Movie>
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
+    suspend fun searchMovies(query: String): List<Movie>
 }
 
 @Singleton
@@ -50,4 +51,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse =
         safeApiCall { apiService.getAvailableGenresAndCountries() } ?: GenresAndCountriesResponse(emptyList(), emptyList())
+
+    override suspend fun searchMovies(query: String): List<Movie> =
+        safeApiCall { apiService.searchMovies(query).items } ?: emptyList()
 }

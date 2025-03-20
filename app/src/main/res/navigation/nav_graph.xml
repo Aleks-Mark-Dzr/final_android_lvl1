@@ -103,4 +103,13 @@
             app:destination="@id/filmographyFragment"/>
     </fragment>
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.skillcinema.ui.search.SearchFragment"
+        android:label="Поиск">
+        <action
+            android:id="@+id/action_main_to_search"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
 </navigation>
