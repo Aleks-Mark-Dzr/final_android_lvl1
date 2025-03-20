@@ -15,13 +15,17 @@ import com.example.skillcinema.databinding.SearchFragmentBinding
 import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SearchView
 import com.example.skillcinema.SkillCinemaApp
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import android.util.Log
 
 class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: SearchViewModel
     private lateinit var searchAdapter: SearchAdapter
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,24 +38,33 @@ class SearchFragment : Fragment() {
 
         // Инициализируем ViewModel с фабрикой
         viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
-//        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         setupUI()
         observeViewModel()
         return binding.root
     }
 
     private fun setupUI() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        val searchView = binding.searchView
+
+        // Устанавливаем слушатель на ввод текста
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                return false // Не обрабатываем нажатие Enter
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.searchMovies(newText.orEmpty())
+                searchJob?.cancel() // Отменяем предыдущий запрос
+
+                searchJob = lifecycleScope.launch(Dispatchers.Main) {
+                    delay(500) // Задержка перед отправкой запроса
+                    if (!newText.isNullOrBlank()) {
+                        Log.d("SearchFragment", "Отправка запроса: $newText") // Логируем запрос
+                        viewModel.searchMovies(newText)
+                    }
+                }
                 return true
             }
         })
-
 
         binding.buttonSettings.setOnClickListener {
             Toast.makeText(requireContext(), "Открыть настройки поиска", Toast.LENGTH_SHORT).show()
@@ -69,6 +82,7 @@ class SearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.searchResults.collect { results ->
+                    Log.d("SearchFragment", "Обновление UI, найдено: ${results.size} фильмов")
                     searchAdapter.submitList(results)
                 }
             }

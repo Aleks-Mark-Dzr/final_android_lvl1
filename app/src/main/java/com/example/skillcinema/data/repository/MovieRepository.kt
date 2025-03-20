@@ -52,6 +52,8 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse =
         safeApiCall { apiService.getAvailableGenresAndCountries() } ?: GenresAndCountriesResponse(emptyList(), emptyList())
 
-    override suspend fun searchMovies(query: String): List<Movie> =
-        safeApiCall { apiService.searchMovies(query).items } ?: emptyList()
+    override suspend fun searchMovies(query: String): List<Movie> {
+        Log.d("MovieRepository", "API запрос: $query") // Логируем API-запрос
+        return safeApiCall { apiService.searchMovies(query = query).items } ?: emptyList()
+    }
 }

@@ -58,6 +58,17 @@ interface MovieApiService {
     suspend fun getMovieCast(@Query("filmId") filmId: Int): List<ActorResponse>
 
     @GET("search")
-    suspend fun searchMovies(@Query("query") query: String): MovieResponse
+    suspend fun searchMovies(
+        @Query("keyword") query: String?,
+        @Query("countries") countryId: Int? = null,
+        @Query("genres") genreId: Int? = null,
+        @Query("order") order: String = "RATING",
+        @Query("type") type: String? = null,  // "FILM", "TV_SERIES"
+        @Query("yearFrom") yearFrom: Int? = null,
+        @Query("yearTo") yearTo: Int? = null,
+        @Query("ratingFrom") ratingFrom: Int? = null,
+        @Query("ratingTo") ratingTo: Int? = null,
+        @Query("page") page: Int = 1
+    ): MovieResponse
 
 }
