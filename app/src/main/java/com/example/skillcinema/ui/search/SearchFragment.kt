@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.databinding.SearchFragmentBinding
 import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SearchView
+import com.example.skillcinema.SkillCinemaApp
 
 
 class SearchFragment : Fragment() {
@@ -26,7 +27,14 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = SearchFragmentBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
+
+        // Получаем экземпляр репозитория (если используете Dagger или Hilt, замените на инъекцию)
+        val repository = (requireActivity().application as SkillCinemaApp).movieRepository
+        val factory = SearchViewModelFactory(repository)
+
+        // Инициализируем ViewModel с фабрикой
+        viewModel = ViewModelProvider(this, factory).get(SearchViewModel::class.java)
+//        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         setupUI()
         observeViewModel()
         return binding.root

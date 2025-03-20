@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         // Применяем граф к контроллеру
         navController.setGraph(navGraph, null)
+
+        binding.ivSearch.setOnClickListener() { navController.navigate(R.id.searchFragment)
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
