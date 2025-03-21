@@ -2,6 +2,7 @@ package com.example.skillcinema
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -43,6 +44,14 @@ class MainActivity : AppCompatActivity() {
         binding.ivSearch.setOnClickListener() { navController.navigate(R.id.searchFragment)
         }
 
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Скрывать меню на экране онбординга
+            if (destination.id == R.id.onboardingFragment) {
+                binding.navigationMenu.visibility = View.GONE
+            } else {
+                binding.navigationMenu.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

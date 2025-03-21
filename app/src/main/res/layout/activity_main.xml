@@ -19,9 +19,11 @@
         app:defaultNavHost="true" />
 
     <LinearLayout
+        android:id="@+id/navigationMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingTop="8dp">
 
