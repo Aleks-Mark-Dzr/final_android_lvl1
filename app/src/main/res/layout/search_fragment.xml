@@ -14,7 +14,7 @@
         android:queryHint="Введите название фильма..."
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toStartOf="@id/button_settings"/>
 
     <ImageView
         android:id="@+id/button_settings"
