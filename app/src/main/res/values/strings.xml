@@ -29,5 +29,6 @@
     <string name="home_page_icon">Домашняя страница</string>
     <string name="search">Поиск</string>
     <string name="user">Пользователь</string>
+    <string name="search_settings">Настройки поиска</string>
 
 </resources>

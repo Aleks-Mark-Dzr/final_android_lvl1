@@ -16,13 +16,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <android.widget.Button
+    <ImageView
         android:id="@+id/button_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Настройки"
-        app:layout_constraintTop_toBottomOf="@id/search_view"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_property"
+        android:contentDescription="@string/search_settings"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_search_results"
