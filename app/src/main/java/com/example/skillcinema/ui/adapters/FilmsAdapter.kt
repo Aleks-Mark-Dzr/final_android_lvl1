@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.skillcinema.R
-import com.example.skillcinema.databinding.ItemFilmBinding
+import com.example.skillcinema.databinding.ItemMovieBinding
 import com.example.skillcinema.domain.models.Film
 
 class FilmsAdapter(
@@ -16,7 +16,7 @@ class FilmsAdapter(
 ) : ListAdapter<Film, FilmsAdapter.FilmViewHolder>(FilmDiffCallback()) {
 
     inner class FilmViewHolder(
-        private val binding: ItemFilmBinding
+        private val binding: ItemMovieBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(film: Film) {
@@ -24,11 +24,11 @@ class FilmsAdapter(
                 Glide.with(root)
                     .load(film.posterUrl)
                     .placeholder(R.drawable.placeholder_poster)
-                    .into(filmPoster)
+                    .into(moviePoster)
 
-                filmTitle.text = film.title
-                filmYear.text = film.year
-                filmRating.text = film.rating?.toString() ?: "-"
+                movieTitle.text = film.title
+                movieYear.text = film.year
+                movieRating.text = film.rating?.toString() ?: "-"
 
                 root.setOnClickListener { onFilmClick(film.id) }
             }
@@ -36,7 +36,7 @@ class FilmsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = FilmViewHolder(
-        ItemFilmBinding.inflate(
+        ItemMovieBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

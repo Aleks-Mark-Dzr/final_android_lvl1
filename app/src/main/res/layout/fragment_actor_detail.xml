@@ -57,7 +57,7 @@
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
-            tools:listitem="@layout/item_film" />
+            tools:listitem="@layout/item_movie" />
 
         <!-- Кнопка "Вся фильмография" -->
         <Button
