@@ -32,5 +32,6 @@
     <string name="search_settings">Настройки поиска</string>
     <string name="sectionGallery">Галерея</string>
     <string name="photo">Описание фото</string>
+    <string name="serial_poster">Постер сериала</string>
 
 </resources>
