@@ -299,6 +299,46 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Галерея -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <!-- Заголовок и счетчик -->
+                <TextView
+                    android:id="@+id/sectionGallery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sectionGallery"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvPhotosCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@android:color/holo_blue_light"
+                    app:layout_constraintStart_toEndOf="@id/sectionGallery"
+                    app:layout_constraintTop_toTopOf="@id/sectionGallery"/>
+
+                <!-- Горизонтальный список превью -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPhotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/sectionGallery"
+                    tools:listitem="@layout/item_photo"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

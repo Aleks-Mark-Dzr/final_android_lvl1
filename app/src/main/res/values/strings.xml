@@ -30,5 +30,7 @@
     <string name="search">Поиск</string>
     <string name="user">Пользователь</string>
     <string name="search_settings">Настройки поиска</string>
+    <string name="sectionGallery">Галерея</string>
+    <string name="photo">Описание фото</string>
 
 </resources>
