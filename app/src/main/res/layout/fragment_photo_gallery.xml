@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@android:color/white"
     android:layout_width="match_parent"
@@ -10,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:singleSelection="true"
-        android:chipSpacing="8dp" />
+        app:singleSelection="true"
+        app:chipSpacing="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPhotoGrid"
