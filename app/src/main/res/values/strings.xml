@@ -33,5 +33,9 @@
     <string name="sectionGallery">Галерея</string>
     <string name="photo">Описание фото</string>
     <string name="serial_poster">Постер сериала</string>
+    <string name="viewed">Просмотрено</string>
+    <string name="collections">Коллекции</string>
+    <string name="create_your_own_collection">+ Создай свою коллекцию</string>
+    <string name="were_you_interested">Вам было интересно</string>
 
 </resources>
