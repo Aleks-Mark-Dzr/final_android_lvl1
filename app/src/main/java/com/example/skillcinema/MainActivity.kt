@@ -44,6 +44,12 @@ class MainActivity : AppCompatActivity() {
         binding.ivSearch.setOnClickListener() { navController.navigate(R.id.searchFragment)
         }
 
+        binding.ivHome.setOnClickListener(){
+            navController.navigate(R.id.homepageFragment)
+        }
+
+
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Скрывать меню на экране онбординга
             if (destination.id == R.id.onboardingFragment) {

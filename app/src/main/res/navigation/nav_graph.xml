@@ -119,6 +119,7 @@
         <action
             android:id="@+id/action_main_to_search"
             app:destination="@id/searchFragment" />
+
     </fragment>
 
 </navigation>
