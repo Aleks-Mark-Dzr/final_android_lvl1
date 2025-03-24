@@ -35,7 +35,7 @@
             android:clickable="true"
             android:contentDescription="@string/home_page_icon"
             android:focusable="true"
-            android:src="@drawable/ic_home" />
+            android:src="@drawable/outline_home" />
 
         <ImageView
             android:id="@+id/ivSearch"
@@ -45,7 +45,7 @@
             android:clickable="true"
             android:contentDescription="@string/search"
             android:focusable="true"
-            android:src="@drawable/ic_search" />
+            android:src="@drawable/baseline_search" />
 
         <ImageView
             android:id="@+id/ivUser"
@@ -55,7 +55,7 @@
             android:clickable="true"
             android:contentDescription="@string/user"
             android:focusable="true"
-            android:src="@drawable/ic_user" />
+            android:src="@drawable/ic_person" />
 
     </LinearLayout>
 
