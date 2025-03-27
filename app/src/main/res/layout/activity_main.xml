@@ -55,7 +55,7 @@
             android:clickable="true"
             android:contentDescription="@string/user"
             android:focusable="true"
-            android:src="@drawable/ic_person" />
+            android:src="@drawable/ic_profile" />
 
     </LinearLayout>
 

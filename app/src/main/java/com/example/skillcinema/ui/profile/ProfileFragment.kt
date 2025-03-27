@@ -99,7 +99,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.btnClearHistory.setOnClickListener {
+        binding.clearHistoryIcon.setOnClickListener {
             viewModel.clearHistory()
         }
     }
