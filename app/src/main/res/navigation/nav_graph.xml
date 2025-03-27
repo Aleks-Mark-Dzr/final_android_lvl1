@@ -122,4 +122,14 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.skillcinema.ui.profile.ProfileFragment"
+        android:label="Профиль" >
+        <action
+            android:id="@+id/actionToMovieDetail"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+
 </navigation>

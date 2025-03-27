@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(R.id.homepageFragment)
         }
 
+        binding.ivUser.setOnClickListener(){
+            navController.navigate(R.id.profileFragment)
+        }
+
 
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
