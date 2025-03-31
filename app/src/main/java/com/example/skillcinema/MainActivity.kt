@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         // Применяем граф к контроллеру
         navController.setGraph(navGraph, null)
 
-<<<<<<< HEAD
         // Навигация без дублирования фрагментов в back stack
         binding.ivSearch.setOnClickListener {
             navigateSingleTop(R.id.searchFragment)
@@ -54,42 +53,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.ivUser.setOnClickListener {
             navigateSingleTop(R.id.profileFragment)
-=======
-        binding.ivHome.setOnClickListener {
-            if (navController.currentDestination?.id != R.id.homepageFragment) {
-                navController.navigate(R.id.homepageFragment) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-        }
-
-        binding.ivSearch.setOnClickListener {
-            if (navController.currentDestination?.id != R.id.searchFragment) {
-                navController.navigate(R.id.searchFragment) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-        }
-
-        binding.ivUser.setOnClickListener {
-            if (navController.currentDestination?.id != R.id.profileFragment) {
-                navController.navigate(R.id.profileFragment) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
->>>>>>> 4f17407e07e41c0782b70c3b7b36d9c821cc0677
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
