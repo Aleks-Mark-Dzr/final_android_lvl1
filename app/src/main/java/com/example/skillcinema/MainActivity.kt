@@ -41,18 +41,41 @@ class MainActivity : AppCompatActivity() {
         // Применяем граф к контроллеру
         navController.setGraph(navGraph, null)
 
-        binding.ivSearch.setOnClickListener() { navController.navigate(R.id.searchFragment)
+        binding.ivHome.setOnClickListener {
+            if (navController.currentDestination?.id != R.id.homepageFragment) {
+                navController.navigate(R.id.homepageFragment) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
 
-        binding.ivHome.setOnClickListener(){
-            navController.navigate(R.id.homepageFragment)
+        binding.ivSearch.setOnClickListener {
+            if (navController.currentDestination?.id != R.id.searchFragment) {
+                navController.navigate(R.id.searchFragment) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
 
-        binding.ivUser.setOnClickListener(){
-            navController.navigate(R.id.profileFragment)
+        binding.ivUser.setOnClickListener {
+            if (navController.currentDestination?.id != R.id.profileFragment) {
+                navController.navigate(R.id.profileFragment) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
         }
-
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Скрывать меню на экране онбординга
