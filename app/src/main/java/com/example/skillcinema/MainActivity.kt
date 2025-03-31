@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import com.example.skillcinema.databinding.ActivityMainBinding
 import com.google.android.gms.ads.MobileAds
 
@@ -41,18 +42,18 @@ class MainActivity : AppCompatActivity() {
         // Применяем граф к контроллеру
         navController.setGraph(navGraph, null)
 
-        binding.ivSearch.setOnClickListener() { navController.navigate(R.id.searchFragment)
+        // Навигация без дублирования фрагментов в back stack
+        binding.ivSearch.setOnClickListener {
+            navigateSingleTop(R.id.searchFragment)
         }
 
-        binding.ivHome.setOnClickListener(){
-            navController.navigate(R.id.homepageFragment)
+        binding.ivHome.setOnClickListener {
+            navigateSingleTop(R.id.homepageFragment)
         }
 
-        binding.ivUser.setOnClickListener(){
-            navController.navigate(R.id.profileFragment)
+        binding.ivUser.setOnClickListener {
+            navigateSingleTop(R.id.profileFragment)
         }
-
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Скрывать меню на экране онбординга
@@ -62,6 +63,14 @@ class MainActivity : AppCompatActivity() {
                 binding.navigationMenu.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun navigateSingleTop(destinationId: Int) {
+        val navOptions = navOptions {
+            launchSingleTop = true
+            popUpTo(destinationId) { inclusive = false }
+        }
+        navController.navigate(destinationId, null, navOptions)
     }
 
     override fun onSupportNavigateUp(): Boolean {
