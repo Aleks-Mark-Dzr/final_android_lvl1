@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.skillcinema.data.repository.MovieRepository
-//import com.example.skillcinema.data.model.Movie
 
 class SearchViewModel(private val repository: MovieRepository) : ViewModel() {
 
