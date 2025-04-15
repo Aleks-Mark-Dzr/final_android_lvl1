@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import android.util.Log
+import androidx.navigation.fragment.findNavController
 
 class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
@@ -71,7 +72,8 @@ class SearchFragment : Fragment() {
         }
 
         searchAdapter = SearchAdapter { movie ->
-            Toast.makeText(requireContext(), "Вы выбрали: ${movie.nameRu}", Toast.LENGTH_SHORT).show()
+            val action = SearchFragmentDirections.actionSearchFragmentToMovieDetailFragment(movie.kinopoiskId)
+            findNavController().navigate(action)
         }
 
         binding.recyclerSearchResults.layoutManager = LinearLayoutManager(requireContext())
