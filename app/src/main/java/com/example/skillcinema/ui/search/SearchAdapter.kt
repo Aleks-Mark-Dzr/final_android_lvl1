@@ -11,7 +11,7 @@ import com.example.skillcinema.databinding.ItemFilmBinding
 
 //import com.example.skillcinema.data.model.Movie
 
-class SearchAdapter(private val onMovieClick: (Movie) -> Unit) :
+class SearchAdapter(private val onMovieClick: (Int) -> Unit) :
     ListAdapter<Movie, SearchAdapter.SearchViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
@@ -37,7 +37,7 @@ class SearchAdapter(private val onMovieClick: (Movie) -> Unit) :
                 .load(movie.posterUrlPreview)
                 .into(binding.filmPoster)
 
-            binding.root.setOnClickListener { onMovieClick(movie) }
+            binding.root.setOnClickListener { onMovieClick(movie.kinopoiskId) } // ✅ передаём только ID
         }
     }
 

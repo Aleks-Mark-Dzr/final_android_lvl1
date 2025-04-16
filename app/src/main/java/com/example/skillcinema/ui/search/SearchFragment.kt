@@ -20,6 +20,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import android.util.Log
 import androidx.navigation.fragment.findNavController
+import com.example.skillcinema.R
 
 class SearchFragment : Fragment() {
     private var _binding: SearchFragmentBinding? = null
@@ -27,6 +28,11 @@ class SearchFragment : Fragment() {
     private lateinit var viewModel: SearchViewModel
     private lateinit var searchAdapter: SearchAdapter
     private var searchJob: Job? = null
+
+    private val onMovieClick: (Int) -> Unit = { movieId ->
+        Log.d("SearchFragment", "Клик по фильму с ID: $movieId")
+        navigateToMovieDetail(movieId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -71,10 +77,7 @@ class SearchFragment : Fragment() {
             Toast.makeText(requireContext(), "Открыть настройки поиска", Toast.LENGTH_SHORT).show()
         }
 
-        searchAdapter = SearchAdapter { movie ->
-            val action = SearchFragmentDirections.actionSearchFragmentToMovieDetailFragment(movie.kinopoiskId)
-            findNavController().navigate(action)
-        }
+        searchAdapter = SearchAdapter(onMovieClick)
 
         binding.recyclerSearchResults.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerSearchResults.adapter = searchAdapter
@@ -89,6 +92,19 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+    }
+
+    // ✅ переход на `MovieDetailFragment`
+    private fun navigateToMovieDetail(movieId: Int) {
+        if (!isAdded) return // Проверяем, что фрагмент еще добавлен в NavController
+
+        Log.d("SearchFragment", "Навигация в MovieDetailFragment с movieId = $movieId")
+
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        findNavController().navigate(R.id.action_searchFragment_to_movieDetailFragment, bundle)
     }
 
     override fun onDestroyView() {
