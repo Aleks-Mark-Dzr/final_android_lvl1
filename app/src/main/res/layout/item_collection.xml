@@ -8,15 +8,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/ivCollectionIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_no_favorite_2"
+            android:contentDescription="@string/collection_favorite"/>
 
         <TextView
             android:id="@+id/tvCollectionName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Коллекция"
+            android:text="@string/favorite_collection"
             android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="2"

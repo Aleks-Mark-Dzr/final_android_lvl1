@@ -37,5 +37,7 @@
     <string name="collections">Коллекции</string>
     <string name="create_your_own_collection">+ Создай свою коллекцию</string>
     <string name="were_you_interested">Вам было интересно</string>
+    <string name="collection_favorite">Любимые</string>
+    <string name="favorite_collection">Любимые</string>
 
 </resources>
