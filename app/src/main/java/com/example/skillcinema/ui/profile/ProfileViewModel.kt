@@ -41,8 +41,8 @@ class ProfileViewModel : ViewModel() {
     private fun loadCollections() {
         viewModelScope.launch {
             _collections.value = listOf(
-//                Collection(1, "Любимые", listOf()),
-//                Collection(2, "Хочу посмотреть", listOf())
+                Collection(1, "Любимые", listOf()),
+                Collection(2, "Хочу посмотреть", listOf())
             )
         }
     }
