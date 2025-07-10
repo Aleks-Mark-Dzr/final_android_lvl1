@@ -39,5 +39,6 @@
     <string name="were_you_interested">Вам было интересно</string>
     <string name="collection_favorite">Любимые</string>
     <string name="favorite_collection">Любимые</string>
+    <string name="favorite_collection_card">Любимые</string>
 
 </resources>
