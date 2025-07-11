@@ -40,5 +40,7 @@
     <string name="collection_favorite">Любимые</string>
     <string name="favorite_collection">Любимые</string>
     <string name="favorite_collection_card">Любимые</string>
+    <string name="want_to_see">Хочу посмотреть</string>
+    <string name="want_to_see_collection_text">Хочу посмотреть</string>
 
 </resources>

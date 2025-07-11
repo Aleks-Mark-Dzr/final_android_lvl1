@@ -17,25 +17,25 @@
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/tvFavoriteCardImage"
+            android:id="@+id/tvWantToSeeCardImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/collection_favorite"
-            android:src="@drawable/ic_favorite_2"
+            android:contentDescription="@string/want_to_see"
+            android:src="@drawable/ic_no_bookmark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvFavoriteCardText"
+            android:id="@+id/tvWantToSeeCardText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/favorite_collection_card"
+            android:text="@string/want_to_see_collection_text"
             app:layout_constraintBottom_toTopOf="@id/tvCounter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvFavoriteCardImage" />
+            app:layout_constraintTop_toBottomOf="@id/tvWantToSeeCardImage" />
 
         <TextView
             android:id="@+id/tvCounter"
@@ -51,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvFavoriteCardText" />
+            app:layout_constraintTop_toBottomOf="@id/tvWantToSeeCardText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
