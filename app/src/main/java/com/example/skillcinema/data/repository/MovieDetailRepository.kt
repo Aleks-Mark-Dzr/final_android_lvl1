@@ -6,6 +6,8 @@ import com.example.skillcinema.data.database.MovieDao
 import com.example.skillcinema.data.database.MovieEntity
 import com.example.skillcinema.network.MovieApiService
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -20,6 +22,7 @@ interface MovieDetailRepository {
     suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
     suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
     suspend fun getMovieById(movieId: Int): MovieEntity?
+    fun getFavoriteMovies(): Flow<List<Movie>>
 }
 
 class MovieDetailRepositoryImpl @Inject constructor(
@@ -151,6 +154,12 @@ class MovieDetailRepositoryImpl @Inject constructor(
     override suspend fun getMovieById(movieId: Int): MovieEntity? {
         return movieDao.getMovieById(movieId)
     }
+
+    override fun getFavoriteMovies(): Flow<List<Movie>> {
+        return movieDao.getFavoriteMovies().map { entities ->
+            entities.map { it.toMovie() }
+        }
+    }
 }
 
 // ✅ Конвертация `MovieEntity` → `MovieDetailResponse`
@@ -169,6 +178,19 @@ private fun MovieEntity.toMovieDetailResponse(): MovieDetailResponse {
         serial = false,
         seasonsCount = null,
         ratingAgeLimits = null,
+    )
+}
+
+private fun MovieEntity.toMovie(): Movie {
+    return Movie(
+        filmId = this.movieId,
+        kinopoiskId = this.movieId,
+        nameRu = this.nameRu,
+        year = this.year ?: "",
+        posterUrlPreview = this.posterUrl ?: "",
+        rating = this.rating,
+        ratingKinopoisk = this.rating,
+        genres = emptyList()
     )
 }
 

@@ -5,13 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.skillcinema.R
+import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.ItemType
 import com.example.skillcinema.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
@@ -20,15 +22,22 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: ProfileViewModel by viewModels()
+    private lateinit var viewModel: ProfileViewModel
 
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var collectionAdapter: CollectionAdapter
     private lateinit var historyAdapter: HistoryAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val repository = (requireActivity().application as SkillCinemaApp).movieDetailRepository
+        val factory = ProfileViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -68,7 +77,6 @@ class ProfileFragment : Fragment() {
             it.adapter = collectionAdapter
         }
 
-
         binding.rvWereYouInterested.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvWereYouInterested.adapter = historyAdapter
@@ -78,8 +86,8 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.viewed.collect {
-                        movieAdapter.submitList(it)
+                    viewModel.favoriteMovies.collect { favorites ->
+                        movieAdapter.submitList(favorites)
                     }
                 }
 
@@ -110,9 +118,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun navigateToCollection(id: Int) {
-        // Если нет навигации — просто лог или тост
-        // val action = ProfileFragmentDirections.actionToCollectionDetail(id)
-        // findNavController().navigate(action)
+        if (id == 1) {
+            findNavController().navigate(R.id.action_profileFragment_to_favoritesFragment)
+        }
     }
 
     private fun navigateToPerson(id: Int) {

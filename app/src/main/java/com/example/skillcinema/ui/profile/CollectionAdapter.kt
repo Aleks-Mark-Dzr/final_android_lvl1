@@ -58,6 +58,8 @@ class CollectionAdapter(
         private val binding: ItemFavoriteCollectionBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(collection: Collection) {
+            binding.tvFavoriteCardText.text = collection.name
+            binding.tvCounter.text = collection.items.size.toString()
             binding.root.setOnClickListener { onClick(collection) }
         }
     }
@@ -66,6 +68,8 @@ class CollectionAdapter(
         private val binding: ItemWantToSeeCollectionBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(collection: Collection) {
+            binding.tvWantToSeeCardText.text = collection.name
+            binding.tvCounter.text = collection.items.size.toString()
             binding.root.setOnClickListener { onClick(collection) }
         }
     }

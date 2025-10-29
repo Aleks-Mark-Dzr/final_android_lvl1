@@ -134,6 +134,20 @@
         <action
             android:id="@+id/actionToMovieDetail"
             app:destination="@id/movieDetailFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.skillcinema.ui.profile.favorites.FavoritesFragment"
+        android:label="Любимые"
+        tools:layout="@layout/fragment_favorites">
+        <action
+            android:id="@+id/action_favoritesFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
     </fragment>
 
 

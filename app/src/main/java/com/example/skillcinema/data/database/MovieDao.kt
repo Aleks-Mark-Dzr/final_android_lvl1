@@ -1,7 +1,10 @@
 package com.example.skillcinema.data.database
 
-import androidx.room.*
-import com.example.skillcinema.data.database.MovieEntity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -20,4 +23,7 @@ interface MovieDao {
 
     @Query("UPDATE movies SET isWatchLater = :watchLater WHERE movieId = :movieId")
     suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
+
+    @Query("SELECT * FROM movies WHERE isFavorite = 1")
+    fun getFavoriteMovies(): Flow<List<MovieEntity>>
 }
