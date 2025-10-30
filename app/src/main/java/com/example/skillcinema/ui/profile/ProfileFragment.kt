@@ -24,7 +24,6 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: ProfileViewModel
 
-    private lateinit var movieAdapter: MovieAdapter
     private lateinit var collectionAdapter: CollectionAdapter
     private lateinit var historyAdapter: HistoryAdapter
 
@@ -51,9 +50,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        movieAdapter = MovieAdapter { movie ->
-            navigateToMovie(movie.kinopoiskId)
-        }
 
         collectionAdapter = CollectionAdapter { collection ->
             navigateToCollection(collection.id)
@@ -69,8 +65,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        binding.rvActors.layoutManager = GridLayoutManager(context, 4)
-        binding.rvActors.adapter = movieAdapter
 
         binding.rvCreateYourOwnCollection.layoutManager = GridLayoutManager(context, 2)
         binding.rvCreateYourOwnCollection?.let {
@@ -85,11 +79,6 @@ class ProfileFragment : Fragment() {
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.favoriteMovies.collect { favorites ->
-                        movieAdapter.submitList(favorites)
-                    }
-                }
 
                 launch {
                     viewModel.collections.collect {

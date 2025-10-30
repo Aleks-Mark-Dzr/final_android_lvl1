@@ -19,46 +19,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Просмотрено -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/sectionViewed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/viewed"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingConstraints" />
-
-                <TextView
-                    android:id="@+id/tvViewedCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/purple_500"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingConstraints" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvActors"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/sectionViewed"
-                    app:spanCount="4"
-                    tools:ignore="MissingConstraints"
-                    tools:listitem="@layout/item_movie" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <!-- Коллекции -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
