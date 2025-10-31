@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -73,7 +74,8 @@ class MovieDetailFragment : Fragment() {
         setupClickListeners()
         setupActorsRecyclerView()
         setupCrewRecyclerView()
-        fetchMovieDetailsWithRetry()
+        showLoading()
+        viewModel.fetchMovieDetails(movieId)
         observeStates()
     }
 
@@ -108,28 +110,13 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun observeStates() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isFavorite.collectLatest { isFavorite ->
-                    val icon = if (isFavorite) R.drawable.ic_favorite_2 else R.drawable.ic_no_favorite_2
-                    binding.ivFavorite.setImageResource(icon)
-                }
-                viewModel.isWatchLater.collectLatest { isWatchLater ->
-                    val icon = if (isWatchLater) R.drawable.ic_bookmark_2 else R.drawable.ic_no_bookmark
-                    binding.ivWatchLater.setImageResource(icon)
-                }
-                viewModel.isWatched.collectLatest { isWatched ->
-                    val icon = if (isWatched) R.drawable.ic_viewed else R.drawable.ic_not_viewed_2
-                    binding.ivWatched.setImageResource(icon)
-                }
-            }
-        }
         observeMovieDetails()
         observeActorsList()
         observeCrewList()
         observeFavoriteState()
         observeWatchLaterState()
         observeWatchedState()
+        observeErrorMessages()
     }
 
     private fun observeMovieDetails() {
@@ -176,6 +163,18 @@ class MovieDetailFragment : Fragment() {
                     val icon = if (isWatched) R.drawable.ic_viewed
                     else R.drawable.ic_not_viewed_2
                     binding.ivWatched.setImageResource(icon)
+                }
+            }
+        }
+    }
+
+    private fun observeErrorMessages() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.errorMessages.collectLatest { message ->
+                    if (message.isNotBlank()) {
+                        showErrorAndExit(message)
+                    }
                 }
             }
         }
@@ -259,10 +258,13 @@ class MovieDetailFragment : Fragment() {
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
             tvMovieRating.text = movie.ratingKinopoisk?.toString() ?: "N/A"
-            tvMovieYearGenres.text = formatYearAndGenres(movie)
-            tvCountry.text = movie.countries.joinToString(", ") { it.country }
-            tvDuration.text = movie.filmLength?.let { "$it мин." } ?: "Неизвестно"
-            tvAgeRestrictions.text = movie.ratingAgeLimits?.let { "$it+" } ?: "Не указано"
+            val yearAndGenres = formatYearAndGenres(movie)
+            tvMovieYearGenres.text = yearAndGenres
+            tvMovieYearGenres.isVisible = yearAndGenres.isNotBlank()
+
+            val countryDurationAge = formatCountryDurationAge(movie)
+            tvMovieCountryDurationAge.text = countryDurationAge
+            tvMovieCountryDurationAge.isVisible = countryDurationAge.isNotBlank()
             // Обрезка описания до 250 символов
             val fullDescription = movie.description?.takeIf { it.isNotBlank() } ?: "Описание не доступно"
             val shortDescription = if (fullDescription.length > 250) {
@@ -272,7 +274,6 @@ class MovieDetailFragment : Fragment() {
             }
             tvMovieDescription.text = shortDescription
             tvMovieDescription.visibility = View.VISIBLE // Убедимся, что элемент не скрыт
-
             // Добавление обработчика нажатий для разворачивания текста
             var isExpanded = false
             tvMovieDescription.setOnClickListener {
@@ -284,10 +285,45 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun formatYearAndGenres(movie: MovieDetailResponse): String {
-        return listOfNotNull(
-            movie.year?.toString(),
-            movie.genres?.joinToString { it.genre }
-        ).joinToString(" | ")
+        val year = movie.year?.takeIf { it.isNotBlank() }
+        val genres = movie.genres
+            .mapNotNull { it.genre.takeIf { genre -> genre.isNotBlank() } }
+            .joinToString(", ")
+            .takeIf { it.isNotBlank() }
+
+        return listOfNotNull(year, genres).joinToString(", ")
+    }
+
+    private fun formatCountryDurationAge(movie: MovieDetailResponse): String {
+        val countries = movie.countries
+            .mapNotNull { it.country.takeIf { country -> country.isNotBlank() } }
+            .joinToString(", ")
+            .takeIf { it.isNotBlank() }
+        val duration = movie.filmLength?.takeIf { it > 0 }?.let { formatDurationMinutes(it) }
+        val age = movie.ratingAgeLimits
+            ?.let { extractAgeLimit(it) }
+            ?.takeIf { it.isNotBlank() }
+
+        return listOfNotNull(countries, duration, age).joinToString(", ")
+    }
+
+    private fun extractAgeLimit(ageLimit: String): String {
+        val digits = ageLimit.filter { it.isDigit() }
+        return if (digits.isNotEmpty()) {
+            "$digits+"
+        } else {
+            ageLimit
+        }
+    }
+
+    private fun formatDurationMinutes(totalMinutes: Int): String {
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+        return when {
+            hours > 0 && minutes > 0 -> "${hours} ч ${minutes} мин"
+            hours > 0 -> "${hours} ч"
+            else -> "${minutes} мин"
+        }
     }
 
     private fun showErrorAndExit(message: String) {
@@ -303,22 +339,6 @@ class MovieDetailFragment : Fragment() {
     private fun showLoading() {
         binding.progressBar.visibility = View.VISIBLE
         binding.contentContainer.visibility = View.GONE
-    }
-
-    private fun fetchMovieDetailsWithRetry(retryCount: Int = 3) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            Log.d("MovieDetailFragment", "Начинаем загрузку данных для фильма ID: $movieId")
-            repeat(retryCount) { attempt ->
-                try {
-                    viewModel.fetchMovieDetails(movieId)
-                    delay(1000)
-                    if (viewModel.movieDetail.value != null) return@launch
-                } catch (e: Exception) {
-                    Log.e("MovieDetailFragment", "Attempt ${attempt + 1} failed: ${e.message}")
-                }
-            }
-            showErrorAndExit("❌ Ошибка загрузки фильма")
-        }
     }
 
     override fun onDestroyView() {

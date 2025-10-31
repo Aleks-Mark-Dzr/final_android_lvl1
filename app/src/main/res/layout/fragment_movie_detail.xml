@@ -102,48 +102,14 @@
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvMovieCountryDurationAge"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingTop="4dp">
-
-                        <TextView
-                            android:id="@+id/tvCountry"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=", "
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvDuration"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=", "
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvAgeRestrictions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-                    </LinearLayout>
+                        android:textAlignment="center"
+                        android:paddingTop="4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
 
                     <!-- Панель действий (кликабельные изображения) -->
                     <LinearLayout

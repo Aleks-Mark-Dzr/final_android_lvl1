@@ -34,17 +34,19 @@ class MovieDetailRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieDetails(movieId: Int): MovieDetailResponse? {
         return withContext(repositoryScope.coroutineContext) {
+            var cachedMovie: MovieEntity? = null
             try {
                 Log.d("MovieDetailRepository", "📤 Запрос фильма с ID: $movieId")
 
-                // Проверяем локальную базу
-                val cachedMovie = movieDao.getMovieById(movieId)
+                cachedMovie = movieDao.getMovieById(movieId)
                 if (cachedMovie != null) {
-                    Log.d("MovieDetailRepository", "✅ Фильм найден в локальной базе: ${cachedMovie.nameRu}")
-                    return@withContext cachedMovie.toMovieDetailResponse()
+                    Log.d(
+                        "MovieDetailRepository",
+                        "✅ Фильм найден в локальной базе: ${cachedMovie.nameRu}. Все равно запрашиваем свежие данные из API"
+                    )
+                } else {
+                    Log.d("MovieDetailRepository", "🌐 Фильма нет в локальной базе, запрашиваем из API...")
                 }
-
-                Log.d("MovieDetailRepository", "🌐 Запрашиваем фильм из API...")
 
                 var movie: MovieDetailResponse? = null
 
@@ -64,30 +66,40 @@ class MovieDetailRepositoryImpl @Inject constructor(
                     }
                 }
 
-                if (movie == null) {
-                    Log.e("MovieDetailRepository", "❌ Фильм не удалось загрузить после 3 попыток")
-                    return@withContext null
+                if (movie != null) {
+                    Log.d("MovieDetailRepository", "✅ Успешно загружен фильм: ${movie!!.nameRu}")
+
+                    // Сохраняем в локальную базу, сохраняя пользовательские флаги
+                    movieDao.insertMovie(movie!!.toMovieEntity(cachedMovie))
+                    Log.d("MovieDetailRepository", "💾 Фильм сохранен в локальную базу")
+
+                    return@withContext movie
                 }
 
-                Log.d("MovieDetailRepository", "✅ Успешно загружен фильм: ${movie!!.nameRu}")
+                Log.e("MovieDetailRepository", "❌ Фильм не удалось загрузить после 3 попыток")
 
-                // Сохраняем в локальную базу
-                movieDao.insertMovie(movie!!.toMovieEntity())
-                Log.d("MovieDetailRepository", "💾 Фильм сохранен в локальную базу")
+                // Если API недоступно, пытаемся вернуть данные из локальной базы
+                if (cachedMovie != null) {
+                    Log.w(
+                        "MovieDetailRepository",
+                        "⚠️ Возвращаем кэшированные данные (без дополнительной информации из API)"
+                    )
+                    return@withContext cachedMovie.toMovieDetailResponse()
+                }
 
-                return@withContext movie
+                return@withContext null
             } catch (e: HttpException) {
                 Log.e("MovieDetailRepository", "❌ HTTP Ошибка: ${e.code()} - ${e.message()}", e)
-                null
+                cachedMovie?.toMovieDetailResponse()
             } catch (e: IOException) {
                 Log.e("MovieDetailRepository", "❌ Ошибка сети: ${e.message}", e)
-                null
+                cachedMovie?.toMovieDetailResponse()
             } catch (e: CancellationException) {
                 Log.e("MovieDetailRepository", "⏳ Запрос отменен", e)
-                null
+                cachedMovie?.toMovieDetailResponse()
             } catch (e: Exception) {
                 Log.e("MovieDetailRepository", "❌ Ошибка при получении фильма: ${e.message}", e)
-                null
+                cachedMovie?.toMovieDetailResponse()
             }
         }
     }
@@ -195,16 +207,17 @@ private fun MovieEntity.toMovie(): Movie {
 }
 
 // ✅ Конвертация `MovieDetailResponse` → `MovieEntity`
-private fun MovieDetailResponse.toMovieEntity(): MovieEntity {
+private fun MovieDetailResponse.toMovieEntity(previous: MovieEntity?): MovieEntity {
     return MovieEntity(
         movieId = this.kinopoiskId,
-        nameRu = this.nameRu ?: "Неизвестно",
-        nameOriginal = this.nameOriginal ?: "",
-        year = this.year ?: "",
-        posterUrl = this.posterUrl ?: "",
-        rating = this.ratingKinopoisk ?: 0.0,
-        isWatched = false,
-        isFavorite = false,
-        description = this.description
+        nameRu = this.nameRu ?: previous?.nameRu ?: "Неизвестно",
+        nameOriginal = this.nameOriginal ?: previous?.nameOriginal,
+        year = this.year ?: previous?.year,
+        posterUrl = this.posterUrl ?: previous?.posterUrl,
+        rating = this.ratingKinopoisk ?: previous?.rating,
+        isWatched = previous?.isWatched ?: false,
+        isFavorite = previous?.isFavorite ?: false,
+        isWatchLater = previous?.isWatchLater ?: false,
+        description = this.description ?: previous?.description
     )
 }
