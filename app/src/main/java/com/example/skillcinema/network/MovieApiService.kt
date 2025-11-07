@@ -77,5 +77,6 @@ interface MovieApiService {
         @Query("ratingTo") ratingTo: Int? = null,
         @Query("page") page: Int = 1
     ): MovieResponse
+    
 
 }
