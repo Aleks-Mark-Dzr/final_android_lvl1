@@ -16,6 +16,8 @@ interface MovieDetailRepository {
     suspend fun getMovieDetails(movieId: Int): MovieDetailResponse?
     suspend fun getMovieCast(movieId: Int): List<ActorResponse>
     suspend fun getMovieGallery(movieId: Int): GalleryResponse
+
+    suspend fun getMovieImages(movieId: Int, type: String, page: Int = 1): MovieImagesResponse
     suspend fun getSeasons(movieId: Int): SeasonsResponse
     suspend fun getSimilarMovies(movieId: Int): SimilarMoviesResponse
     suspend fun updateFavoriteStatus(movieId: Int, favorite: Boolean)
@@ -126,6 +128,23 @@ class MovieDetailRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Log.e("MovieDetailRepository", "❌ Ошибка загрузки галереи: ${e.message}")
                 GalleryResponse(total = 0, items = emptyList())
+            }
+        }
+
+    override suspend fun getMovieImages(movieId: Int, type: String, page: Int): MovieImagesResponse =
+        withContext(Dispatchers.IO) {
+            try {
+                Log.d(
+                    "MovieDetailRepository",
+                    "🖼️ Запрос изображений ($type) для фильма ID: $movieId, страница: $page"
+                )
+                apiService.getMovieImages(movieId, type, page)
+            } catch (e: Exception) {
+                Log.e(
+                    "MovieDetailRepository",
+                    "❌ Ошибка загрузки изображений ($type): ${e.message}"
+                )
+                MovieImagesResponse(total = 0, items = emptyList())
             }
         }
 

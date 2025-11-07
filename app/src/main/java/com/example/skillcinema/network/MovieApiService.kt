@@ -54,6 +54,13 @@ interface MovieApiService {
     @GET("/api/v2.2/films/{filmId}/similars")
     suspend fun getSimilarMovies(@Path("filmId") filmId: Int): SimilarMoviesResponse
 
+    @GET("/api/v2.2/films/{filmId}/images")
+    suspend fun getMovieImages(
+        @Path("filmId") filmId: Int,
+        @Query("type") type: String,
+        @Query("page") page: Int = 1
+    ): MovieImagesResponse
+
     @GET("/api/v1/staff")
     suspend fun getMovieCast(@Query("filmId") filmId: Int): List<ActorResponse>
 
@@ -70,7 +77,5 @@ interface MovieApiService {
         @Query("ratingTo") ratingTo: Int? = null,
         @Query("page") page: Int = 1
     ): MovieResponse
-
-
 
 }
