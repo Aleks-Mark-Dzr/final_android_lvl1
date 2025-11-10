@@ -7,6 +7,7 @@ import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.GalleryItem
 import com.example.skillcinema.data.GalleryResponse
 import com.example.skillcinema.data.MovieDetailResponse
+import com.example.skillcinema.data.MovieImagesResponse
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -48,6 +49,8 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _errorMessages = MutableSharedFlow<String>(replay = 0, extraBufferCapacity = 1)
     val errorMessages: SharedFlow<String> = _errorMessages.asSharedFlow()
 
+    private val galleryImageTypes = listOf("SHOOTING", "POSTER")
+
     fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
             Log.d("MovieDetailViewModel", "Запрос деталей фильма для ID: $movieId")
@@ -65,6 +68,16 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                     val galleryDeferred = async {
                         Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/frames")
                         repository.getMovieGallery(movieId)
+                    }
+
+                    val imageRequests = galleryImageTypes.associateWith { type ->
+                        async {
+                            Log.d(
+                                "MovieDetailViewModel",
+                                "API: /api/v2.2/films/$movieId/images?type=$type&page=1"
+                            )
+                            repository.getMovieImages(movieId, type)
+                        }
                     }
 
                     val movie = try {
@@ -88,7 +101,21 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                         null
                     }
 
-                    MovieDetailResult(movie, staff, gallery)
+                    val imagesByType = imageRequests.mapValues { (type, deferred) ->
+                        try {
+                            deferred.await()
+                        } catch (error: Exception) {
+                            Log.e(
+                                "MovieDetailViewModel",
+                                "Ошибка при загрузке изображений типа $type",
+                                error
+                            )
+                            null
+                        }
+                    }.filterValues { response -> response != null }
+                        .mapValues { (_, response) -> response!! }
+
+                    MovieDetailResult(movie, staff, gallery, imagesByType)
                 }
 
                 val movie = result.movie
@@ -109,14 +136,32 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 _actorsList.value = actors
                 _crewList.value = crew
 
-                val galleryItems = result.gallery?.items
+                val galleryItems = buildList {
+                    addAll(
+                        result.gallery?.items
+                            ?.filter { !it.imageUrl.isNullOrBlank() }
+                            .orEmpty()
+                    )
+
+                    result.imagesByType.forEach { (type, response) ->
+                        response.items.forEach { image ->
+                            if (image.imageUrl.isNotBlank()) {
+                                add(GalleryItem(imageUrl = image.imageUrl, type = type))
+                            }
+                        }
+                    }
+                }
                     ?.filter { !it.imageUrl.isNullOrBlank() }
                     .orEmpty()
                 _galleryByType.value = galleryItems.groupBy { item ->
                     (item.type ?: "").ifBlank { "OTHER" }
                 }
-                _galleryTotalCount.value = result.gallery?.total
-                    ?.takeIf { it > 0 }
+                val totalFromGallery = result.gallery?.total?.takeIf { it > 0 } ?: 0
+                val totalFromImages = result.imagesByType.values.sumOf { response ->
+                    response.total.takeIf { it > 0 } ?: 0
+                }
+                _galleryTotalCount.value = (totalFromGallery + totalFromImages)
+                    .takeIf { it > 0 }
                     ?: galleryItems.size
 
                 Log.d("MovieDetailViewModel", "Фильм загружен: ${movie.nameRu}")
@@ -170,6 +215,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private data class MovieDetailResult(
         val movie: MovieDetailResponse?,
         val staff: List<ActorResponse>,
-        val gallery: GalleryResponse?
+        val gallery: GalleryResponse?,
+        val imagesByType: Map<String, MovieImagesResponse>
     )
 }
