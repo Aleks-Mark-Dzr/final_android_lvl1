@@ -31,6 +31,15 @@
     <string name="user">Пользователь</string>
     <string name="search_settings">Настройки поиска</string>
     <string name="sectionGallery">Галерея</string>
+    <string name="gallery_type_shooting">Со съёмок</string>
+    <string name="gallery_type_still">Кадры из фильма</string>
+    <string name="gallery_type_poster">Постеры</string>
+    <string name="gallery_type_fan_art">Фан-арты</string>
+    <string name="gallery_type_concept">Концепт-арты</string>
+    <string name="gallery_type_wallpaper">Обои</string>
+    <string name="gallery_type_cover">Обложки</string>
+    <string name="gallery_type_screenshot">Скриншоты</string>
+    <string name="gallery_type_other">Другие</string>
     <string name="photo">Описание фото</string>
     <string name="serial_poster">Постер сериала</string>
     <string name="viewed">Просмотрено</string>

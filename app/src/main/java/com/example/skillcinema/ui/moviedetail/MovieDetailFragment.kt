@@ -15,22 +15,25 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.skillcinema.GlideApp
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.data.Actor
-import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.CrewMember
+import com.example.skillcinema.data.GalleryItem
+import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
 import com.example.skillcinema.ui.adapters.ActorsAdapter
 import com.example.skillcinema.ui.adapters.CrewAdapter
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModelFactory
-import kotlinx.coroutines.delay
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class MovieDetailFragment : Fragment() {
@@ -49,6 +52,8 @@ class MovieDetailFragment : Fragment() {
         // Обработка клика по персоналу
     }
 
+    private val galleryAdapter = GalleryAdapter()
+    private var selectedGalleryType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +79,7 @@ class MovieDetailFragment : Fragment() {
         setupClickListeners()
         setupActorsRecyclerView()
         setupCrewRecyclerView()
+        setupGalleryRecyclerView()
         showLoading()
         viewModel.fetchMovieDetails(movieId)
         observeStates()
@@ -109,6 +115,12 @@ class MovieDetailFragment : Fragment() {
         binding.rvStaff.adapter = crewAdapter
     }
 
+    private fun setupGalleryRecyclerView() {
+        binding.rvPhotos.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.rvPhotos.adapter = galleryAdapter
+    }
+
     private fun observeStates() {
         observeMovieDetails()
         observeActorsList()
@@ -117,6 +129,7 @@ class MovieDetailFragment : Fragment() {
         observeWatchLaterState()
         observeWatchedState()
         observeErrorMessages()
+        observeGallery()
     }
 
     private fun observeMovieDetails() {
@@ -200,6 +213,20 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun observeGallery() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                combine(
+                    viewModel.galleryByType,
+                    viewModel.galleryTotalCount
+                ) { galleryByType, totalCount -> galleryByType to totalCount }
+                    .collectLatest { (galleryByType, totalCount) ->
+                        updateGalleryUI(galleryByType, totalCount)
+                    }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun updateActorsUI(actors: List<ActorResponse>) {
         // Общее количество актёров
@@ -243,6 +270,91 @@ class MovieDetailFragment : Fragment() {
         tvStaffCount.text = if (totalCrew > 6) "Всего участников: $totalCrew" else ""
         crewAdapter.submitList( if (totalCrew > 6) crew.take(6) else crew )
         rvStaff.visibility = View.VISIBLE
+    }
+
+    private fun updateGalleryUI(
+        galleryByType: Map<String, List<GalleryItem>>,
+        totalCount: Int
+    ) = with(binding) {
+        if (galleryByType.isEmpty()) {
+            chipsScrollContainer.visibility = View.GONE
+            rvPhotos.visibility = View.GONE
+            tvPhotosCount.text = ""
+            tvPhotosCount.visibility = View.GONE
+            galleryAdapter.submitList(emptyList())
+            return@with
+        }
+
+        chipsScrollContainer.visibility = View.VISIBLE
+        rvPhotos.visibility = View.VISIBLE
+        val shouldShowCount = totalCount > 20
+        tvPhotosCount.text = if (shouldShowCount) totalCount.toString() else ""
+        tvPhotosCount.isVisible = shouldShowCount
+
+        createOrUpdateChips(galleryByType)
+        updatePhotosList(galleryByType)
+    }
+
+    private fun createOrUpdateChips(galleryByType: Map<String, List<GalleryItem>>) {
+        val chipGroup = binding.chipGroupPhotoTypes
+        val sortedTypes = galleryByType.keys.sortedBy { getGalleryTypeName(it) }
+
+        val desiredSelection = when {
+            selectedGalleryType != null && galleryByType.containsKey(selectedGalleryType) ->
+                selectedGalleryType
+            else -> sortedTypes.firstOrNull()
+        }
+        selectedGalleryType = desiredSelection
+
+        chipGroup.removeAllViews()
+
+        sortedTypes.forEach { type ->
+            val chip = Chip(requireContext()).apply {
+                text = getGalleryTypeName(type)
+                isCheckable = true
+                tag = type
+            }
+            chip.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    if (selectedGalleryType != type) {
+                        selectedGalleryType = type
+                        updatePhotosList(galleryByType)
+                    }
+                }
+            }
+            chipGroup.addView(chip)
+            if (type == selectedGalleryType) {
+                chip.isChecked = true
+            }
+        }
+
+        if (chipGroup.childCount == 0) {
+            selectedGalleryType = null
+        }
+    }
+
+    private fun updatePhotosList(galleryByType: Map<String, List<GalleryItem>>) {
+        val type = selectedGalleryType
+        val images = if (type != null) {
+            galleryByType[type].orEmpty()
+        } else {
+            emptyList()
+        }
+        galleryAdapter.submitList(images.take(20))
+    }
+
+    private fun getGalleryTypeName(type: String): String {
+        return when (type.uppercase()) {
+            "SHOOTING" -> getString(R.string.gallery_type_shooting)
+            "STILL" -> getString(R.string.gallery_type_still)
+            "POSTER" -> getString(R.string.gallery_type_poster)
+            "FAN_ART" -> getString(R.string.gallery_type_fan_art)
+            "CONCEPT" -> getString(R.string.gallery_type_concept)
+            "WALLPAPER" -> getString(R.string.gallery_type_wallpaper)
+            "COVER" -> getString(R.string.gallery_type_cover)
+            "SCREENSHOT" -> getString(R.string.gallery_type_screenshot)
+            else -> getString(R.string.gallery_type_other)
+        }
     }
 
 

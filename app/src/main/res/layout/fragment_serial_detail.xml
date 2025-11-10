@@ -325,15 +325,37 @@
                     app:layout_constraintStart_toEndOf="@id/sectionGallery"
                     app:layout_constraintTop_toTopOf="@id/sectionGallery"/>
 
+                <HorizontalScrollView
+                    android:id="@+id/chipsScrollContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:overScrollMode="never"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sectionGallery">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupPhotoTypes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp"
+                        app:selectionRequired="false"
+                        app:singleLine="true"
+                        app:singleSelection="true" />
+                </HorizontalScrollView>
+
                 <!-- Горизонтальный список превью -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvPhotos"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintTop_toBottomOf="@id/sectionGallery"
+                    app:layout_constraintTop_toBottomOf="@id/chipsScrollContainer"
                     tools:listitem="@layout/item_photo"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

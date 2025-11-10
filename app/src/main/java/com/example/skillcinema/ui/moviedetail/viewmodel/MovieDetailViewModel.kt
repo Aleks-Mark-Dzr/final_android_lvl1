@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.data.ActorResponse
+import com.example.skillcinema.data.GalleryItem
+import com.example.skillcinema.data.GalleryResponse
 import com.example.skillcinema.data.MovieDetailResponse
-import com.example.skillcinema.data.MovieImage
-import com.example.skillcinema.data.MovieImagesResponse
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,11 +29,11 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _crewList = MutableStateFlow<List<ActorResponse>>(emptyList())
     val crewList: StateFlow<List<ActorResponse>> = _crewList.asStateFlow()
 
-    private val _shootingImages = MutableStateFlow<List<MovieImage>>(emptyList())
-    val shootingImages: StateFlow<List<MovieImage>> = _shootingImages.asStateFlow()
+    private val _galleryByType = MutableStateFlow<Map<String, List<GalleryItem>>>(emptyMap())
+    val galleryByType: StateFlow<Map<String, List<GalleryItem>>> = _galleryByType.asStateFlow()
 
-    private val _posterImages = MutableStateFlow<List<MovieImage>>(emptyList())
-    val posterImages: StateFlow<List<MovieImage>> = _posterImages.asStateFlow()
+    private val _galleryTotalCount = MutableStateFlow(0)
+    val galleryTotalCount: StateFlow<Int> = _galleryTotalCount.asStateFlow()
 
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite: StateFlow<Boolean> = _isFavorite.asStateFlow()
@@ -62,16 +62,17 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                         Log.d("MovieDetailViewModel", "API: /api/v1/staff?filmId=$movieId")
                         repository.getMovieCast(movieId)
                     }
-                    val shootingDeferred = async {
-                        Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/images?type=SHOOTING&page=1")
-                        repository.getMovieImages(movieId, "SHOOTING")
-                    }
-                    val posterDeferred = async {
-                        Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/images?type=POSTER&page=1")
-                        repository.getMovieImages(movieId, "POSTER")
+                    val galleryDeferred = async {
+                        Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/frames")
+                        repository.getMovieGallery(movieId)
                     }
 
-                    val movie = movieDeferred.await()
+                    val movie = try {
+                        movieDeferred.await()
+                    } catch (error: Exception) {
+                        Log.e("MovieDetailViewModel", "Ошибка при загрузке деталей фильма", error)
+                        null
+                    }
 
                     val staff = try {
                         staffDeferred.await()
@@ -80,21 +81,14 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                         emptyList()
                     }
 
-                    val shooting = try {
-                        shootingDeferred.await()
+                    val gallery = try {
+                        galleryDeferred.await()
                     } catch (error: Exception) {
-                        Log.e("MovieDetailViewModel", "Ошибка при загрузке съемочных изображений", error)
+                        Log.e("MovieDetailViewModel", "Ошибка при загрузке галереи", error)
                         null
                     }
 
-                    val posters = try {
-                        posterDeferred.await()
-                    } catch (error: Exception) {
-                        Log.e("MovieDetailViewModel", "Ошибка при загрузке постеров", error)
-                        null
-                    }
-
-                    MovieDetailResult(movie, staff, shooting, posters)
+                    MovieDetailResult(movie, staff, gallery)
                 }
 
                 val movie = result.movie
@@ -103,6 +97,8 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                     _movieDetail.value = null
                     _actorsList.value = emptyList()
                     _crewList.value = emptyList()
+                    _galleryByType.value = emptyMap()
+                    _galleryTotalCount.value = 0
                     _errorMessages.tryEmit("Не удалось загрузить данные фильма")
                     return@launch
                 }
@@ -112,13 +108,19 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 val (actors, crew) = result.staff.partition { it.professionKey == "ACTOR" }
                 _actorsList.value = actors
                 _crewList.value = crew
-                _shootingImages.value = result.shooting?.items.orEmpty()
-                _posterImages.value = result.posters?.items.orEmpty()
+
+                val galleryItems = result.gallery?.items.orEmpty()
+                _galleryByType.value = galleryItems.groupBy { item ->
+                    (item.type ?: "").ifBlank { "OTHER" }
+                }
+                _galleryTotalCount.value = result.gallery?.total
+                    ?.takeIf { it > 0 }
+                    ?: galleryItems.size
 
                 Log.d("MovieDetailViewModel", "Фильм загружен: ${movie.nameRu}")
                 Log.d(
                     "MovieDetailViewModel",
-                    "Загружено актеров: ${actors.size}, съемочной группы: ${crew.size}, съемочных фото: ${_shootingImages.value.size}, постеров: ${_posterImages.value.size}"
+                    "Загружено актеров: ${actors.size}, съемочной группы: ${crew.size}, изображений галереи: ${galleryItems.size}"
                 )
 
                 repository.getMovieById(movieId)?.let {
@@ -131,6 +133,8 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 _movieDetail.value = null
                 _actorsList.value = emptyList()
                 _crewList.value = emptyList()
+                _galleryByType.value = emptyMap()
+                _galleryTotalCount.value = 0
                 _errorMessages.tryEmit("Произошла ошибка при загрузке данных фильма")
             }
         }
@@ -164,7 +168,6 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private data class MovieDetailResult(
         val movie: MovieDetailResponse?,
         val staff: List<ActorResponse>,
-        val shooting: MovieImagesResponse?,
-        val posters: MovieImagesResponse?
+        val gallery: GalleryResponse?
     )
 }
