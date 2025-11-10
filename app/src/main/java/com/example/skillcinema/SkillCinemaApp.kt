@@ -1,6 +1,7 @@
 package com.example.skillcinema
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.skillcinema.data.database.MovieDatabase
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import com.example.skillcinema.data.repository.MovieDetailRepositoryImpl
@@ -23,6 +24,8 @@ class SkillCinemaApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         // 1. Создаем экземпляр кастомного Interceptor
         val customLoggingInterceptor = CustomHttpLoggingInterceptor()
