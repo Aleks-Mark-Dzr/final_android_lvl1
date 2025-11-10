@@ -109,7 +109,9 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 _actorsList.value = actors
                 _crewList.value = crew
 
-                val galleryItems = result.gallery?.items.orEmpty()
+                val galleryItems = result.gallery?.items
+                    ?.filter { !it.imageUrl.isNullOrBlank() }
+                    .orEmpty()
                 _galleryByType.value = galleryItems.groupBy { item ->
                     (item.type ?: "").ifBlank { "OTHER" }
                 }

@@ -24,8 +24,8 @@ data class GalleryResponse(
 )
 
 data class GalleryItem(
-    val imageUrl: String,
-    val type: String
+    val imageUrl: String?,
+    val type: String?
 )
 
 data class SeasonsResponse(

@@ -40,7 +40,7 @@ class SkillCinemaApp : Application() {
 
         // 3. Настройка Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://kinopoiskapiunofficial.tech/api/v2.2/") // Базовый URL API
+            .baseUrl("https://kinopoiskapiunofficial.tech/") // Базовый URL API
             .addConverterFactory(GsonConverterFactory.create()) // Конвертер для JSON
             .client(okHttpClient) // Используем настроенный OkHttpClient
             .build()
