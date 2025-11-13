@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.GalleryItem
 import com.example.skillcinema.data.GalleryResponse
+import com.example.skillcinema.data.Movie
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.data.MovieImagesResponse
 import com.example.skillcinema.data.repository.MovieDetailRepository
@@ -45,6 +46,9 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _isWatched = MutableStateFlow(false)
     val isWatched: StateFlow<Boolean> = _isWatched.asStateFlow()
 
+    private val _similarMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val similarMovies: StateFlow<List<Movie>> = _similarMovies.asStateFlow()
+
     // ❗ ОСТАВИТЬ ТОЛЬКО ЭТУ ПАРУ
     private val _errorMessages = MutableSharedFlow<String>(replay = 0, extraBufferCapacity = 1)
     val errorMessages: SharedFlow<String> = _errorMessages.asSharedFlow()
@@ -68,6 +72,11 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                     val galleryDeferred = async {
                         Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/frames")
                         repository.getMovieGallery(movieId)
+                    }
+
+                    val similarDeferred = async {
+                        Log.d("MovieDetailViewModel", "API: /api/v2.2/films/$movieId/similars")
+                        repository.getSimilarMovies(movieId)
                     }
 
                     val imageRequests = galleryImageTypes.associateWith { type ->
@@ -115,7 +124,18 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                     }.filterValues { response -> response != null }
                         .mapValues { (_, response) -> response!! }
 
-                    MovieDetailResult(movie, staff, gallery, imagesByType)
+                    val similarMovies = try {
+                        similarDeferred.await().items
+                    } catch (error: Exception) {
+                        Log.e(
+                            "MovieDetailViewModel",
+                            "Ошибка при загрузке похожих фильмов",
+                            error
+                        )
+                        emptyList()
+                    }
+
+                    MovieDetailResult(movie, staff, gallery, imagesByType, similarMovies)
                 }
 
                 val movie = result.movie
@@ -126,6 +146,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                     _crewList.value = emptyList()
                     _galleryByType.value = emptyMap()
                     _galleryTotalCount.value = 0
+                    _similarMovies.value = emptyList()
                     _errorMessages.tryEmit("Не удалось загрузить данные фильма")
                     return@launch
                 }
@@ -163,6 +184,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 _galleryTotalCount.value = (totalFromGallery + totalFromImages)
                     .takeIf { it > 0 }
                     ?: galleryItems.size
+                _similarMovies.value = result.similarMovies
 
                 Log.d("MovieDetailViewModel", "Фильм загружен: ${movie.nameRu}")
                 Log.d(
@@ -182,6 +204,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
                 _crewList.value = emptyList()
                 _galleryByType.value = emptyMap()
                 _galleryTotalCount.value = 0
+                _similarMovies.value = emptyList()
                 _errorMessages.tryEmit("Произошла ошибка при загрузке данных фильма")
             }
         }
@@ -216,6 +239,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
         val movie: MovieDetailResponse?,
         val staff: List<ActorResponse>,
         val gallery: GalleryResponse?,
-        val imagesByType: Map<String, MovieImagesResponse>
+        val imagesByType: Map<String, MovieImagesResponse>,
+        val similarMovies: List<Movie>
     )
 }

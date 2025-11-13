@@ -25,10 +25,12 @@ import com.example.skillcinema.data.Actor
 import com.example.skillcinema.data.ActorResponse
 import com.example.skillcinema.data.CrewMember
 import com.example.skillcinema.data.GalleryItem
+import com.example.skillcinema.data.Movie
 import com.example.skillcinema.data.MovieDetailResponse
 import com.example.skillcinema.databinding.FragmentMovieDetailBinding
 import com.example.skillcinema.ui.adapters.ActorsAdapter
 import com.example.skillcinema.ui.adapters.CrewAdapter
+import com.example.skillcinema.ui.moviedetail.SimilarMoviesAdapter
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModel
 import com.example.skillcinema.ui.moviedetail.viewmodel.MovieDetailViewModelFactory
 import com.google.android.material.chip.Chip
@@ -53,6 +55,11 @@ class MovieDetailFragment : Fragment() {
     }
 
     private val galleryAdapter = GalleryAdapter()
+    private val similarMoviesAdapter by lazy {
+        SimilarMoviesAdapter { selectedMovieId ->
+            navigateToMovieDetail(selectedMovieId)
+        }
+    }
     private var selectedGalleryType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +87,7 @@ class MovieDetailFragment : Fragment() {
         setupActorsRecyclerView()
         setupCrewRecyclerView()
         setupGalleryRecyclerView()
+        setupSimilarMoviesRecyclerView()
         showLoading()
         viewModel.fetchMovieDetails(movieId)
         observeStates()
@@ -121,6 +129,12 @@ class MovieDetailFragment : Fragment() {
         binding.rvPhotos.adapter = galleryAdapter
     }
 
+    private fun setupSimilarMoviesRecyclerView() {
+        binding.rvSimilarMovies.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        binding.rvSimilarMovies.adapter = similarMoviesAdapter
+    }
+
     private fun observeStates() {
         observeMovieDetails()
         observeActorsList()
@@ -130,6 +144,7 @@ class MovieDetailFragment : Fragment() {
         observeWatchedState()
         observeErrorMessages()
         observeGallery()
+        observeSimilarMovies()
     }
 
     private fun observeMovieDetails() {
@@ -223,6 +238,16 @@ class MovieDetailFragment : Fragment() {
                     .collectLatest { (galleryByType, totalCount) ->
                         updateGalleryUI(galleryByType, totalCount)
                     }
+            }
+        }
+    }
+
+    private fun observeSimilarMovies() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.similarMovies.collectLatest { movies ->
+                    updateSimilarMoviesUI(movies)
+                }
             }
         }
     }
@@ -396,6 +421,29 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun updateSimilarMoviesUI(movies: List<Movie>) = with(binding) {
+        val hasMovies = movies.isNotEmpty()
+
+        similarMoviesContainer.isVisible = hasMovies
+
+        if (!hasMovies) {
+            tvSimilaviesCount.text = ""
+            tvSimilaviesCount.isVisible = false
+            similarMoviesAdapter.submitList(emptyList())
+            return@with
+        }
+
+        val limitedMovies = movies.take(20)
+        similarMoviesAdapter.submitList(limitedMovies)
+
+        tvSimilaviesCount.text = when {
+            movies.size > 20 -> "${movies.size} >"
+            else -> movies.size.toString()
+        }
+        tvSimilaviesCount.isVisible = true
+    }
+
+
     private fun formatYearAndGenres(movie: MovieDetailResponse): String {
         val year = movie.year?.takeIf { it.isNotBlank() }
         val genres = movie.genres
@@ -437,6 +485,17 @@ class MovieDetailFragment : Fragment() {
             else -> "${minutes} мин"
         }
     }
+
+    private fun navigateToMovieDetail(movieId: Int) {
+        if (!isAdded) return
+
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        findNavController().navigate(R.id.action_movieDetailFragment_self, bundle)
+    }
+
 
     private fun showErrorAndExit(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

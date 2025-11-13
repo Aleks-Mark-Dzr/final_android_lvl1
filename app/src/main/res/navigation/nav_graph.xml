@@ -78,6 +78,13 @@
             android:name="movieId"
             android:defaultValue="0"
             app:argType="integer" />
+
+        <action
+            android:id="@+id/action_movieDetailFragment_self"
+            app:destination="@id/movieDetailFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/movieDetailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
