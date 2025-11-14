@@ -52,5 +52,8 @@
     <string name="favorite_collection_empty">В коллекции пока нет любимых фильмов</string>
     <string name="want_to_see">Хочу посмотреть</string>
     <string name="want_to_see_collection_text">Хочу посмотреть</string>
+    <string name="all_actors">Все актеры</string>
+    <string name="no_actors_available">Список актеров пуст</string>
+    <string name="error_movie_not_found">Не удалось найти фильм</string>
 
 </resources>

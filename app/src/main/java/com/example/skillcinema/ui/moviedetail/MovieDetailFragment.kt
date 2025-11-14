@@ -109,6 +109,9 @@ class MovieDetailFragment : Fragment() {
         binding.ivWatched.setOnClickListener {
             viewModel.toggleWatched(movieId)
         }
+        binding.tvActorsCount.setOnClickListener {
+            navigateToActorsList()
+        }
     }
 
     private fun setupActorsRecyclerView() {
@@ -272,11 +275,25 @@ class MovieDetailFragment : Fragment() {
         actorsAdapter.submitList(actorList)
         binding.rvActors.visibility = View.VISIBLE
 
-        // Добавляем информацию о количестве актёров
-        binding.tvActorsCount.text = if (totalActors > 20) {
-            "$totalActors >"
-        } else {
-            ""
+        binding.tvActorsCount.apply {
+            text = totalActors.toString()
+            isVisible = totalActors > 0
+            isEnabled = totalActors > 0
+        }
+    }
+
+    private fun navigateToActorsList() {
+        if (!isAdded || binding.tvActorsCount.text.isNullOrBlank()) return
+
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        if (findNavController().currentDestination?.id == R.id.movieDetailFragment) {
+            findNavController().navigate(
+                R.id.action_movieDetailFragment_to_actorsListFragment,
+                bundle
+            )
         }
     }
 

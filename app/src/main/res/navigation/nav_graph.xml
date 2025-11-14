@@ -85,6 +85,21 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/movieDetailFragment"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_movieDetailFragment_to_actorsListFragment"
+            app:destination="@id/actorsListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/actorsListFragment"
+        android:name="com.example.skillcinema.ui.moviedetail.actors.ActorsListFragment"
+        android:label="@string/all_actors"
+        tools:layout="@layout/fragment_actors_list">
+
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
     </fragment>
 
     <fragment
