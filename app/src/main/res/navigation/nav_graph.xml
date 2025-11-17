@@ -89,6 +89,10 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_actorsListFragment"
             app:destination="@id/actorsListFragment" />
+
+        <action
+            android:id="@+id/action_movieDetailFragment_to_crewListFragment"
+            app:destination="@id/crewListFragment" />
     </fragment>
 
     <fragment
@@ -96,6 +100,17 @@
         android:name="com.example.skillcinema.ui.moviedetail.actors.ActorsListFragment"
         android:label="@string/all_actors"
         tools:layout="@layout/fragment_actors_list">
+
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crewListFragment"
+        android:name="com.example.skillcinema.ui.moviedetail.crew.CrewListFragment"
+        android:label="@string/all_crew"
+        tools:layout="@layout/fragment_crew_list">
 
         <argument
             android:name="movieId"

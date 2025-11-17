@@ -56,5 +56,8 @@
     <string name="no_actors_available">Список актеров пуст</string>
     <string name="error_movie_not_found">Не удалось найти фильм</string>
     <string name="list_of_actors">Список актеров</string>
+    <string name="all_crew">Вся съемочная группа</string>
+    <string name="no_crew_available">Список съемочной группы пуст</string>
+    <string name="list_of_crew">Список съемочной группы</string>
 
 </resources>

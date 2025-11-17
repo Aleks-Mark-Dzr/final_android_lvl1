@@ -112,6 +112,9 @@ class MovieDetailFragment : Fragment() {
         binding.tvActorsCount.setOnClickListener {
             navigateToActorsList()
         }
+        binding.tvStaffCount.setOnClickListener {
+            navigateToCrewList()
+        }
     }
 
     private fun setupActorsRecyclerView() {
@@ -297,6 +300,22 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private fun navigateToCrewList() {
+        val crewCount = binding.tvStaffCount.text.toString().toIntOrNull()
+        if (!isAdded || crewCount == null || crewCount <= 0) return
+
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        if (findNavController().currentDestination?.id == R.id.movieDetailFragment) {
+            findNavController().navigate(
+                R.id.action_movieDetailFragment_to_crewListFragment,
+                bundle
+            )
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun updateCrewUI(staff: List<ActorResponse>) = with(binding) {
         val crew = staff.map { person ->
@@ -308,8 +327,11 @@ class MovieDetailFragment : Fragment() {
             )
         }
         val totalCrew = crew.size
-        // Если участников больше определенного порога (например, 6), показываем их количество
-        tvStaffCount.text = if (totalCrew > 6) "Всего участников: $totalCrew" else ""
+        tvStaffCount.apply {
+            text = totalCrew.toString()
+            isVisible = totalCrew > 0
+            isEnabled = totalCrew > 0
+        }
         crewAdapter.submitList( if (totalCrew > 6) crew.take(6) else crew )
         rvStaff.visibility = View.VISIBLE
     }
