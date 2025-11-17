@@ -27,7 +27,7 @@ class CrewAdapter(
                 .into(staffPhoto)
             // Установка имени и роли
             staffName.text = member.name
-            profession.text = member.role
+            profession.text = member.professionText?.ifBlank { member.role } ?: member.role
             // Обработка клика по элементу
 //            root.setOnClickListener { onCrewClick(member.id) }
         }

@@ -40,7 +40,8 @@ class CrewListViewModel(private val repository: MovieDetailRepository) : ViewMod
                             id = person.staffId,
                             name = person.nameRu ?: person.nameEn ?: "Неизвестный участник",
                             role = person.profession ?: "",
-                            photoUrl = person.posterUrl
+                            photoUrl = person.posterUrl,
+                            professionText = person.professionText
                         )
                     }
                 _crew.value = crewMembers

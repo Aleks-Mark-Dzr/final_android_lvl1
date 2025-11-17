@@ -55,11 +55,13 @@ class MovieDetailFragment : Fragment() {
     }
 
     private val galleryAdapter = GalleryAdapter()
+
     private val similarMoviesAdapter by lazy {
         SimilarMoviesAdapter { selectedMovieId ->
             navigateToMovieDetail(selectedMovieId)
         }
     }
+
     private var selectedGalleryType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,9 +125,9 @@ class MovieDetailFragment : Fragment() {
         binding.rvActors.adapter = actorsAdapter
     }
 
-    private fun setupCrewRecyclerView(){
-        val layoutManager = GridLayoutManager(requireContext(),2,RecyclerView.HORIZONTAL,false)
-        binding.rvStaff.layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.HORIZONTAL, false)
+    private fun setupCrewRecyclerView() {
+        val layoutManager = GridLayoutManager(requireContext(), 2, RecyclerView.HORIZONTAL, false)
+        binding.rvStaff.layoutManager = layoutManager
         binding.rvStaff.adapter = crewAdapter
     }
 
@@ -225,8 +227,8 @@ class MovieDetailFragment : Fragment() {
     }
 
     private fun observeCrewList() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.crewList.collectLatest { staff ->
                     updateCrewUI(staff)
                 }
@@ -260,10 +262,8 @@ class MovieDetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateActorsUI(actors: List<ActorResponse>) {
-        // Общее количество актёров
         val totalActors = actors.size
 
-        // Отображаем только 20 первых актёров, если их больше
         val actorList = actors.take(20).map { actor ->
             Actor(
                 id = actor.staffId,
@@ -274,7 +274,6 @@ class MovieDetailFragment : Fragment() {
             )
         }
 
-        // Обновляем адаптер
         actorsAdapter.submitList(actorList)
         binding.rvActors.visibility = View.VISIBLE
 
@@ -300,6 +299,7 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    // ОСТАВЛЕННАЯ ЕДИНСТВЕННАЯ ВЕРСИЯ
     private fun navigateToCrewList() {
         val crewCount = binding.tvStaffCount.text.toString().toIntOrNull()
         if (!isAdded || crewCount == null || crewCount <= 0) return
@@ -322,8 +322,9 @@ class MovieDetailFragment : Fragment() {
             CrewMember(
                 id = person.staffId,
                 name = person.nameRu ?: "Неизвестный участник",
-                role = person.profession ?: "",      // должность (режиссер, продюсер и т.п.)
-                photoUrl = person.posterUrl
+                role = person.profession ?: "",
+                photoUrl = person.posterUrl,
+                professionText = person.professionText
             )
         }
         val totalCrew = crew.size
@@ -332,7 +333,7 @@ class MovieDetailFragment : Fragment() {
             isVisible = totalCrew > 0
             isEnabled = totalCrew > 0
         }
-        crewAdapter.submitList( if (totalCrew > 6) crew.take(6) else crew )
+        crewAdapter.submitList(if (totalCrew > 6) crew.take(6) else crew)
         rvStaff.visibility = View.VISIBLE
     }
 
@@ -421,7 +422,6 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
-
     private fun updateUI(movie: MovieDetailResponse) {
         with(binding) {
             GlideApp.with(this@MovieDetailFragment)
@@ -434,6 +434,7 @@ class MovieDetailFragment : Fragment() {
             tvMovieTitle.text = movie.nameRu
             tvMovieOriginalTitle.text = movie.nameOriginal ?: ""
             tvMovieRating.text = movie.ratingKinopoisk?.toString() ?: "N/A"
+
             val yearAndGenres = formatYearAndGenres(movie)
             tvMovieYearGenres.text = yearAndGenres
             tvMovieYearGenres.isVisible = yearAndGenres.isNotBlank()
@@ -441,16 +442,17 @@ class MovieDetailFragment : Fragment() {
             val countryDurationAge = formatCountryDurationAge(movie)
             tvMovieCountryDurationAge.text = countryDurationAge
             tvMovieCountryDurationAge.isVisible = countryDurationAge.isNotBlank()
-            // Обрезка описания до 250 символов
-            val fullDescription = movie.description?.takeIf { it.isNotBlank() } ?: "Описание не доступно"
+
+            val fullDescription =
+                movie.description?.takeIf { it.isNotBlank() } ?: "Описание не доступно"
             val shortDescription = if (fullDescription.length > 250) {
                 fullDescription.substring(0, 250) + "..."
             } else {
                 fullDescription
             }
             tvMovieDescription.text = shortDescription
-            tvMovieDescription.visibility = View.VISIBLE // Убедимся, что элемент не скрыт
-            // Добавление обработчика нажатий для разворачивания текста
+            tvMovieDescription.visibility = View.VISIBLE
+
             var isExpanded = false
             tvMovieDescription.setOnClickListener {
                 isExpanded = !isExpanded
@@ -481,7 +483,6 @@ class MovieDetailFragment : Fragment() {
         }
         tvSimilaviesCount.isVisible = true
     }
-
 
     private fun formatYearAndGenres(movie: MovieDetailResponse): String {
         val year = movie.year?.takeIf { it.isNotBlank() }
@@ -534,7 +535,6 @@ class MovieDetailFragment : Fragment() {
 
         findNavController().navigate(R.id.action_movieDetailFragment_self, bundle)
     }
-
 
     private fun showErrorAndExit(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

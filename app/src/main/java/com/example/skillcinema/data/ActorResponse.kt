@@ -22,5 +22,8 @@ data class ActorResponse(
     val professionKey: String?,
 
     @SerializedName("profession")
-    val profession: String? = null
+    val profession: String? = null,
+
+    @SerializedName("professionText")
+    val professionText: String? = null
 )
