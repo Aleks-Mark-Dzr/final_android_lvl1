@@ -209,7 +209,7 @@
                     android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:textColor="@color/purple_500"
+                    android:textColor="@android:color/holo_blue_light"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="MissingConstraints" />
@@ -249,7 +249,7 @@
                     android:id="@+id/tvStaffCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/purple_500"
+                    android:textColor="@android:color/holo_blue_bright"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="MissingConstraints" />
@@ -291,10 +291,9 @@
                     android:id="@+id/tvPhotosCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:textColor="@android:color/holo_blue_light"
-                    app:layout_constraintStart_toEndOf="@id/sectionGallery"
-                    app:layout_constraintTop_toTopOf="@id/sectionGallery"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <HorizontalScrollView
                     android:id="@+id/chipsScrollContainer"
