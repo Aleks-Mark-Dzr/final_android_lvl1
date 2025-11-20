@@ -35,6 +35,7 @@
     <string name="gallery_type_still">Кадры из фильма</string>
     <string name="gallery_type_poster">Постеры</string>
     <string name="gallery_type_fan_art">Фан-арты</string>
+    <string name="gallery_type_promo">Промо</string>
     <string name="gallery_type_concept">Концепт-арты</string>
     <string name="gallery_type_wallpaper">Обои</string>
     <string name="gallery_type_cover">Обложки</string>

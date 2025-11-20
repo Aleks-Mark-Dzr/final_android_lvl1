@@ -414,6 +414,7 @@ class MovieDetailFragment : Fragment() {
             "STILL" -> getString(R.string.gallery_type_still)
             "POSTER" -> getString(R.string.gallery_type_poster)
             "FAN_ART" -> getString(R.string.gallery_type_fan_art)
+            "PROMO" -> getString(R.string.gallery_type_promo)
             "CONCEPT" -> getString(R.string.gallery_type_concept)
             "WALLPAPER" -> getString(R.string.gallery_type_wallpaper)
             "COVER" -> getString(R.string.gallery_type_cover)

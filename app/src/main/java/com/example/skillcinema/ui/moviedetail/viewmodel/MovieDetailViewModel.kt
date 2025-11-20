@@ -53,7 +53,17 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
     private val _errorMessages = MutableSharedFlow<String>(replay = 0, extraBufferCapacity = 1)
     val errorMessages: SharedFlow<String> = _errorMessages.asSharedFlow()
 
-    private val galleryImageTypes = listOf("SHOOTING", "POSTER")
+    private val galleryImageTypes = listOf(
+        "SHOOTING",
+        "POSTER",
+        "STILL",
+        "FAN_ART",
+        "PROMO",
+        "CONCEPT",
+        "WALLPAPER",
+        "COVER",
+        "SCREENSHOT"
+    )
 
     fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
