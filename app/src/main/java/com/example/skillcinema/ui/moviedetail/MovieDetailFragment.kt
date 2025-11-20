@@ -422,6 +422,7 @@ class MovieDetailFragment : Fragment() {
             else -> getString(R.string.gallery_type_other)
         }
     }
+    
 
     private fun updateUI(movie: MovieDetailResponse) {
         with(binding) {
