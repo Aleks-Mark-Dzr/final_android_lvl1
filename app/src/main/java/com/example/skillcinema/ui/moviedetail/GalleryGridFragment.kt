@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.skillcinema.databinding.FragmentGalleryGridBinding
 
@@ -14,6 +15,8 @@ class GalleryGridFragment : Fragment() {
 
     private var _binding: FragmentGalleryGridBinding? = null
     private val binding get() = _binding!!
+
+    private val args: GalleryGridFragmentArgs by navArgs()
 
     private val galleryAdapter by lazy { GalleryGridAdapter() }
 
@@ -32,7 +35,7 @@ class GalleryGridFragment : Fragment() {
         setupToolbar()
         setupRecycler()
 
-        val photoUrls = arguments?.getStringArrayList(PHOTO_URLS_KEY).orEmpty()
+        val photoUrls = args.photoUrls?.filter { it.isNotBlank() }.orEmpty()
         galleryAdapter.submitList(photoUrls)
         binding.emptyView.isVisible = photoUrls.isEmpty()
     }
@@ -53,9 +56,5 @@ class GalleryGridFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val PHOTO_URLS_KEY = "photoUrls"
     }
 }
