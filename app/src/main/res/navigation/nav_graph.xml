@@ -93,6 +93,10 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_crewListFragment"
             app:destination="@id/crewListFragment" />
+
+        <action
+            android:id="@+id/action_movieDetailFragment_to_galleryGridFragment"
+            app:destination="@id/galleryGridFragment" />
     </fragment>
 
     <fragment
@@ -115,6 +119,17 @@
         <argument
             android:name="movieId"
             app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/galleryGridFragment"
+        android:name="com.example.skillcinema.ui.moviedetail.GalleryGridFragment"
+        android:label="@string/all_photos"
+        tools:layout="@layout/fragment_gallery_grid">
+
+        <argument
+            android:name="photoUrls"
+            app:argType="string[]" />
     </fragment>
 
     <fragment
@@ -146,7 +161,7 @@
 
         <action
             android:id="@+id/action_actorDetailFragment_to_filmographyFragment"
-            app:destination="@id/filmographyFragment"/>
+            app:destination="@id/filmographyListFragment"/>
     </fragment>
 
     <fragment
@@ -176,7 +191,6 @@
             app:destination="@id/favoritesFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.skillcinema.ui.profile.favorites.FavoritesFragment"
@@ -186,6 +200,5 @@
             android:id="@+id/action_favoritesFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
     </fragment>
-
 
 </navigation>

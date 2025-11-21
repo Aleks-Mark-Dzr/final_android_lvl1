@@ -37,6 +37,7 @@ import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 class MovieDetailFragment : Fragment() {
 
@@ -353,8 +354,13 @@ class MovieDetailFragment : Fragment() {
         chipsScrollContainer.visibility = View.VISIBLE
         rvPhotos.visibility = View.VISIBLE
         val shouldShowCount = totalCount > 20
-        tvPhotosCount.text = if (shouldShowCount) totalCount.toString() else ""
+        tvPhotosCount.text = if (shouldShowCount) "$totalCount >" else ""
         tvPhotosCount.isVisible = shouldShowCount
+        tvPhotosCount.setOnClickListener {
+            if (shouldShowCount) {
+                navigateToGalleryGrid(galleryByType)
+            }
+        }
 
         createOrUpdateChips(galleryByType)
         updatePhotosList(galleryByType)
@@ -408,6 +414,22 @@ class MovieDetailFragment : Fragment() {
         galleryAdapter.submitList(images.take(20))
     }
 
+    private fun navigateToGalleryGrid(galleryByType: Map<String, List<GalleryItem>>) {
+        if (!isAdded) return
+
+        val photoUrls = galleryByType.values
+            .flatten()
+            .mapNotNull { item -> item.imageUrl?.takeIf { it.isNotBlank() } }
+
+        if (photoUrls.size <= 20) return
+
+        // ✅ Используем Safe Args и Array<String>, как в nav_graph (string[])
+        val action = MovieDetailFragmentDirections
+            .actionMovieDetailFragmentToGalleryGridFragment(photoUrls.toTypedArray())
+
+        findNavController().navigate(action)
+    }
+
     private fun getGalleryTypeName(type: String): String {
         return when (type.uppercase()) {
             "SHOOTING" -> getString(R.string.gallery_type_shooting)
@@ -422,7 +444,6 @@ class MovieDetailFragment : Fragment() {
             else -> getString(R.string.gallery_type_other)
         }
     }
-    
 
     private fun updateUI(movie: MovieDetailResponse) {
         with(binding) {

@@ -60,5 +60,7 @@
     <string name="all_crew">Вся съемочная группа</string>
     <string name="no_crew_available">Список съемочной группы пуст</string>
     <string name="list_of_crew">Список съемочной группы</string>
+    <string name="all_photos">Все фото</string>
+    <string name="no_photos_available">Нет доступных фотографий</string>
 
 </resources>
