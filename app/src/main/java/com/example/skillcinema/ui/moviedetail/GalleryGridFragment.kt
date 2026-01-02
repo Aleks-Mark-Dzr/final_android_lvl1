@@ -57,5 +57,5 @@ class GalleryGridFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-    
+
 }
