@@ -62,5 +62,6 @@
     <string name="list_of_crew">Список съемочной группы</string>
     <string name="all_photos">Все фото</string>
     <string name="no_photos_available">Нет доступных фотографий</string>
+    <string name="error_loading_actor">Не удалось загрузить данные об актере</string>
 
 </resources>

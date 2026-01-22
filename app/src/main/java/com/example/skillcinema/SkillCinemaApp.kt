@@ -3,12 +3,14 @@ package com.example.skillcinema
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.skillcinema.data.database.MovieDatabase
+import com.example.skillcinema.data.repository.ActorRepositoryImpl
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import com.example.skillcinema.data.repository.MovieDetailRepositoryImpl
 import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.data.repository.MovieRepositoryImpl
 import com.example.skillcinema.data.repository.ProfileRepository
 import com.example.skillcinema.data.repository.ProfileRepositoryImpl
+import com.example.skillcinema.domain.repositories.ActorRepository
 import com.example.skillcinema.network.CustomHttpLoggingInterceptor
 import com.example.skillcinema.network.MovieApiService
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -21,6 +23,8 @@ class SkillCinemaApp : Application() {
     lateinit var movieRepository: MovieRepository
     lateinit var movieDetailRepository: MovieDetailRepository
     lateinit var profileRepository: ProfileRepository
+    lateinit var actorRepository: ActorRepository
+
 
     override fun onCreate() {
         super.onCreate()
@@ -60,6 +64,7 @@ class SkillCinemaApp : Application() {
         movieRepository = MovieRepositoryImpl(movieApiService)
         movieDetailRepository = MovieDetailRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
         profileRepository = ProfileRepositoryImpl(movieDao)
+        actorRepository = ActorRepositoryImpl(movieApiService)
 
         // 7. Инициализация Crashlytics в коде
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)

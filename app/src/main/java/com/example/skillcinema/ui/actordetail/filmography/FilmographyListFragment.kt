@@ -5,28 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.skillcinema.databinding.FragmentFilmographyListBinding
-import com.example.skillcinema.domain.models.Film
-//import com.example.skillcinema.domain.models.Profession
+import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.ui.adapters.FilmsAdapter
-import com.example.skillcinema.utils.Resource
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class FilmographyListFragment : Fragment() {
 
     private var _binding: FragmentFilmographyListBinding? = null
     private val binding get() = _binding!!
     private val args: FilmographyListFragmentArgs by navArgs()
-    private val viewModel: FilmographyViewModel by viewModels()
+    private lateinit var viewModel: FilmographyViewModel
 
     private val filmsAdapter = FilmsAdapter(::onFilmClicked)
 
@@ -42,6 +32,7 @@ class FilmographyListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 //        setupRecyclerView()
 //        observeData()
+        setupViewModel()
         loadData()
     }
 
@@ -58,6 +49,12 @@ class FilmographyListFragment : Fragment() {
             actorId = args.actorId,
             profession = args.profession
         )
+    }
+
+    private fun setupViewModel() {
+        val repository = (requireActivity().application as SkillCinemaApp).actorRepository
+        val factory = FilmographyViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[FilmographyViewModel::class.java]
     }
 
 //    private fun observeData() {

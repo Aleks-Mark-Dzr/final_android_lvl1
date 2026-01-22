@@ -4,8 +4,6 @@ import android.util.Log
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.network.GenresAndCountriesResponse
 import com.example.skillcinema.network.MovieApiService
-import javax.inject.Inject
-import javax.inject.Singleton
 
 interface MovieRepository {
     suspend fun getTopMovies(page: Int): List<Movie>
@@ -17,8 +15,7 @@ interface MovieRepository {
     suspend fun searchMovies(query: String): List<Movie>
 }
 
-@Singleton
-class MovieRepositoryImpl @Inject constructor(
+class MovieRepositoryImpl(
     private val apiService: MovieApiService
 ) : MovieRepository {
 

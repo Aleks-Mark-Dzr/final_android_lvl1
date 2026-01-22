@@ -27,8 +27,8 @@ class ActorsListFragment : Fragment() {
 
     private lateinit var viewModel: ActorsListViewModel
     private val actorsAdapter by lazy {
-        ActorsAdapter { _ ->
-            // TODO: переход на экран актера
+        ActorsAdapter { actorId ->
+            navigateToActorDetail(actorId)
         }
     }
 
@@ -140,6 +140,13 @@ class ActorsListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun navigateToActorDetail(actorId: Int) {
+        val bundle = Bundle().apply {
+            putInt("actorId", actorId)
+        }
+        findNavController().navigate(R.id.actorDetailFragment, bundle)
     }
 
     companion object {

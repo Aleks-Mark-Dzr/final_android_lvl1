@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
-import javax.inject.Inject
 
 interface MovieDetailRepository {
     suspend fun getMovieDetails(movieId: Int): MovieDetailResponse?
@@ -27,7 +26,7 @@ interface MovieDetailRepository {
     fun getFavoriteMovies(): Flow<List<Movie>>
 }
 
-class MovieDetailRepositoryImpl @Inject constructor(
+class MovieDetailRepositoryImpl(
     private val apiService: MovieApiService,
     private val movieDao: MovieDao
 ) : MovieDetailRepository {

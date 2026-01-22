@@ -7,13 +7,10 @@ import com.example.skillcinema.data.Actor
 import com.example.skillcinema.domain.models.Film
 import com.example.skillcinema.domain.repositories.ActorRepository
 import com.example.skillcinema.utils.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ActorDetailViewModel @Inject constructor(
+class ActorDetailViewModel(
     private val repository: ActorRepository
 ) : ViewModel() {
 
@@ -30,8 +27,11 @@ class ActorDetailViewModel @Inject constructor(
                 val actor = repository.getActorDetails(actorId)
                 _actorDetails.value = Resource.Success(actor)
                 _topFilms.value = repository.getTopFilms(actorId)
+                    .sortedByDescending { it.rating ?: Double.NEGATIVE_INFINITY }
+                    .take(10)
             } catch (e: Exception) {
                 _actorDetails.value = Resource.Error(e.message ?: "Error loading actor")
+
             }
         }
     }

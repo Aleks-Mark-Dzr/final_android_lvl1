@@ -48,7 +48,7 @@ class MovieDetailFragment : Fragment() {
     private var movieId: Int = 0
 
     private val actorsAdapter = ActorsAdapter { actorId ->
-        // Обработка клика по актеру
+        navigateToActorDetail(actorId)
     }
 
     private val crewAdapter = CrewAdapter { crewId ->
@@ -557,6 +557,18 @@ class MovieDetailFragment : Fragment() {
         }
 
         findNavController().navigate(R.id.action_movieDetailFragment_self, bundle)
+    }
+
+    private fun navigateToActorDetail(actorId: Int) {
+        if (!isAdded) return
+
+        val bundle = Bundle().apply {
+            putInt("actorId", actorId)
+        }
+
+        if (findNavController().currentDestination?.id == R.id.movieDetailFragment) {
+            findNavController().navigate(R.id.actorDetailFragment, bundle)
+        }
     }
 
     private fun showErrorAndExit(message: String) {

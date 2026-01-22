@@ -7,13 +7,10 @@ import com.example.skillcinema.domain.models.Film
 import com.example.skillcinema.domain.models.Profession
 import com.example.skillcinema.domain.repositories.ActorRepository
 import com.example.skillcinema.utils.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class FilmographyViewModel @Inject constructor(
+class FilmographyViewModel(
     private val repository: ActorRepository
 ) : ViewModel() {
 

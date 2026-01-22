@@ -8,5 +8,5 @@ import com.example.skillcinema.domain.models.Profession
 interface ActorRepository {
     suspend fun getActorDetails(actorId: Int): Actor
     suspend fun getTopFilms(actorId: Int): List<Film>
-    fun getFilmsByProfession(actorId: Int, profession: Profession): List<Film>
+    suspend fun getFilmsByProfession(actorId: Int, profession: Profession): List<Film>
 }

@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     id("org.jetbrains.kotlin.kapt")
-    id("dagger.hilt.android.plugin")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
     // Add the Crashlytics Gradle plugin
@@ -12,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.example.skillcinema"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.skillcinema"
@@ -70,10 +69,7 @@ dependencies {
     annotationProcessor (libs.compiler)
     kapt (libs.compiler)
 
-    // Dependency Injection (Hilt)
-    implementation(libs.hilt.android)
     implementation(libs.mediation.test.suite)
-    kapt(libs.hilt.android.compiler)
 
     // Room (Database)
     implementation(libs.androidx.room.runtime)

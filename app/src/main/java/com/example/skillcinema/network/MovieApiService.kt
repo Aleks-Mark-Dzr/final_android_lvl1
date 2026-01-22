@@ -45,6 +45,9 @@ interface MovieApiService {
     @GET("api/v2.2/films/{filmId}")
     suspend fun getMovieDetails(@Path("filmId") filmId: Int): MovieDetailResponse
 
+    @GET("api/v1/staff/{id}")
+    suspend fun getActorDetails(@Path("id") actorId: Int): ActorDetailsResponse
+
     @GET("api/v2.2/films/{filmId}/seasons")
     suspend fun getSeasons(@Path("filmId") filmId: Int): SeasonsResponse
 
@@ -77,6 +80,4 @@ interface MovieApiService {
         @Query("ratingTo") ratingTo: Int? = null,
         @Query("page") page: Int = 1
     ): MovieResponse
-    
-
 }
