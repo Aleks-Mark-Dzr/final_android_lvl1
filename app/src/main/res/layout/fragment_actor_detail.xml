@@ -17,13 +17,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp">
 
             <!-- Фото актера (слева) -->
             <ImageView
                 android:id="@+id/actorPhoto"
                 android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_height="180dp"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_person_placeholder" />
 
