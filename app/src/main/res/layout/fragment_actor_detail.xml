@@ -12,32 +12,49 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Фото актера -->
-        <ImageView
-            android:id="@+id/actorPhoto"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_person_placeholder" />
-
-        <!-- Имя актера -->
-        <TextView
-            android:id="@+id/actorName"
+        <!-- Контейнер для фото и информации -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            tools:text="Леонардо ДиКаприо" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
-        <!-- Профессия -->
-        <TextView
-            android:id="@+id/actorProfession"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-            tools:text="Актер, Продюсер" />
+            <!-- Фото актера (слева) -->
+            <ImageView
+                android:id="@+id/actorPhoto"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_person_placeholder" />
+
+            <!-- Контейнер для текстовой информации (справа от фото) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical"
+                android:gravity="start">
+
+                <!-- Имя актера -->
+                <TextView
+                    android:id="@+id/actorName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    tools:text="Леонардо ДиКаприо" />
+
+                <!-- Профессия (под именем) -->
+                <TextView
+                    android:id="@+id/actorProfession"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    tools:text="Актер, Продюсер" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Секция "Лучшие фильмы" -->
         <TextView
