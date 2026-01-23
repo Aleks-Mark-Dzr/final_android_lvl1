@@ -36,7 +36,7 @@
 ## 🖼️ Скриншоты
 
 | Главный экран | Фильмы выбранного раздела | Карточка фильма | Список актеров | Над фильмом работали | Галерея | Страница актера | Экран поиска | Профиль | Коллекция Любимые |
-| <img src="screenshots/MainScreen.png" width="150"> | <img src="screenshots/все фильмы раздела.png" width="150"> | <img src="screenshots/Детализация фильма.png" width="150"> | ![Экран поиска](screenshots/search_screen.png) | ![Профиль](screenshots/profile_screen.png) |
+| <img src="screenshots/MainScreen.png" width="150"> | <img src="screenshots/все фильмы раздела.png" width="150"> | <img src="screenshots/Детализация фильма.png" width="150"><br><img src="screenshots/Детализация фильма 2.png" width="150"></div> | <img src="screenshots/Список актеров.png" width="150"> | <img src="screenshots/Над фильмом работали.png" width="150"> | <img src="screenshots/Галерея фильма.png" width="150"> | <img src="screenshots/Страница актера.png" width="150"> | <img src="screenshots/Поиск.png" width="150"> | <img src="screenshots/Профиль.png" width="150"> | <img src="screenshots/Коллекция Любимые.png" width="150"> |
 
 
 ---
