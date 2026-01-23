@@ -36,7 +36,7 @@
 ## 🖼️ Скриншоты
 
 | Главный экран | Карточка фильма | Фильмы выбранного раздела | Экран поиска | Профиль |
-| ![Главный экран](screenshots/img src="MainScreen.png" width="150") | ![Карточка фильма](screenshots/moviedetail_screen.png) | ![Фильмы выбранного раздела](screenshots/movieslist_screen.png) | ![Экран поиска](screenshots/search_screen.png) | ![Профиль](screenshots/profile_screen.png) |
+| ![Главный экран](screenshots/<img src="MainScreen.png" width="150">) | ![Карточка фильма](screenshots/moviedetail_screen.png) | ![Фильмы выбранного раздела](screenshots/movieslist_screen.png) | ![Экран поиска](screenshots/search_screen.png) | ![Профиль](screenshots/profile_screen.png) |
 
 
 ---
