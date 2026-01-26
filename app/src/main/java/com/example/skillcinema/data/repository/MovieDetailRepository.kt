@@ -23,7 +23,9 @@ interface MovieDetailRepository {
     suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
     suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
     suspend fun getMovieById(movieId: Int): MovieEntity?
+    suspend fun saveMovie(movie: MovieDetailResponse)
     fun getFavoriteMovies(): Flow<List<Movie>>
+    fun getWatchedMovies(): Flow<List<Movie>>
 }
 
 class MovieDetailRepositoryImpl(
@@ -185,8 +187,19 @@ class MovieDetailRepositoryImpl(
         return movieDao.getMovieById(movieId)
     }
 
+    override suspend fun saveMovie(movie: MovieDetailResponse) {
+        val cachedMovie = movieDao.getMovieById(movie.kinopoiskId)
+        movieDao.insertMovie(movie.toMovieEntity(cachedMovie))
+    }
+
     override fun getFavoriteMovies(): Flow<List<Movie>> {
         return movieDao.getFavoriteMovies().map { entities ->
+            entities.map { it.toMovie() }
+        }
+    }
+
+    override fun getWatchedMovies(): Flow<List<Movie>> {
+        return movieDao.getWatchedMovies().map { entities ->
             entities.map { it.toMovie() }
         }
     }

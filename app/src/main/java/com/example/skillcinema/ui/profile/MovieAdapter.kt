@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.databinding.ItemMovieBinding
+import androidx.core.view.isVisible
 
 class MovieAdapter(
     private val onClick: (Movie) -> Unit
@@ -29,9 +30,15 @@ class MovieAdapter(
 
         fun bind(movie: Movie) {
             binding.movieTitle.text = movie.nameRu
+            binding.movieYear.text = movie.year
+            binding.movieYear.isVisible = movie.year.isNotBlank()
+            binding.movieRating.text = movie.ratingKinopoisk?.toString() ?: ""
+            binding.movieRating.isVisible = !binding.movieRating.text.isNullOrBlank()
+            binding.movieGenres.text = movie.genres.joinToString(", ") { it.genre }
+            binding.movieGenres.isVisible = binding.movieGenres.text.isNotBlank()
             Glide.with(binding.moviePoster.context)
-//                .load(movie.posterUrl)
-//                .into(binding.moviePoster)
+                .load(movie.posterUrlPreview)
+                .into(binding.moviePoster)
 
             binding.root.setOnClickListener {
                 onClick(movie)
