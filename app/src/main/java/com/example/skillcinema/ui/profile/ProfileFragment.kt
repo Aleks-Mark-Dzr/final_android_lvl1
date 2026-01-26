@@ -26,6 +26,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var collectionAdapter: CollectionAdapter
     private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var watchedAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,10 @@ class ProfileFragment : Fragment() {
                 ItemType.SERIES -> navigateToSeries(item.id)
             }
         }
+
+        watchedAdapter = MovieAdapter { movie ->
+            navigateToMovie(movie.kinopoiskId)
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -74,6 +79,10 @@ class ProfileFragment : Fragment() {
         binding.rvWereYouInterested.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvWereYouInterested.adapter = historyAdapter
+
+        binding.rvViewed.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvViewed.adapter = watchedAdapter
     }
 
     private fun setupObservers() {
@@ -89,6 +98,12 @@ class ProfileFragment : Fragment() {
                 launch {
                     viewModel.history.collect {
                         historyAdapter.submitList(it)
+                    }
+                }
+
+                launch {
+                    viewModel.watchedMovies.collect {
+                        watchedAdapter.submitList(it)
                     }
                 }
             }

@@ -26,4 +26,7 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies WHERE isFavorite = 1")
     fun getFavoriteMovies(): Flow<List<MovieEntity>>
+
+    @Query("SELECT * FROM movies WHERE isWatched = 1 ORDER BY movieId DESC")
+    fun getWatchedMovies(): Flow<List<MovieEntity>>
 }

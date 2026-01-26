@@ -240,6 +240,7 @@ class MovieDetailViewModel(private val repository: MovieDetailRepository) : View
         viewModelScope.launch {
             val currentStatus = !_isWatched.value
             _isWatched.value = currentStatus
+            _movieDetail.value?.let { repository.saveMovie(it) }
             repository.updateWatchedStatus(movieId, currentStatus)
         }
     }

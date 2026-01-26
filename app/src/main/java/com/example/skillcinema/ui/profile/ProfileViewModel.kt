@@ -31,9 +31,13 @@ class ProfileViewModel(
     private val _favoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
     val favoriteMovies: StateFlow<List<Movie>> = _favoriteMovies.asStateFlow()
 
+    private val _watchedMovies = MutableStateFlow<List<Movie>>(emptyList())
+    val watchedMovies: StateFlow<List<Movie>> = _watchedMovies.asStateFlow()
+
     init {
         loadHistory()
         observeFavoriteMovies()
+        observeWatchedMovies()
     }
 
     private fun loadHistory() {
@@ -53,6 +57,14 @@ class ProfileViewModel(
                     Collection(FAVORITES_COLLECTION_ID, "Любимые", favorites),
                     Collection(WATCH_LATER_COLLECTION_ID, "Хочу посмотреть", emptyList())
                 )
+            }
+        }
+    }
+
+    private fun observeWatchedMovies() {
+        viewModelScope.launch {
+            movieDetailRepository.getWatchedMovies().collect { watched ->
+                _watchedMovies.value = watched
             }
         }
     }
