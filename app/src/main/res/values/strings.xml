@@ -50,7 +50,13 @@
     <string name="collection_name_hint">Название коллекции</string>
     <string name="collection_name_empty">Введите название коллекции</string>
     <string name="create_action">Создать</string>
+    <string name="save_action">Сохранить</string>
     <string name="cancel_action">Отмена</string>
+    <string name="edit_collection_title">Редактировать коллекцию</string>
+    <string name="delete_collection_title">Удалить коллекцию</string>
+    <string name="delete_collection_message">Удалить эту коллекцию?</string>
+    <string name="edit_collection_action">Редактировать</string>
+    <string name="delete_collection_action">Удалить</string>
     <string name="were_you_interested">Вам было интересно</string>
     <string name="collection_favorite">Любимые</string>
     <string name="favorite_collection">Любимые</string>

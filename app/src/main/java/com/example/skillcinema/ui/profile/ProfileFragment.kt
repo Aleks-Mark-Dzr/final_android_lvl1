@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
+import com.example.skillcinema.data.Collection
 import com.example.skillcinema.data.ItemType
 import com.example.skillcinema.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
@@ -56,9 +57,14 @@ class ProfileFragment : Fragment() {
 
     private fun setupAdapters() {
 
-        collectionAdapter = CollectionAdapter { collection ->
-            navigateToCollection(collection.id)
-        }
+        collectionAdapter = CollectionAdapter(
+            onClick = { collection ->
+                navigateToCollection(collection.id)
+            },
+            onLongClick = { collection ->
+                showCollectionActionsDialog(collection)
+            }
+        )
 
         historyAdapter = HistoryAdapter { item ->
             when (item.type) {
@@ -148,6 +154,60 @@ class ProfileFragment : Fragment() {
             .show()
     }
 
+    private fun showCollectionActionsDialog(collection: Collection) {
+        if (collection.id <= CUSTOM_COLLECTION_START_ID) return
+        val options = arrayOf(
+            getString(R.string.edit_collection_action),
+            getString(R.string.delete_collection_action)
+        )
+        AlertDialog.Builder(requireContext())
+            .setTitle(collection.name)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showEditCollectionDialog(collection)
+                    1 -> showDeleteCollectionDialog(collection)
+                }
+            }
+            .show()
+    }
+
+    private fun showEditCollectionDialog(collection: Collection) {
+        val input = EditText(requireContext()).apply {
+            setText(collection.name)
+            setSelection(collection.name.length)
+            hint = getString(R.string.collection_name_hint)
+            imeOptions = EditorInfo.IME_ACTION_DONE
+        }
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.edit_collection_title)
+            .setView(input)
+            .setPositiveButton(R.string.save_action) { _, _ ->
+                val name = input.text.toString()
+                if (name.isBlank()) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.collection_name_empty,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    viewModel.renameCustomCollection(collection.id, name)
+                }
+            }
+            .setNegativeButton(R.string.cancel_action, null)
+            .show()
+    }
+
+    private fun showDeleteCollectionDialog(collection: Collection) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_collection_title)
+            .setMessage(R.string.delete_collection_message)
+            .setPositiveButton(R.string.delete_collection_action) { _, _ ->
+                viewModel.deleteCustomCollection(collection.id)
+            }
+            .setNegativeButton(R.string.cancel_action, null)
+            .show()
+    }
+
     private fun navigateToMovie(id: Int) {
 //        val action = ProfileFragmentDirections.actionToMovieDetail(id)
 //        findNavController().navigate(action)
@@ -172,5 +232,9 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val CUSTOM_COLLECTION_START_ID = 2
     }
 }

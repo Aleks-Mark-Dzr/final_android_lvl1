@@ -11,7 +11,8 @@ import com.example.skillcinema.databinding.ItemWantToSeeCollectionBinding
 import com.example.skillcinema.data.Collection
 
 class CollectionAdapter(
-    private val onClick: (Collection) -> Unit
+    private val onClick: (Collection) -> Unit,
+    private val onLongClick: (Collection) -> Unit
 ) : ListAdapter<Collection, RecyclerView.ViewHolder>(DiffCallback()) {
 
     companion object {
@@ -61,6 +62,10 @@ class CollectionAdapter(
             binding.tvFavoriteCardText.text = collection.name
             binding.tvCounter.text = collection.items.size.toString()
             binding.root.setOnClickListener { onClick(collection) }
+            binding.root.setOnLongClickListener {
+                onLongClick(collection)
+                true
+            }
         }
     }
 
@@ -71,6 +76,10 @@ class CollectionAdapter(
             binding.tvWantToSeeCardText.text = collection.name
             binding.tvCounter.text = collection.items.size.toString()
             binding.root.setOnClickListener { onClick(collection) }
+            binding.root.setOnLongClickListener {
+                onLongClick(collection)
+                true
+            }
         }
     }
 
@@ -81,6 +90,10 @@ class CollectionAdapter(
             binding.tvCollectionName.text = collection.name
             binding.root.setOnClickListener {
                 onClick(collection)
+            }
+            binding.root.setOnLongClickListener {
+                onLongClick(collection)
+                true
             }
         }
     }

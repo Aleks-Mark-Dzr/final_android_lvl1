@@ -41,7 +41,7 @@ class ProfileViewModel(
     init {
         loadHistory()
         observeFavoriteMovies()
-        observeWatchedMovies()
+//        observeWatchedMovies()
     }
 
     private fun loadHistory() {
@@ -63,14 +63,6 @@ class ProfileViewModel(
         }
     }
 
-    private fun observeWatchedMovies() {
-        viewModelScope.launch {
-            movieDetailRepository.getWatchedMovies().collect { watched ->
-                _watchedMovies.value = watched
-            }
-        }
-    }
-
     fun clearHistory() {
         viewModelScope.launch {
             _history.value = emptyList()
@@ -81,6 +73,24 @@ class ProfileViewModel(
         if (trimmedName.isEmpty()) return
         val newCollection = Collection(nextCustomCollectionId++, trimmedName, emptyList())
         customCollections.value = customCollections.value + newCollection
+        updateCollections()
+    }
+
+    fun renameCustomCollection(collectionId: Int, newName: String) {
+        val trimmedName = newName.trim()
+        if (trimmedName.isEmpty()) return
+        customCollections.value = customCollections.value.map { collection ->
+            if (collection.id == collectionId) {
+                collection.copy(name = trimmedName)
+            } else {
+                collection
+            }
+        }
+        updateCollections()
+    }
+
+    fun deleteCustomCollection(collectionId: Int) {
+        customCollections.value = customCollections.value.filterNot { it.id == collectionId }
         updateCollections()
     }
 
