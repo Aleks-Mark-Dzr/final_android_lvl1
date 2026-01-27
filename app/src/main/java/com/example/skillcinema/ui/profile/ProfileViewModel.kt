@@ -41,7 +41,7 @@ class ProfileViewModel(
     init {
         loadHistory()
         observeFavoriteMovies()
-//        observeWatchedMovies()
+        observeWatchedMovies()
     }
 
     private fun loadHistory() {
@@ -59,6 +59,14 @@ class ProfileViewModel(
                 _favoriteMoviesList = favorites
                 _favoriteMovies.value = favorites
                 updateCollections()
+            }
+        }
+    }
+
+    private fun observeWatchedMovies() {
+        viewModelScope.launch {
+            movieDetailRepository.getWatchedMovies().collect { watched ->
+                _watchedMovies.value = watched
             }
         }
     }
