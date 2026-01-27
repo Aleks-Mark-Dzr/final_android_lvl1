@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -114,6 +118,34 @@ class ProfileFragment : Fragment() {
         binding.clearHistoryIcon.setOnClickListener {
             viewModel.clearHistory()
         }
+        binding.tvCreateYourOwnCollection.setOnClickListener {
+            showCreateCollectionDialog()
+        }
+    }
+
+    private fun showCreateCollectionDialog() {
+        val input = EditText(requireContext()).apply {
+            hint = getString(R.string.collection_name_hint)
+            imeOptions = EditorInfo.IME_ACTION_DONE
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.create_collection_title)
+            .setView(input)
+            .setPositiveButton(R.string.create_action) { _, _ ->
+                val name = input.text.toString()
+                if (name.isBlank()) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.collection_name_empty,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    viewModel.addCustomCollection(name)
+                }
+            }
+            .setNegativeButton(R.string.cancel_action, null)
+            .show()
     }
 
     private fun navigateToMovie(id: Int) {

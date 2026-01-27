@@ -46,6 +46,11 @@
     <string name="viewed">Просмотрено</string>
     <string name="collections">Коллекции</string>
     <string name="create_your_own_collection">+ Создай свою коллекцию</string>
+    <string name="create_collection_title">Новая коллекция</string>
+    <string name="collection_name_hint">Название коллекции</string>
+    <string name="collection_name_empty">Введите название коллекции</string>
+    <string name="create_action">Создать</string>
+    <string name="cancel_action">Отмена</string>
     <string name="were_you_interested">Вам было интересно</string>
     <string name="collection_favorite">Любимые</string>
     <string name="favorite_collection">Любимые</string>
