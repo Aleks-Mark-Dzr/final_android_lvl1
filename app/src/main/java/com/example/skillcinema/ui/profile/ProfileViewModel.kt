@@ -71,6 +71,14 @@ class ProfileViewModel(
         }
     }
 
+    private fun observeWatchedMovies() {
+        viewModelScope.launch {
+            movieDetailRepository.getWatchedMovies().collect { watched ->
+                _watchedMovies.value = watched
+            }
+        }
+    }
+
     fun clearHistory() {
         viewModelScope.launch {
             _history.value = emptyList()
