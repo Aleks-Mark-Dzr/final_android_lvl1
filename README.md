@@ -44,7 +44,7 @@
 ### Второй ряд
 | Галерея | Страница актера | Экран поиска | Профиль | Коллекция Любимые |
 |---|---|---|---|---|
-| <img src="screenshots/Галерея фильма.png" width="150"> | <img src="screenshots/Страница актера.png" width="150"> | <img src="screenshots/Поиск.png" width="150"> | <img src="screenshots/Профиль 2.png" width="150"> | <img src="screenshots/Коллекция Любимые.png" width="150"> |
+| <img src="screenshots/Галерея фильма.png" width="150"> | <img src="screenshots/Страница актера.png" width="150"> | <img src="screenshots/Поиск.png" width="150"> | <img src="screenshots/Профиль_.png" width="150"> | <img src="screenshots/Коллекция Любимые.png" width="150"> |
 
 
 ---
