@@ -74,5 +74,6 @@
     <string name="all_photos">Все фото</string>
     <string name="no_photos_available">Нет доступных фотографий</string>
     <string name="error_loading_actor">Не удалось загрузить данные об актере</string>
+    <string name="_0">0</string>
 
 </resources>
