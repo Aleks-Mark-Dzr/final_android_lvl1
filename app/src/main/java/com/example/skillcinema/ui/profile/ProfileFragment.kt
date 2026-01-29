@@ -37,7 +37,7 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val repository = (requireActivity().application as SkillCinemaApp).movieDetailRepository
         val factory = ProfileViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), factory)[ProfileViewModel::class.java]
     }
 
     override fun onCreateView(
