@@ -18,6 +18,9 @@ interface MovieDao {
     @Query("UPDATE movies SET isFavorite = :favorite WHERE movieId = :movieId")
     suspend fun updateFavoriteStatus(movieId: Int, favorite: Boolean)
 
+    @Query("UPDATE movies SET inCollections = :inCollections WHERE movieId = :movieId")
+    suspend fun updateInCollections(movieId: Int, inCollections: String)
+
     @Query("UPDATE movies SET isWatched = :watched WHERE movieId = :movieId")
     suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
 
@@ -27,6 +30,12 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE isFavorite = 1")
     fun getFavoriteMovies(): Flow<List<MovieEntity>>
 
+    @Query("SELECT * FROM movies WHERE isWatchLater = 1")
+    fun getWatchLaterMovies(): Flow<List<MovieEntity>>
+
     @Query("SELECT * FROM movies WHERE isWatched = 1 ORDER BY movieId DESC")
     fun getWatchedMovies(): Flow<List<MovieEntity>>
+
+    @Query("SELECT * FROM movies")
+    fun getAllMovies(): Flow<List<MovieEntity>>
 }

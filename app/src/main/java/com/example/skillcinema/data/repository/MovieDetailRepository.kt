@@ -22,10 +22,13 @@ interface MovieDetailRepository {
     suspend fun updateFavoriteStatus(movieId: Int, favorite: Boolean)
     suspend fun updateWatchedStatus(movieId: Int, watched: Boolean)
     suspend fun updateWatchLaterStatus(movieId: Int, watchLater: Boolean)
+    suspend fun updateMovieCollections(movieId: Int, collectionIds: Set<Int>)
     suspend fun getMovieById(movieId: Int): MovieEntity?
     suspend fun saveMovie(movie: MovieDetailResponse)
     fun getFavoriteMovies(): Flow<List<Movie>>
+    fun getWatchLaterMovies(): Flow<List<Movie>>
     fun getWatchedMovies(): Flow<List<Movie>>
+    fun getAllMovieEntities(): Flow<List<MovieEntity>>
 }
 
 class MovieDetailRepositoryImpl(
@@ -183,6 +186,10 @@ class MovieDetailRepositoryImpl(
         movieDao.updateWatchLaterStatus(movieId, watchLater)
     }
 
+    override suspend fun updateMovieCollections(movieId: Int, collectionIds: Set<Int>) {
+        movieDao.updateInCollections(movieId, collectionIds.sorted().joinToString(","))
+    }
+
     override suspend fun getMovieById(movieId: Int): MovieEntity? {
         return movieDao.getMovieById(movieId)
     }
@@ -198,10 +205,20 @@ class MovieDetailRepositoryImpl(
         }
     }
 
+    override fun getWatchLaterMovies(): Flow<List<Movie>> {
+        return movieDao.getWatchLaterMovies().map { entities ->
+            entities.map { it.toMovie() }
+        }
+    }
+
     override fun getWatchedMovies(): Flow<List<Movie>> {
         return movieDao.getWatchedMovies().map { entities ->
             entities.map { it.toMovie() }
         }
+    }
+
+    override fun getAllMovieEntities(): Flow<List<MovieEntity>> {
+        return movieDao.getAllMovies()
     }
 }
 
@@ -249,6 +266,7 @@ private fun MovieDetailResponse.toMovieEntity(previous: MovieEntity?): MovieEnti
         isWatched = previous?.isWatched ?: false,
         isFavorite = previous?.isFavorite ?: false,
         isWatchLater = previous?.isWatchLater ?: false,
-        description = this.description ?: previous?.description
+        description = this.description ?: previous?.description,
+        inCollections = previous?.inCollections ?: ""
     )
 }

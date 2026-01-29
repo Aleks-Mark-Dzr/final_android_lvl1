@@ -97,6 +97,22 @@
         <action
             android:id="@+id/action_movieDetailFragment_to_galleryGridFragment"
             app:destination="@id/galleryGridFragment" />
+
+        <action
+            android:id="@+id/action_movieDetailFragment_to_movieCollectionsFragment"
+            app:destination="@id/movieCollectionsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieCollectionsFragment"
+        android:name="com.example.skillcinema.ui.moviedetail.collections.MovieCollectionsFragment"
+        android:label="@string/collections"
+        tools:layout="@layout/fragment_movie_collections">
+
+        <argument
+            android:name="movieId"
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 
     <fragment

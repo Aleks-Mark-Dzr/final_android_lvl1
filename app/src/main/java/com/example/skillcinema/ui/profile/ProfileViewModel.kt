@@ -19,6 +19,7 @@ class ProfileViewModel(
 
     private val customCollections = MutableStateFlow<List<Collection>>(emptyList())
     private var _favoriteMoviesList: List<Movie> = emptyList()
+    private var _watchLaterMoviesList: List<Movie> = emptyList()
     private var nextCustomCollectionId = 3
 
     private val _collections = MutableStateFlow<List<Collection>>(
@@ -42,6 +43,7 @@ class ProfileViewModel(
         loadHistory()
         observeFavoriteMovies()
         observeWatchedMovies()
+        observeWatchLaterMovies()
     }
 
     private fun loadHistory() {
@@ -71,17 +73,27 @@ class ProfileViewModel(
         }
     }
 
+    private fun observeWatchLaterMovies() {
+        viewModelScope.launch {
+            movieDetailRepository.getWatchLaterMovies().collect { watchLater ->
+                _watchLaterMoviesList = watchLater
+                updateCollections()
+            }
+        }
+    }
+
     fun clearHistory() {
         viewModelScope.launch {
             _history.value = emptyList()
         }
     }
-    fun addCustomCollection(name: String) {
+    fun addCustomCollection(name: String): Int? {
         val trimmedName = name.trim()
-        if (trimmedName.isEmpty()) return
+        if (trimmedName.isEmpty()) return null
         val newCollection = Collection(nextCustomCollectionId++, trimmedName, emptyList())
         customCollections.value = customCollections.value + newCollection
         updateCollections()
+        return newCollection.id
     }
 
     fun renameCustomCollection(collectionId: Int, newName: String) {
@@ -105,7 +117,7 @@ class ProfileViewModel(
     private fun updateCollections() {
         _collections.value = listOf(
             Collection(FAVORITES_COLLECTION_ID, "Любимые", _favoriteMoviesList),
-            Collection(WATCH_LATER_COLLECTION_ID, "Хочу посмотреть", emptyList())
+            Collection(WATCH_LATER_COLLECTION_ID, "Хочу посмотреть", _watchLaterMoviesList)
         ) + customCollections.value
     }
 

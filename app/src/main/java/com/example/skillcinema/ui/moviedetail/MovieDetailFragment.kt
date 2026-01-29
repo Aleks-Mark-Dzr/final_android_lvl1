@@ -112,6 +112,9 @@ class MovieDetailFragment : Fragment() {
         binding.ivWatched.setOnClickListener {
             viewModel.toggleWatched(movieId)
         }
+        binding.otherMenu.setOnClickListener {
+            navigateToCollections()
+        }
         binding.tvActorsCount.setOnClickListener {
             navigateToActorsList()
         }
@@ -568,6 +571,21 @@ class MovieDetailFragment : Fragment() {
 
         if (findNavController().currentDestination?.id == R.id.movieDetailFragment) {
             findNavController().navigate(R.id.actorDetailFragment, bundle)
+        }
+    }
+
+    private fun navigateToCollections() {
+        if (!isAdded) return
+
+        val bundle = Bundle().apply {
+            putInt("movieId", movieId)
+        }
+
+        if (findNavController().currentDestination?.id == R.id.movieDetailFragment) {
+            findNavController().navigate(
+                R.id.action_movieDetailFragment_to_movieCollectionsFragment,
+                bundle
+            )
         }
     }
 

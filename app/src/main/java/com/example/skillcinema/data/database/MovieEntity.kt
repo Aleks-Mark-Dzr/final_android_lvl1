@@ -14,5 +14,6 @@ data class MovieEntity(
     val isWatched: Boolean = false,
     val isFavorite: Boolean = false,
     val isWatchLater: Boolean = false,
-    val description: String?
+    val description: String?,
+    val inCollections: String = ""
 )
