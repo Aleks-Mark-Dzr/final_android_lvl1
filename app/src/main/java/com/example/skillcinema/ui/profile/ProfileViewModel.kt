@@ -6,6 +6,7 @@ import com.example.skillcinema.data.Collection
 import com.example.skillcinema.data.HistoryItem
 import com.example.skillcinema.data.ItemType
 import com.example.skillcinema.data.Movie
+import com.example.skillcinema.data.database.MovieEntity
 import com.example.skillcinema.data.repository.MovieDetailRepository
 import com.example.skillcinema.data.repository.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,6 +48,7 @@ class ProfileViewModel(
         observeFavoriteMovies()
         observeWatchedMovies()
         observeWatchLaterMovies()
+        observeCustomCollectionMovies()
     }
 
     private fun loadCustomCollections() {
@@ -89,6 +91,24 @@ class ProfileViewModel(
         viewModelScope.launch {
             movieDetailRepository.getWatchLaterMovies().collect { watchLater ->
                 _watchLaterMoviesList = watchLater
+                updateCollections()
+            }
+        }
+    }
+
+    private fun observeCustomCollectionMovies() {
+        viewModelScope.launch {
+            movieDetailRepository.getAllMovieEntities().collect { entities ->
+                val moviesByCollectionId = mutableMapOf<Int, MutableList<Movie>>()
+                entities.forEach { entity ->
+                    val movie = entity.toMovie()
+                    parseCollectionIds(entity.inCollections).forEach { id ->
+                        moviesByCollectionId.getOrPut(id) { mutableListOf() }.add(movie)
+                    }
+                }
+                customCollections.value = customCollections.value.map { collection ->
+                    collection.copy(items = moviesByCollectionId[collection.id].orEmpty())
+                }
                 updateCollections()
             }
         }
@@ -139,6 +159,27 @@ class ProfileViewModel(
     private fun persistCustomCollections() {
         profileRepository.saveCustomCollections(customCollections.value)
     }
+
+    private fun parseCollectionIds(value: String): Set<Int> {
+        if (value.isBlank()) return emptySet()
+        return value.split(",")
+            .mapNotNull { it.trim().toIntOrNull() }
+            .toSet()
+    }
+
+    private fun MovieEntity.toMovie(): Movie {
+        return Movie(
+            filmId = movieId,
+            kinopoiskId = movieId,
+            nameRu = nameRu,
+            year = year.orEmpty(),
+            posterUrlPreview = posterUrl.orEmpty(),
+            rating = rating,
+            ratingKinopoisk = rating,
+            genres = emptyList()
+        )
+    }
+
 
     companion object {
         private const val FAVORITES_COLLECTION_ID = 1
