@@ -7,6 +7,7 @@ import com.example.skillcinema.data.HistoryItem
 import com.example.skillcinema.data.ItemType
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.data.repository.MovieDetailRepository
+import com.example.skillcinema.data.repository.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 
 class ProfileViewModel(
-    private val movieDetailRepository: MovieDetailRepository
+    private val movieDetailRepository: MovieDetailRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private val customCollections = MutableStateFlow<List<Collection>>(emptyList())
@@ -40,10 +42,20 @@ class ProfileViewModel(
     val watchedMovies: StateFlow<List<Movie>> = _watchedMovies.asStateFlow()
 
     init {
+        loadCustomCollections()
         loadHistory()
         observeFavoriteMovies()
         observeWatchedMovies()
         observeWatchLaterMovies()
+    }
+
+    private fun loadCustomCollections() {
+        val saved = profileRepository.loadCustomCollections()
+        if (saved.isNotEmpty()) {
+            customCollections.value = saved
+            nextCustomCollectionId = (saved.maxOfOrNull { it.id } ?: WATCH_LATER_COLLECTION_ID) + 1
+            updateCollections()
+        }
     }
 
     private fun loadHistory() {
@@ -93,6 +105,7 @@ class ProfileViewModel(
         val newCollection = Collection(nextCustomCollectionId++, trimmedName, emptyList())
         customCollections.value = customCollections.value + newCollection
         updateCollections()
+        persistCustomCollections()
         return newCollection.id
     }
 
@@ -107,11 +120,13 @@ class ProfileViewModel(
             }
         }
         updateCollections()
+        persistCustomCollections()
     }
 
     fun deleteCustomCollection(collectionId: Int) {
         customCollections.value = customCollections.value.filterNot { it.id == collectionId }
         updateCollections()
+        persistCustomCollections()
     }
 
     private fun updateCollections() {
@@ -119,6 +134,10 @@ class ProfileViewModel(
             Collection(FAVORITES_COLLECTION_ID, "Любимые", _favoriteMoviesList),
             Collection(WATCH_LATER_COLLECTION_ID, "Хочу посмотреть", _watchLaterMoviesList)
         ) + customCollections.value
+    }
+
+    private fun persistCustomCollections() {
+        profileRepository.saveCustomCollections(customCollections.value)
     }
 
     companion object {

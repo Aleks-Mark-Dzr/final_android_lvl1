@@ -57,11 +57,14 @@ class MovieCollectionsFragment : Fragment() {
     }
 
     private fun setupViewModels() {
-        val repository = (requireActivity().application as SkillCinemaApp).movieDetailRepository
-        val factory = MovieCollectionsViewModelFactory(repository, movieId)
+        val app = requireActivity().application as SkillCinemaApp
+        val factory = MovieCollectionsViewModelFactory(app.movieDetailRepository, movieId)
         viewModel = ViewModelProvider(this, factory)[MovieCollectionsViewModel::class.java]
 
-        val profileFactory = ProfileViewModelFactory(repository)
+        val profileFactory = ProfileViewModelFactory(
+            app.movieDetailRepository,
+            app.profileRepository
+        )
         profileViewModel = ViewModelProvider(requireActivity(), profileFactory)[ProfileViewModel::class.java]
     }
 

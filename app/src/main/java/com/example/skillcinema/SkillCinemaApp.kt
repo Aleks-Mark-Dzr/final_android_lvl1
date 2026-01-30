@@ -63,7 +63,10 @@ class SkillCinemaApp : Application() {
 //        movieRepository = MovieRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
         movieRepository = MovieRepositoryImpl(movieApiService)
         movieDetailRepository = MovieDetailRepositoryImpl(apiService = movieApiService, movieDao = movieDao)
-        profileRepository = ProfileRepositoryImpl(movieDao)
+        profileRepository = ProfileRepositoryImpl(
+            movieDao,
+            getSharedPreferences("profile_prefs", MODE_PRIVATE)
+        )
         actorRepository = ActorRepositoryImpl(movieApiService)
 
         // 7. Инициализация Crashlytics в коде
