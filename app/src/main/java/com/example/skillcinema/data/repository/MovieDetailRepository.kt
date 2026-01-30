@@ -28,6 +28,7 @@ interface MovieDetailRepository {
     fun getFavoriteMovies(): Flow<List<Movie>>
     fun getWatchLaterMovies(): Flow<List<Movie>>
     fun getWatchedMovies(): Flow<List<Movie>>
+    fun getMoviesByCollectionId(collectionId: Int): Flow<List<Movie>>
     fun getAllMovieEntities(): Flow<List<MovieEntity>>
 }
 
@@ -213,6 +214,12 @@ class MovieDetailRepositoryImpl(
 
     override fun getWatchedMovies(): Flow<List<Movie>> {
         return movieDao.getWatchedMovies().map { entities ->
+            entities.map { it.toMovie() }
+        }
+    }
+
+    override fun getMoviesByCollectionId(collectionId: Int): Flow<List<Movie>> {
+        return movieDao.getMoviesInCollection(collectionId).map { entities ->
             entities.map { it.toMovie() }
         }
     }

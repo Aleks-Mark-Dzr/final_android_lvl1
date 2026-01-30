@@ -62,7 +62,7 @@ class ProfileFragment : Fragment() {
 
         collectionAdapter = CollectionAdapter(
             onClick = { collection ->
-                navigateToCollection(collection.id)
+                navigateToCollection(collection)
             },
             onLongClick = { collection ->
                 showCollectionActionsDialog(collection)
@@ -216,9 +216,21 @@ class ProfileFragment : Fragment() {
 //        findNavController().navigate(action)
     }
 
-    private fun navigateToCollection(id: Int) {
-        if (id == 1) {
+    private fun navigateToCollection(collection: Collection) {
+        if (collection.id == 1) {
             findNavController().navigate(R.id.action_profileFragment_to_favoritesFragment)
+            return
+        }
+
+        if (collection.id > CUSTOM_COLLECTION_START_ID) {
+            val bundle = Bundle().apply {
+                putInt("collectionId", collection.id)
+                putString("collectionName", collection.name)
+            }
+            findNavController().navigate(
+                R.id.action_profileFragment_to_collectionMoviesFragment,
+                bundle
+            )
         }
     }
 

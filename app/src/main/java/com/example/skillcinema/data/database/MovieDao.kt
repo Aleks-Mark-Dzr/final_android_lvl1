@@ -36,6 +36,9 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE isWatched = 1 ORDER BY movieId DESC")
     fun getWatchedMovies(): Flow<List<MovieEntity>>
 
+    @Query("SELECT * FROM movies WHERE ',' || inCollections || ',' LIKE '%,' || :collectionId || ',%'")
+    fun getMoviesInCollection(collectionId: Int): Flow<List<MovieEntity>>
+
     @Query("SELECT * FROM movies")
     fun getAllMovies(): Flow<List<MovieEntity>>
 }
