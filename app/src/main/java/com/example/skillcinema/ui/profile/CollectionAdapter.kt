@@ -89,6 +89,7 @@ class CollectionAdapter(
         fun bind(collection: Collection) {
             binding.tvCollectionName.text = collection.name
             binding.tvCounter.text = collection.items.size.toString()
+            binding.tvCounter.text = collection.items.size.toString()
             binding.root.setOnClickListener {
                 onClick(collection)
             }
