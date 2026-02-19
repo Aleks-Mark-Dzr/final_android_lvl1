@@ -222,6 +222,11 @@ class ProfileFragment : Fragment() {
             return
         }
 
+        if (collection.id == 2) {
+            findNavController().navigate(R.id.action_profileFragment_to_wantToSeeFragment)
+            return
+        }
+
         if (collection.id > CUSTOM_COLLECTION_START_ID) {
             val bundle = Bundle().apply {
                 putInt("collectionId", collection.id)

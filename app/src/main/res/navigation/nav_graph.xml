@@ -206,6 +206,9 @@
             android:id="@+id/action_profileFragment_to_favoritesFragment"
             app:destination="@id/favoritesFragment" />
         <action
+            android:id="@+id/action_profileFragment_to_wantToSeeFragment"
+            app:destination="@id/wantToSeeFragment" />
+        <action
             android:id="@+id/action_profileFragment_to_collectionMoviesFragment"
             app:destination="@id/collectionMoviesFragment" />
     </fragment>
@@ -217,6 +220,16 @@
         tools:layout="@layout/fragment_favorites">
         <action
             android:id="@+id/action_favoritesFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/wantToSeeFragment"
+        android:name="com.example.skillcinema.ui.profile.wanttosee.WantToSeeFragment"
+        android:label="Хочу посмотреть"
+        tools:layout="@layout/fragment_want_to_see">
+        <action
+            android:id="@+id/action_wantToSeeFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
     </fragment>
 
