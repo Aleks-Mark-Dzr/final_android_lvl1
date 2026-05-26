@@ -78,5 +78,17 @@
     <string name="no_photos_available">Нет доступных фотографий</string>
     <string name="error_loading_actor">Не удалось загрузить данные об актере</string>
     <string name="_0">0</string>
+    <string name="not_selected">Не выбрано</string>
+    <string name="search_type_all">Искать все</string>
+    <string name="search_type_films">Только фильмы</string>
+    <string name="search_type_series">Только сериалы</string>
+    <string name="year_from">Год от</string>
+    <string name="year_to">Год до</string>
+    <string name="hide_viewed">Скрывать просмотренные</string>
+    <string name="apply">Применить</string>
+    <string name="order_rating">По рейтингу</string>
+    <string name="order_popularity">По популярности</string>
+    <string name="order_date">По дате</string>
+    <string name="rating_range_value">Рейтинг: %1$d - %2$d</string>
 
 </resources>

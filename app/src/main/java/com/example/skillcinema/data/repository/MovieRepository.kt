@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.skillcinema.data.Movie
 import com.example.skillcinema.network.GenresAndCountriesResponse
 import com.example.skillcinema.network.MovieApiService
+import com.example.skillcinema.ui.search.SearchSettings
 
 interface MovieRepository {
     suspend fun getTopMovies(page: Int): List<Movie>
@@ -13,6 +14,7 @@ interface MovieRepository {
     suspend fun getTvSeries(page: Int): List<Movie>
     suspend fun getAvailableGenresAndCountries(): GenresAndCountriesResponse
     suspend fun searchMovies(query: String): List<Movie>
+    suspend fun searchMovies(query: String, settings: SearchSettings): List<Movie>
 }
 
 class MovieRepositoryImpl(
@@ -50,7 +52,31 @@ class MovieRepositoryImpl(
         safeApiCall { apiService.getAvailableGenresAndCountries() } ?: GenresAndCountriesResponse(emptyList(), emptyList())
 
     override suspend fun searchMovies(query: String): List<Movie> {
-        Log.d("MovieRepository", "API запрос: $query") // Логируем API-запрос
-        return safeApiCall { apiService.searchMovies(query = query).items } ?: emptyList()
+        Log.d("MovieRepository", "API поиск без настроек: $query")
+
+        return safeApiCall {
+            apiService.searchMovies(
+                query = query
+            ).items
+        } ?: emptyList()
     }
-}
+
+    override suspend fun searchMovies(query: String, settings: SearchSettings): List<Movie> {
+        Log.d("MovieRepository", "API запрос: $query")
+
+        return safeApiCall {
+            apiService.searchMovies(
+                query = query,
+                countryId = settings.countryId,
+                genreId = settings.genreId,
+                order = settings.order.apiValue,
+                type = settings.type.apiValue,
+                yearFrom = settings.yearFrom,
+                yearTo = settings.yearTo,
+                ratingFrom = settings.ratingFrom,
+                ratingTo = settings.ratingTo,
+                hideViewed = settings.hideViewed
+            ).items
+        } ?: emptyList()
+    }
+    }

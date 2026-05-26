@@ -78,6 +78,7 @@ interface MovieApiService {
         @Query("yearTo") yearTo: Int? = null,
         @Query("ratingFrom") ratingFrom: Int? = null,
         @Query("ratingTo") ratingTo: Int? = null,
+        @Query("hideViewed") hideViewed: Boolean? = null,
         @Query("page") page: Int = 1
     ): MovieResponse
 }
