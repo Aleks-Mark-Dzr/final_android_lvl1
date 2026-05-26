@@ -57,6 +57,14 @@ class SearchFragment : Fragment() {
     private fun setupUI() {
         val searchView = binding.searchView
 
+        // Делаем строку поиска сразу активной и кликабельной
+
+        searchView.isIconified = false
+        searchView.setOnClickListener {
+            searchView.isIconified = false
+            searchView.requestFocusFromTouch()
+        }
+
         // Устанавливаем слушатель на ввод текста
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,11 +75,10 @@ class SearchFragment : Fragment() {
                 searchJob?.cancel() // Отменяем предыдущий запрос
 
                 searchJob = lifecycleScope.launch(Dispatchers.Main) {
-                    delay(500) // Задержка перед отправкой запроса
-                    if (!newText.isNullOrBlank()) {
-                        Log.d("SearchFragment", "Отправка запроса: $newText") // Логируем запрос
-                        viewModel.searchMovies(newText)
-                    }
+                    delay(250) // Небольшая задержка, чтобы обновлять поиск по каждой введенной букве/цифре
+                    val query = newText.orEmpty()
+                    Log.d("SearchFragment", "Отправка запроса: $query")
+                    viewModel.searchMovies(query)
                 }
                 return true
             }
