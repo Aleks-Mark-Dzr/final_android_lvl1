@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".ui.search.SearchSettingsFragment">
+
+    <!-- Header -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back_chevron" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/search_settings"
+            android:textColor="@color/search_row_text"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="24dp">
+
+            <!-- Показывать -->
+            <TextView
+                style="@style/SearchSectionLabel"
+                android:layout_marginTop="8dp"
+                android:text="@string/search_show_label" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_type_all"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_show_all" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_type_films"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_show_films" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_type_series"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_show_series" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Страна -->
+            <LinearLayout
+                android:id="@+id/row_country"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="?attr/selectableItemBackground"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/SearchRowTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/search_country" />
+
+                <TextView
+                    android:id="@+id/value_country"
+                    style="@style/SearchRowValue"
+                    tools:text="Россия" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/search_divider" />
+
+            <!-- Жанр -->
+            <LinearLayout
+                android:id="@+id/row_genre"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/selectableItemBackground"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/SearchRowTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/search_genre" />
+
+                <TextView
+                    android:id="@+id/value_genre"
+                    style="@style/SearchRowValue"
+                    tools:text="Комедия" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/search_divider" />
+
+            <!-- Год -->
+            <LinearLayout
+                android:id="@+id/row_year"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="?attr/selectableItemBackground"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/SearchRowTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/search_year" />
+
+                <TextView
+                    android:id="@+id/value_year"
+                    style="@style/SearchRowValue"
+                    tools:text="с 1998 до 2017" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/search_divider" />
+
+            <!-- Рейтинг -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/SearchRowTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/search_rating" />
+
+                <TextView
+                    android:id="@+id/value_rating"
+                    style="@style/SearchRowValue"
+                    android:text="@string/search_value_any" />
+            </LinearLayout>
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/slider_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stepSize="1"
+                android:valueFrom="1"
+                android:valueTo="10"
+                app:labelBehavior="gone"
+                app:thumbColor="@color/white"
+                app:thumbStrokeColor="@color/search_accent"
+                app:thumbStrokeWidth="2dp"
+                app:trackColorActive="@color/search_accent"
+                app:trackColorInactive="@color/search_track_inactive" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp">
+
+                <TextView
+                    android:id="@+id/label_rating_from"
+                    style="@style/SearchSectionLabel"
+                    android:text="1" />
+
+                <TextView
+                    android:id="@+id/label_rating_to"
+                    style="@style/SearchSectionLabel"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="10" />
+            </LinearLayout>
+
+            <!-- Сортировать -->
+            <TextView
+                style="@style/SearchSectionLabel"
+                android:layout_marginTop="18dp"
+                android:text="@string/search_sort_label" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_sort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_sort_date"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_sort_date" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_sort_popularity"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_sort_popularity" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_sort_rating"
+                    style="@style/SearchToggleButton"
+                    android:text="@string/search_sort_rating" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Не просмотрен -->
+            <LinearLayout
+                android:id="@+id/row_not_viewed"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/icon_not_viewed"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/search_not_viewed"
+                    android:src="@drawable/ic_not_viewed"
+                    app:tint="@color/search_value" />
+
+                <TextView
+                    android:id="@+id/text_not_viewed"
+                    style="@style/SearchRowTitle"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/search_not_viewed" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

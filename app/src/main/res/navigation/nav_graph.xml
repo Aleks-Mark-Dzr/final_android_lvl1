@@ -193,7 +193,21 @@
             app:destination="@id/movieDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left" />
+
+        <action
+            android:id="@+id/action_searchFragment_to_searchSettingsFragment"
+            app:destination="@id/searchSettingsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/searchSettingsFragment"
+        android:name="com.example.skillcinema.ui.search.SearchSettingsFragment"
+        android:label="@string/search_settings"
+        tools:layout="@layout/fragment_search_settings" />
 
     <fragment
         android:id="@+id/profileFragment"

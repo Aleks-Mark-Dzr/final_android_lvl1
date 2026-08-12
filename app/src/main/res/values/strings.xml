@@ -91,4 +91,23 @@
     <string name="order_date">По дате</string>
     <string name="rating_range_value">Рейтинг: %1$d - %2$d</string>
 
+    <!-- Search settings screen -->
+    <string name="search_show_label">Показывать</string>
+    <string name="search_show_all">Все</string>
+    <string name="search_show_films">Фильмы</string>
+    <string name="search_show_series">Сериалы</string>
+    <string name="search_country">Страна</string>
+    <string name="search_genre">Жанр</string>
+    <string name="search_year">Год</string>
+    <string name="search_rating">Рейтинг</string>
+    <string name="search_sort_label">Сортировать</string>
+    <string name="search_sort_date">Дата</string>
+    <string name="search_sort_popularity">Популярность</string>
+    <string name="search_sort_rating">Рейтинг</string>
+    <string name="search_not_viewed">Не просмотрен</string>
+    <string name="search_value_any">любой</string>
+    <string name="search_year_range">с %1$d до %2$d</string>
+    <string name="search_rating_range">%1$d – %2$d</string>
+    <string name="back">Назад</string>
+
 </resources>

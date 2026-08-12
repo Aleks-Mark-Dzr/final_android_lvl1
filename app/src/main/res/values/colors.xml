@@ -8,4 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#25FFFFFF</color>
+
+    <!-- Search settings screen -->
+    <color name="search_accent">#3D3BFF</color>
+    <color name="search_toggle_stroke">#E2E2EA</color>
+    <color name="search_toggle_text_unchecked">#1C1C28</color>
+    <color name="search_label">#A7A7B0</color>
+    <color name="search_value">#B0B0B8</color>
+    <color name="search_row_text">#1C1C28</color>
+    <color name="search_divider">#EFEFF2</color>
+    <color name="search_track_inactive">#E2E2EA</color>
 </resources>

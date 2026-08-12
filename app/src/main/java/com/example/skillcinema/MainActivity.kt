@@ -56,12 +56,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Скрывать меню на экране онбординга
-            if (destination.id == R.id.onboardingFragment) {
-                binding.navigationMenu.visibility = View.GONE
-            } else {
-                binding.navigationMenu.visibility = View.VISIBLE
-            }
+            // Скрывать меню на онбординге и экране настроек поиска
+            val hideMenu = destination.id == R.id.onboardingFragment ||
+                    destination.id == R.id.searchSettingsFragment
+            binding.navigationMenu.visibility = if (hideMenu) View.GONE else View.VISIBLE
         }
     }
 

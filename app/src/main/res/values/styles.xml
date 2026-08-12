@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SearchToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/search_toggle_text</item>
+        <item name="backgroundTint">@color/search_toggle_bg</item>
+        <item name="strokeColor">@color/search_toggle_stroke</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">22dp</item>
+        <item name="rippleColor">@color/search_toggle_stroke</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="SearchSectionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/search_label</item>
+    </style>
+
+    <style name="SearchRowTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/search_row_text</item>
+    </style>
+
+    <style name="SearchRowValue">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/search_value</item>
+    </style>
+
+</resources>
