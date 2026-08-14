@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/search_background"
     android:orientation="vertical"
     tools:context=".ui.search.SearchSettingsFragment">
 
@@ -189,7 +189,7 @@
                 android:valueFrom="1"
                 android:valueTo="10"
                 app:labelBehavior="gone"
-                app:thumbColor="@color/white"
+                app:thumbColor="@color/search_background"
                 app:thumbStrokeColor="@color/search_accent"
                 app:thumbStrokeWidth="2dp"
                 app:trackColorActive="@color/search_accent"

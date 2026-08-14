@@ -10,6 +10,7 @@
     <color name="gray">#25FFFFFF</color>
 
     <!-- Search settings screen -->
+    <color name="search_background">#FFFFFF</color>
     <color name="search_accent">#3D3BFF</color>
     <color name="search_toggle_stroke">#E2E2EA</color>
     <color name="search_toggle_text_unchecked">#1C1C28</color>

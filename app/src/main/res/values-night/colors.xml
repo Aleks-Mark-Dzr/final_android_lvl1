@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Search settings screen (dark theme) -->
+    <color name="search_background">#14141F</color>
+    <color name="search_toggle_stroke">#2A2A38</color>
+    <color name="search_toggle_text_unchecked">#FFFFFF</color>
+    <color name="search_label">#8F8F9A</color>
+    <color name="search_value">#8F8F9A</color>
+    <color name="search_row_text">#FFFFFF</color>
+    <color name="search_divider">#2A2A38</color>
+    <color name="search_track_inactive">#2A2A38</color>
+</resources>
