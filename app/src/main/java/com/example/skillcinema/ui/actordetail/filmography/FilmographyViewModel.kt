@@ -8,23 +8,34 @@ import com.example.skillcinema.domain.models.Profession
 import com.example.skillcinema.domain.repositories.ActorRepository
 import com.example.skillcinema.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Одна ViewModel на весь экран фильмографии: список табов строится по ключам карты,
+ * а вкладки ([FilmographyTabFragment]) читают из неё свою часть фильмографии.
+ */
 class FilmographyViewModel(
     private val repository: ActorRepository
 ) : ViewModel() {
 
-    private val _films = MutableStateFlow<Resource<List<Film>>>(Resource.Loading())
-    val films = _films
+    private val _filmography =
+        MutableStateFlow<Resource<Map<Profession, List<Film>>>>(Resource.Loading())
+    val filmography = _filmography.asStateFlow()
 
-    fun loadFilmography(actorId: Int, profession: Profession) {
+    private var loadedActorId: Int? = null
+
+    fun loadFilmography(actorId: Int) {
+        if (loadedActorId == actorId && _filmography.value is Resource.Success) return
+        loadedActorId = actorId
+
         viewModelScope.launch {
-            _films.value = Resource.Loading()
+            _filmography.value = Resource.Loading()
             try {
-                val films = repository.getFilmsByProfession(actorId, profession)
-                _films.value = Resource.Success(films)
+                _filmography.value = Resource.Success(repository.getFilmography(actorId))
             } catch (e: Exception) {
-                _films.value = Resource.Error(e.message ?: "Error loading filmography")
+                loadedActorId = null
+                _filmography.value = Resource.Error(e.message ?: "Error loading filmography")
             }
         }
     }

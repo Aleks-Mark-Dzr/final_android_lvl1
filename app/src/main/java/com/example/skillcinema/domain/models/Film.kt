@@ -5,5 +5,7 @@ data class Film(
     val title: String,
     val year: String,
     val posterUrl: String?,
-    val rating: Double?
+    val rating: Double?,
+    /** Роль актёра в фильме либо название работы — приходит в поле `description`. */
+    val role: String? = null
 )

@@ -27,8 +27,9 @@ class FilmsAdapter(
                     .into(moviePoster)
 
                 movieTitle.text = film.title
-                movieYear.text = film.year
-                movieRating.text = film.rating?.toString() ?: "-"
+                movieYear.text = film.year.ifBlank { "--" }
+                // Формат совпадает с карточками на вкладке «Главная» (CategoryMoviesAdapter).
+                movieRating.text = "⭐ ${film.rating ?: "N/A"}"
 
                 root.setOnClickListener { onFilmClick(film.id) }
             }

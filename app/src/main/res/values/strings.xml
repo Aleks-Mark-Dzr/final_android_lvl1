@@ -110,4 +110,17 @@
     <string name="search_rating_range">%1$d – %2$d</string>
     <string name="back">Назад</string>
 
+    <!-- Actor detail / filmography -->
+    <string name="actor_photo">Фотография актера</string>
+    <string name="to_the_list">К списку ></string>
+    <string name="filmography_empty">Фильмография пуста</string>
+    <string name="error_loading_films">Не удалось загрузить фильмографию</string>
+
+    <plurals name="films_count">
+        <item quantity="one">%d фильм</item>
+        <item quantity="few">%d фильма</item>
+        <item quantity="many">%d фильмов</item>
+        <item quantity="other">%d фильма</item>
+    </plurals>
+
 </resources>

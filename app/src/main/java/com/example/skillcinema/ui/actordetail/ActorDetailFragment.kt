@@ -1,11 +1,14 @@
 package com.example.skillcinema.ui.actordetail
 
+import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import android.app.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,14 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
+import com.example.skillcinema.data.Actor
 import com.example.skillcinema.databinding.FragmentActorDetailBinding
 import com.example.skillcinema.domain.models.Film
 import com.example.skillcinema.ui.adapters.FilmsAdapter
-import com.example.skillcinema.domain.models.Profession
 import com.example.skillcinema.utils.Resource
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -74,6 +74,10 @@ class ActorDetailFragment : Fragment() {
                 adapter = filmsAdapter
             }
 
+            btnBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
+
             filmographyButton.setOnClickListener {
                 navigateToFilmography()
             }
@@ -104,17 +108,25 @@ class ActorDetailFragment : Fragment() {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.filmsCount.collectLatest { count ->
+                    renderFilmographyCount(count)
+                }
+            }
+        }
     }
 
     private fun showLoading() {
         binding.apply {
-            progressBar.visibility = View.VISIBLE
-            errorMessage.visibility = View.GONE
-            setContentVisible(false)
+            progressBar.isVisible = true
+            errorMessage.isVisible = false
+            contentContainer.isVisible = false
         }
     }
 
-    private fun showActorDetails(actor: com.example.skillcinema.data.Actor) {
+    private fun showActorDetails(actor: Actor) {
         binding.apply {
             Glide.with(actorPhoto)
                 .load(actor.photoUrl)
@@ -123,64 +135,63 @@ class ActorDetailFragment : Fragment() {
                 .into(actorPhoto)
 
             actorName.text = actor.name
-            actorProfession.text = actor.profession ?: ""
+            actorProfession.text = actor.profession.orEmpty()
+            actorProfession.isVisible = !actor.profession.isNullOrBlank()
             actorPhotoUrl = actor.photoUrl
 
-            progressBar.visibility = View.GONE
-            errorMessage.visibility = View.GONE
-            setContentVisible(true)
+            progressBar.isVisible = false
+            errorMessage.isVisible = false
+            contentContainer.isVisible = true
         }
     }
 
     private fun showError(message: String) {
         binding.apply {
-            progressBar.visibility = View.GONE
-            errorMessage.visibility = View.VISIBLE
+            progressBar.isVisible = false
+            errorMessage.isVisible = true
             errorMessage.text = message.ifBlank {
                 getString(R.string.error_loading_actor)
             }
-            setContentVisible(false)
+            contentContainer.isVisible = false
         }
     }
 
     private fun renderTopFilms(films: List<Film>) {
         val hasFilms = films.isNotEmpty()
         filmsAdapter.submitList(films)
-        binding.topFilmsTitle.visibility = if (hasFilms) View.VISIBLE else View.GONE
-        binding.filmsRecyclerView.visibility = if (hasFilms) View.VISIBLE else View.GONE
+        binding.topFilmsTitle.isVisible = hasFilms
+        binding.filmsRecyclerView.isVisible = hasFilms
     }
 
-    private fun setContentVisible(isVisible: Boolean) {
-        val visibility = if (isVisible) View.VISIBLE else View.GONE
-        binding.actorPhoto.visibility = visibility
-        binding.actorName.visibility = visibility
-        binding.actorProfession.visibility = visibility
-        binding.topFilmsTitle.visibility = visibility
-        binding.filmsRecyclerView.visibility = visibility
-        binding.filmographyButton.visibility = visibility
+    private fun renderFilmographyCount(count: Int) {
+        binding.filmographyButton.isVisible = count > 0
+        binding.filmographyCount.text = resources.getQuantityString(
+            R.plurals.films_count,
+            count,
+            count
+        )
     }
 
     private fun navigateToFilmDetails(filmId: Int) {
+        if (!isAdded) return
         val bundle = Bundle().apply { putInt("movieId", filmId) }
         findNavController().navigate(R.id.movieDetailFragment, bundle)
     }
 
     private fun navigateToFilmography() {
+        if (!isAdded) return
         findNavController().navigate(
             R.id.action_actorDetailFragment_to_filmographyFragment,
-            Bundle().apply {
-                putInt("actorId", args.actorId)
-                putSerializable("profession", Profession.ACTOR)
-                putInt("count", 0)
-            }
+            Bundle().apply { putInt("actorId", args.actorId) }
         )
     }
 
     private fun showFullScreenPhoto(url: String) {
         val dialog = Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        val imageView = android.widget.ImageView(requireContext()).apply {
-            setBackgroundColor(android.graphics.Color.BLACK)
-            scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+        val imageView = ImageView(requireContext()).apply {
+            setBackgroundColor(Color.BLACK)
+            scaleType = ImageView.ScaleType.FIT_CENTER
+            contentDescription = getString(R.string.actor_photo)
         }
         Glide.with(imageView)
             .load(url)
@@ -192,8 +203,8 @@ class ActorDetailFragment : Fragment() {
         dialog.show()
     }
 
-
     override fun onDestroyView() {
+        binding.filmsRecyclerView.adapter = null
         super.onDestroyView()
         _binding = null
     }

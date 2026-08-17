@@ -25,6 +25,7 @@ data class ActorDetailsResponse(
         @SerializedName("nameEn") val titleEn: String?,
         @SerializedName("rating") val rating: String?,
         @SerializedName("general") val isMainRole: Boolean,
-        @SerializedName("description") val role: String?
+        @SerializedName("description") val role: String?,
+        @SerializedName("professionKey") val professionKey: String?
     )
 }

@@ -8,6 +8,7 @@ data class MovieDetailResponse(
     val nameOriginal: String?,
     val year: String?,
     val posterUrl: String?,
+    val posterUrlPreview: String? = null,
     val description: String?,
     val ratingKinopoisk: Double?,
     val genres: List<Genre>,
