@@ -18,6 +18,21 @@
         <item name="elevation">0dp</item>
     </style>
 
+    <!-- Чип «профессия + количество» на экране фильмографии -->
+    <style name="FilmographyChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/search_toggle_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:checkable">true</item>
+        <item name="chipBackgroundColor">@color/search_toggle_bg</item>
+        <item name="chipStrokeColor">@color/search_toggle_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+        <item name="rippleColor">@color/search_toggle_stroke</item>
+    </style>
+
     <style name="SearchSectionLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

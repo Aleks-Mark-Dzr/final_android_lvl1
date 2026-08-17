@@ -6,6 +6,6 @@ data class Film(
     val year: String,
     val posterUrl: String?,
     val rating: Double?,
-    /** Роль актёра в фильме либо название работы — приходит в поле `description`. */
-    val role: String? = null
+    /** Первый жанр — показывается в подписи «2021, триллер». */
+    val genre: String? = null
 )

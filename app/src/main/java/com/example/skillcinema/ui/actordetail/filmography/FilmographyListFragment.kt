@@ -1,9 +1,15 @@
 package com.example.skillcinema.ui.actordetail.filmography
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -12,20 +18,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.skillcinema.R
 import com.example.skillcinema.SkillCinemaApp
 import com.example.skillcinema.databinding.FragmentFilmographyListBinding
-import com.example.skillcinema.databinding.ItemFilmographyTabBinding
-import com.example.skillcinema.domain.models.Film
 import com.example.skillcinema.domain.models.Profession
-import com.example.skillcinema.utils.Resource
-import com.google.android.material.tabs.TabLayoutMediator
+import com.example.skillcinema.ui.adapters.FilmographyAdapter
+import com.google.android.material.chip.Chip
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
- * Фильмография актёра: группа табов «профессия + количество фильмов» и список фильмов
- * под каждым из них. Клик по фильму открывает экран фильма — вложенность не ограничена.
+ * Фильмография актёра: группа чипов «профессия + количество фильмов» и список фильмов
+ * выбранной профессии. Клик по фильму открывает экран фильма — вложенность не ограничена.
  */
 class FilmographyListFragment : Fragment() {
 
@@ -34,7 +39,16 @@ class FilmographyListFragment : Fragment() {
     private val args: FilmographyListFragmentArgs by navArgs()
     private lateinit var viewModel: FilmographyViewModel
 
-    private var tabMediator: TabLayoutMediator? = null
+    private val filmsAdapter by lazy {
+        FilmographyAdapter(
+            onFilmShown = { filmId -> viewModel.onFilmShown(filmId) },
+            onFilmClick = { filmId -> navigateToFilmDetails(filmId) }
+        )
+    }
+
+    /** Чипы создаются один раз — держим их, чтобы обновлять подсветку счётчика. */
+    private val chipsByProfession = mutableMapOf<Profession, Chip>()
+    private var renderedSelection: Profession? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,8 +63,9 @@ class FilmographyListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViewModel()
         setupToolbar()
+        setupRecyclerView()
         observeViewModel()
-        viewModel.loadFilmography(args.actorId)
+        viewModel.load(args.actorId)
     }
 
     private fun setupViewModel() {
@@ -65,78 +80,108 @@ class FilmographyListFragment : Fragment() {
         }
     }
 
+    private fun setupRecyclerView() {
+        binding.filmsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = filmsAdapter
+        }
+    }
+
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.filmography.collectLatest { resource ->
-                    when (resource) {
-                        is Resource.Loading -> showLoading()
-                        is Resource.Success -> showFilmography(resource.data)
-                        is Resource.Error -> showError(resource.message)
-                    }
-                }
+                viewModel.uiState.collectLatest { render(it) }
             }
         }
     }
 
-    private fun showLoading() = with(binding) {
-        progressBar.isVisible = true
-        tabLayout.isVisible = false
-        viewPager.isVisible = false
-        errorMessage.isVisible = false
-        emptyState.isVisible = false
-    }
+    private fun render(state: FilmographyUiState) = with(binding) {
+        progressBar.isVisible = state.isLoading
 
-    private fun showError(message: String) = with(binding) {
-        progressBar.isVisible = false
-        tabLayout.isVisible = false
-        viewPager.isVisible = false
-        emptyState.isVisible = false
-        errorMessage.isVisible = true
-        errorMessage.text = message.ifBlank { getString(R.string.error_loading_films) }
-    }
-
-    private fun showFilmography(filmography: Map<Profession, List<Film>>) = with(binding) {
-        progressBar.isVisible = false
-        errorMessage.isVisible = false
-
-        if (filmography.isEmpty()) {
-            tabLayout.isVisible = false
-            viewPager.isVisible = false
-            emptyState.isVisible = true
-            return@with
+        val error = state.errorMessage
+        if (!state.isLoading && error != null) {
+            errorMessage.isVisible = true
+            errorMessage.text = error.ifBlank { getString(R.string.error_loading_films) }
+        } else {
+            errorMessage.isVisible = false
         }
 
-        emptyState.isVisible = false
-        tabLayout.isVisible = true
-        viewPager.isVisible = true
+        val hasContent = !state.isLoading && error == null && state.chips.isNotEmpty()
+        actorName.isVisible = hasContent
+        chipsScrollContainer.isVisible = hasContent
+        filmsRecyclerView.isVisible = hasContent
+        emptyState.isVisible = !state.isLoading && error == null && state.chips.isEmpty()
 
-        val professions = filmography.keys.toList()
-        // Адаптер создаётся один раз — данные приходят одним ответом и дальше не меняются.
-        if (viewPager.adapter == null) {
-            viewPager.adapter = FilmographyPagerAdapter(this@FilmographyListFragment, professions)
-            viewPager.offscreenPageLimit = 1
+        if (!hasContent) return@with
 
-            tabMediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                val profession = professions[position]
-                val count = filmography[profession]?.size ?: 0
-                val tabBinding = ItemFilmographyTabBinding.inflate(layoutInflater)
-                tabBinding.tabTitle.text = profession.title
-                tabBinding.tabCount.text = resources.getQuantityString(
-                    R.plurals.films_count,
-                    count,
-                    count
-                )
-                tab.customView = tabBinding.root
-            }.also { it.attach() }
+        actorName.text = state.actorName
+        renderChips(state)
+        filmsAdapter.submitList(state.films)
+    }
+
+    private fun renderChips(state: FilmographyUiState) {
+        val chipGroup = binding.chipGroupProfessions
+        val isFirstRender = chipsByProfession.isEmpty()
+
+        // Состояние обновляется на каждую подгруженную карточку фильма,
+        // поэтому чипы перерисовываем только когда действительно сменился выбор.
+        if (!isFirstRender && renderedSelection == state.selected) return
+        renderedSelection = state.selected
+
+        if (isFirstRender) {
+            state.chips.forEach { item ->
+                val chip = layoutInflater.inflate(
+                    R.layout.item_filmography_chip,
+                    chipGroup,
+                    false
+                ) as Chip
+                chip.setOnClickListener { viewModel.selectProfession(item.profession) }
+                chipGroup.addView(chip)
+                chipsByProfession[item.profession] = chip
+            }
         }
+
+        state.chips.forEach { item ->
+            val chip = chipsByProfession[item.profession] ?: return@forEach
+            val isSelected = item.profession == state.selected
+            chip.isChecked = isSelected
+            chip.text = chipLabel(item.title, item.count, isSelected)
+        }
+    }
+
+    /** «Актриса 33»: счётчик мельче и приглушённее основного текста. */
+    private fun chipLabel(title: String, count: Int, isSelected: Boolean): CharSequence {
+        val countColor = if (isSelected) {
+            Color.argb(SELECTED_COUNT_ALPHA, 255, 255, 255)
+        } else {
+            ContextCompat.getColor(requireContext(), R.color.search_label)
+        }
+
+        return SpannableStringBuilder(title).apply {
+            append("  ")
+            val start = length
+            append(count.toString())
+            setSpan(RelativeSizeSpan(0.85f), start, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(countColor), start, length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    private fun navigateToFilmDetails(filmId: Int) {
+        if (!isAdded) return
+        val bundle = Bundle().apply { putInt("movieId", filmId) }
+        findNavController().navigate(R.id.movieDetailFragment, bundle)
     }
 
     override fun onDestroyView() {
-        tabMediator?.detach()
-        tabMediator = null
-        binding.viewPager.adapter = null
+        binding.filmsRecyclerView.adapter = null
+        chipsByProfession.clear()
+        renderedSelection = null
         super.onDestroyView()
         _binding = null
+    }
+
+    private companion object {
+        /** Счётчик на выбранном чипе — приглушённый белый поверх акцентной заливки. */
+        const val SELECTED_COUNT_ALPHA = 170
     }
 }

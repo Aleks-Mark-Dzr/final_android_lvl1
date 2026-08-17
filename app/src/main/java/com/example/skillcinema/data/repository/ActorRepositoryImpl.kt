@@ -14,6 +14,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.concurrent.ConcurrentHashMap
 
 class ActorRepositoryImpl(
     private val apiService: MovieApiService
@@ -24,6 +25,9 @@ class ActorRepositoryImpl(
     private val cacheMutex = Mutex()
     private var cachedActorId: Int? = null
     private var cachedResponse: ActorDetailsResponse? = null
+
+    // Карточки фильмов переиспользуются между «Лучшим» и списком фильмографии.
+    private val filmCards = ConcurrentHashMap<Int, Film>()
 
     private suspend fun loadActor(actorId: Int): ActorDetailsResponse = cacheMutex.withLock {
         cachedResponse?.takeIf { cachedActorId == actorId }
@@ -41,7 +45,8 @@ class ActorRepositoryImpl(
             name = response.nameRu ?: response.nameEn ?: "Неизвестный актер",
             role = "",
             photoUrl = response.photoUrl,
-            profession = response.profession
+            profession = response.profession,
+            gender = response.gender
         )
     }
 
@@ -56,25 +61,8 @@ class ActorRepositoryImpl(
 
         // Фильмография не содержит ни постера, ни года — дотягиваем их карточкой фильма,
         // чтобы элементы списка были такими же, как на вкладке «Главная».
-        return withContext(Dispatchers.IO) {
-            coroutineScope {
-                ratedFilms.map { film ->
-                    async {
-                        try {
-                            val detail = apiService.getMovieDetails(film.id)
-                            film.copy(
-                                title = detail.nameRu ?: detail.nameOriginal ?: film.title,
-                                year = detail.year ?: "",
-                                posterUrl = detail.posterUrlPreview ?: detail.posterUrl,
-                                rating = detail.ratingKinopoisk ?: film.rating
-                            )
-                        } catch (e: Exception) {
-                            Log.e("ActorRepository", "Ошибка загрузки фильма ${film.id}: ${e.message}")
-                            film
-                        }
-                    }
-                }.awaitAll()
-            }
+        return coroutineScope {
+            ratedFilms.map { film -> async { enrich(film) } }.awaitAll()
         }.sortedByDescending { it.rating ?: Double.NEGATIVE_INFINITY }
     }
 
@@ -91,22 +79,47 @@ class ActorRepositoryImpl(
             }
             .filterValues { it.isNotEmpty() }
 
-        // Табы должны идти в предсказуемом порядке: сначала актёрские роли, затем остальные.
+        // Чипы должны идти в предсказуемом порядке: сначала актёрские роли, затем остальные.
         return Profession.entries
             .mapNotNull { profession -> grouped[profession]?.let { profession to it } }
             .toMap()
     }
 
-    override suspend fun getFilmsByProfession(actorId: Int, profession: Profession): List<Film> =
-        getFilmography(actorId)[profession].orEmpty()
+    override suspend fun getFilmCard(filmId: Int): Film {
+        filmCards[filmId]?.let { return it }
+
+        val detail = withContext(Dispatchers.IO) { apiService.getMovieDetails(filmId) }
+        return Film(
+            id = filmId,
+            title = detail.nameRu ?: detail.nameOriginal ?: "Без названия",
+            year = detail.year.orEmpty(),
+            posterUrl = detail.posterUrlPreview ?: detail.posterUrl,
+            rating = detail.ratingKinopoisk,
+            genre = detail.genres.firstOrNull()?.genre?.takeIf { it.isNotBlank() }
+        ).also { filmCards[filmId] = it }
+    }
+
+    /** Дополняет запись фильмографии данными карточки; при ошибке остаётся исходная запись. */
+    private suspend fun enrich(film: Film): Film = try {
+        val card = getFilmCard(film.id)
+        film.copy(
+            title = card.title,
+            year = card.year,
+            posterUrl = card.posterUrl,
+            rating = card.rating ?: film.rating,
+            genre = card.genre
+        )
+    } catch (e: Exception) {
+        Log.e("ActorRepository", "Ошибка загрузки фильма ${film.id}: ${e.message}")
+        film
+    }
 
     private fun ActorDetailsResponse.ActorFilm.toFilm() = Film(
         id = id,
         title = titleRu ?: titleEn ?: "Без названия",
         year = "",
         posterUrl = null,
-        rating = rating?.toDoubleOrNull(),
-        role = role?.takeIf { it.isNotBlank() }
+        rating = rating?.toDoubleOrNull()
     )
 
     private companion object {

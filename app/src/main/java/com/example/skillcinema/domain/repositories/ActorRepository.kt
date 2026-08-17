@@ -13,5 +13,9 @@ interface ActorRepository {
     /** Вся фильмография, сгруппированная по профессиям; порядок ключей — как в [Profession]. */
     suspend fun getFilmography(actorId: Int): Map<Profession, List<Film>>
 
-    suspend fun getFilmsByProfession(actorId: Int, profession: Profession): List<Film>
+    /**
+     * Карточка фильма (постер, год, жанр, рейтинг) — фильмография таких данных не содержит,
+     * поэтому список подгружает их по мере прокрутки.
+     */
+    suspend fun getFilmCard(filmId: Int): Film
 }
