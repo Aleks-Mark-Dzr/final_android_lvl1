@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <ImageView
                     android:id="@+id/actorPhoto"
@@ -81,7 +82,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:paddingHorizontal="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:text="@string/top_films"
                 android:textColor="@color/search_row_text"
                 android:textSize="18sp"
@@ -94,7 +96,8 @@
                 android:layout_marginTop="12dp"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="8dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_movie" />
 
@@ -105,8 +108,10 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
                 android:layout_marginTop="20dp"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
                 <TextView
                     android:id="@+id/filmographyTitle"
@@ -161,7 +166,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:paddingHorizontal="32dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
         android:textColor="@color/search_row_text"
         android:visibility="gone"
         tools:text="@string/error_loading_actor" />

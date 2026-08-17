@@ -75,7 +75,7 @@ class ActorRepositoryImpl(
                     }
                 }.awaitAll()
             }
-        }
+        }.sortedByDescending { it.rating ?: Double.NEGATIVE_INFINITY }
     }
 
     override suspend fun getFilmography(actorId: Int): Map<Profession, List<Film>> {
