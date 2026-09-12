@@ -42,11 +42,14 @@
 | <img src="screenshots/MainScreen.png" width="150"> | <img src="screenshots/все фильмы раздела.png" width="150"> | <img src="screenshots/Детализация фильма.png" width="150"><br><img src="screenshots/Детализация фильма 2.png" width="150"></div> | <img src="screenshots/Список актеров.png" width="150"> | <img src="screenshots/Над фильмом работали.png" width="150"> |
 
 ### Второй ряд
-| Галерея | Страница актера | Экран поиска | Профиль | Коллекция Любимые |
+| Галерея | Страница актера | Фильмография | Профиль | Коллекция Любимые |
 |---|---|---|---|---|
-| <img src="screenshots/Галерея фильма.png" width="150"> | <img src="screenshots/Страница актера.png" width="150"> | <img src="screenshots/Поиск.png" width="150"> | <img src="screenshots/Профиль_.png" width="150"> | <img src="screenshots/Коллекция Любимые.png" width="150"> |
+| <img src="screenshots/Галерея фильма.png" width="150"> | <img src="screenshots/Профиль актера.png" width="150"> | <img src="screenshots/Фильмография.png" width="150"> | <img src="screenshots/Профиль_.png" width="150"> | <img src="screenshots/Коллекция Любимые.png" width="150"> |
 
-
+### Третий ряд
+| Экран поиска | Фильтр поиска |
+|---|---|
+| <img src="screenshots/Поиск.png" width="150"> | <img src="screenshots/Фильтр поиска.png" width="150"> |
 ---
 
 ## ⚙️ Установка
