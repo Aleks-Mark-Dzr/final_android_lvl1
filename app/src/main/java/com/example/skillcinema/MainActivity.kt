@@ -4,6 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
@@ -24,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         // Инициализация ViewBinding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupWindowInsets()
 
         // Проверяем, запускался ли онбординг ранее
         val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -61,6 +65,31 @@ class MainActivity : AppCompatActivity() {
                     destination.id == R.id.searchSettingsFragment
             binding.navigationMenu.visibility = if (hideMenu) View.GONE else View.VISIBLE
         }
+    }
+
+    private fun setupWindowInsets() {
+        val root = binding.root
+        val initialLeft = root.paddingLeft
+        val initialTop = root.paddingTop
+        val initialRight = root.paddingRight
+        val initialBottom = root.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val safeInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or
+                        WindowInsetsCompat.Type.displayCutout() or
+                        WindowInsetsCompat.Type.ime()
+            )
+            // Use the original padding so repeated dispatches do not accumulate offsets.
+            view.updatePadding(
+                left = initialLeft + safeInsets.left,
+                top = initialTop + safeInsets.top,
+                right = initialRight + safeInsets.right,
+                bottom = initialBottom + safeInsets.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
     private fun navigateSingleTop(destinationId: Int) {
